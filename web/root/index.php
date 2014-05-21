@@ -7,6 +7,7 @@
 	require 'User.php';
 	require 'Updates.php';
 	require 'Smtp.php';
+	require 'Fetchmail.php';
 
 	require_once 'Session.php';
 	\OPI\session\setup();
@@ -43,15 +44,27 @@
 	$app->post(		'/api/updates',		"\OPI\session\\requireadmin",	"\OPI\updates\setstate");
 	$app->put(		'/api/updates',		"\OPI\session\\requireadmin",	"\OPI\updates\setstate");
 
-	// SMTP
+	// SMTP domains
 	$app->get(		'/api/smtp/domains',		"\OPI\session\\requireadmin",	"\OPI\smtp\getdomains");
 	$app->post(		'/api/smtp/domains',		"\OPI\session\\requireadmin",	"\OPI\smtp\adddomain");
 	$app->delete(	'/api/smtp/domains',		"\OPI\session\\requireadmin",	"\OPI\smtp\deletedomains");
 	$app->delete(	'/api/smtp/domains/:id',	"\OPI\session\\requireadmin",	"\OPI\smtp\deletedomain");
 
-	// Mail-addresses
+	// SMTP Mail-addresses
 	$app->post(		'/api/smtp/domains/:name/addresses',		"\OPI\session\\requireadmin",	"\OPI\smtp\addaddress");
 	$app->get(		'/api/smtp/domains/:name/addresses',		"\OPI\session\\requireadmin",	"\OPI\smtp\getaddresses");
+
+	// SMTP Settings
+	$app->get(		'/api/smtp/settings',		"\OPI\session\\requireadmin",	"\OPI\smtp\getsettings");
+	$app->post(		'/api/smtp/settings',		"\OPI\session\\requireadmin",	"\OPI\smtp\setsettings");
+
+	// Fetchmail Settings
+	$app->get(		'/api/fetchmail/accounts',		"\OPI\session\\requireadmin",	"\OPI\\fetchmail\getaccounts");
+	$app->get(		'/api/fetchmail/accounts/:id',	"\OPI\session\\requireadmin",	"\OPI\\fetchmail\getaccount");
+	$app->post(		'/api/fetchmail/accounts',		"\OPI\session\\requireadmin",	"\OPI\\fetchmail\addaccount");
+	$app->put(		'/api/fetchmail/accounts/:id',	"\OPI\session\\requireadmin",	"\OPI\\fetchmail\updateaccount");
+	$app->delete(	'/api/fetchmail/accounts/:id',	"\OPI\session\\requireadmin",	"\OPI\\fetchmail\deleteaccount");
+	$app->delete(	'/api/fetchmail/accounts',		"\OPI\session\\requireadmin",	"\OPI\\fetchmail\deleteaccounts");
 
 	$app->run();
 

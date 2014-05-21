@@ -13,10 +13,10 @@ class TestUser(unittest.TestCase):
 		self.assertTrue( self.opi.login("admin","secret") )
 
 		self.assertTrue( self.opi.deleteusers() )
-		
+
 		users = self.opi.getusers()
 		self.assertTrue( len(users) == 0 )
-		
+
 		user = { "username":"tempuser","displayname":"Temp User","password":"secret"}
 		id = self.opi.createuser( user )
 		self.assertTrue( id )
@@ -24,10 +24,10 @@ class TestUser(unittest.TestCase):
 		self.assertEqual( len(self.opi.getusers()), 1)
 
 		uc = self.opi.getuser( id )
-		self.assertEqual( int(uc["id"]), id) 
-		self.assertEqual( uc["username"], user["username"]) 
-		self.assertEqual( uc["displayname"], user["displayname"]) 
-		self.assertEqual( uc["password"], user["password"]) 
+		self.assertEqual( int(uc["id"]), id)
+		self.assertEqual( uc["username"], user["username"])
+		self.assertEqual( uc["displayname"], user["displayname"])
+		self.assertEqual( uc["password"], user["password"])
 
 		user["username"]="tempuser2"
 		self.assertTrue( self.opi.createuser( user ) )
@@ -48,19 +48,19 @@ class TestUser(unittest.TestCase):
 
 		# Get by ID
 		uc = self.opi.getuser( id )
-		self.assertEqual( int(uc["id"]), id) 
-		self.assertEqual( uc["username"], user["username"]) 
-		self.assertEqual( uc["displayname"], user["displayname"]) 
-		self.assertEqual( uc["password"], user["password"]) 
+		self.assertEqual( int(uc["id"]), id)
+		self.assertEqual( uc["username"], user["username"])
+		self.assertEqual( uc["displayname"], user["displayname"])
+		self.assertEqual( uc["password"], user["password"])
 
 		self.assertFalse( self.opi.getuser( 0 ) )
 
 		# Get by Username
 		uc = self.opi.getuser( "tempuser" )
-		self.assertEqual( int(uc["id"]), id) 
-		self.assertEqual( uc["username"], user["username"]) 
-		self.assertEqual( uc["displayname"], user["displayname"]) 
-		self.assertEqual( uc["password"], user["password"]) 
+		self.assertEqual( int(uc["id"]), id)
+		self.assertEqual( uc["username"], user["username"])
+		self.assertEqual( uc["displayname"], user["displayname"])
+		self.assertEqual( uc["password"], user["password"])
 
 		self.assertFalse( self.opi.getuser( "Unknown user" ) )
 
@@ -69,7 +69,7 @@ class TestUser(unittest.TestCase):
 		self.assertTrue( self.opi.login("admin","secret") )
 
 		self.assertTrue( self.opi.deleteusers() )
-		
+
 		users = self.opi.getusers()
 		self.assertTrue( len(users) == 0 )
 
@@ -102,7 +102,7 @@ class TestUser(unittest.TestCase):
 
 		user["displayname"] = "updated"
 		self.assertTrue( self.opi.updateuser(id, user) )
-		
+
 		uc = self.opi.getuser( id )
 		self.assertEqual( int(uc["id"]), id)
 		self.assertEqual( uc["username"], user["username"])
@@ -141,11 +141,11 @@ class TestUpdates(unittest.TestCase):
 		# Make sure not logged in can do updates
 		self.assertFalse( self.opi.getupdates() )
 		self.assertFalse( self.opi.setupdates(1) )
-		
+
 		# Login and test updates
 		self.assertTrue( self.opi.login("admin","secret") )
 		self.assertTrue( self.opi.setupdates(1) )
-		
+
 		up = self.opi.getupdates()
 		self.assertTrue( up["doupdates"] == "1")
 
@@ -180,7 +180,7 @@ class TestSmtp(unittest.TestCase):
 		self.assertFalse( self.opi.adddomain("example.com") )
 		self.assertFalse( self.opi.deletedomains() )
 
-		# Test functions 
+		# Test functions
 		self.assertTrue( self.opi.login("admin","secret") )
 
 		# Make sure we have an empty sheet
@@ -188,21 +188,21 @@ class TestSmtp(unittest.TestCase):
 
 		domains = self.opi.getdomains()
 		self.assertEqual( len(domains), 0 )
-		
+
 		# Try add
 		id = self.opi.adddomain("example.com")
-		self.assertTrue( id > 0 ) 
+		self.assertTrue( id > 0 )
 
 		domains = self.opi.getdomains()
 		self.assertEqual( len(domains), 1 )
 		self.assertEqual( domains[0]["domain"], "example.com" )
-		
+
 		# Try add again
 		id1 = self.opi.adddomain("example.com")
-		self.assertFalse( id1 > 0 ) 
+		self.assertFalse( id1 > 0 )
 
 		id2 = self.opi.adddomain("google.com")
-		self.assertTrue( id2 > 0 ) 
+		self.assertTrue( id2 > 0 )
 
 		# Delete by ID
 		self.assertTrue( self.opi.deletedomain(id2) )
@@ -217,10 +217,10 @@ class TestSmtp(unittest.TestCase):
 
 		# Verify delete all
 		id1 = self.opi.adddomain("example.com")
-		self.assertTrue( id1 > 0 ) 
+		self.assertTrue( id1 > 0 )
 
 		id2 = self.opi.adddomain("google.com")
-		self.assertTrue( id2 > 0 ) 
+		self.assertTrue( id2 > 0 )
 
 		domains = self.opi.getdomains()
 		self.assertEqual( len(domains), 2 )
@@ -229,7 +229,7 @@ class TestSmtp(unittest.TestCase):
 
 		domains = self.opi.getdomains()
 		self.assertEqual( len(domains), 0 )
-		
+
 		# Check that normal user cant edit
 		self.assertTrue( self.opi.logout() )
 		self.assertTrue( self.opi.login("user","secret") )
@@ -244,17 +244,96 @@ class TestSmtp(unittest.TestCase):
 
 
 		id1 = self.opi.adddomain("example.com")
-		self.assertTrue( id1 > 0 ) 
+		self.assertTrue( id1 > 0 )
 
 		self.assertTrue( self.opi.addaddress("example.com","tor", "tor") )
 		self.assertTrue( self.opi.addaddress("example.com","tar", "tor") )
 		# Add duplicate
 		self.assertFalse( self.opi.addaddress("example.com","tar", "tor") )
-		
+
 		ad = self.opi.getaddresses("example.com")
 		self.assertTrue( ad )
 		self.assertEqual( len(ad), 2)
-		
+
+	def testSettings(self):
+		self.assertFalse( self.opi.getsmtpsettings() )
+		self.assertTrue( self.opi.login("admin","secret") )
+
+		s = self.opi.getsmtpsettings()
+		self.assertTrue( s )
+		settings = { "username":"u1","password":"MySecret","relay":"gmail.com", "port":"22"}
+
+		self.assertTrue( self.opi.setsmtpsettings(settings) )
+
+		del settings["port"]
+		self.assertFalse( self.opi.setsmtpsettings(settings) )
+
+		settings["port"] = "443"
+		settings["username"] = "u2"
+		self.assertTrue( self.opi.setsmtpsettings(settings) )
+
+		s = self.opi.getsmtpsettings()
+		self.assertTrue( s )
+
+		self.assertEqual( s["port"], "443")
+		self.assertEqual( s["username"], "u2")
+		self.assertEqual( s["password"], "MySecret")
+		self.assertEqual( s["relay"], "gmail.com")
+
+class TestFetchmail(unittest.TestCase):
+
+	def setUp(self):
+		self.opi = OPI(URL)
+
+	def testFetchmail(self):
+		account = { "host":"gmail.com", "identity":"user1", "password":"secret","username":"localuser" }
+
+		# Try add account while not logged in
+		self.assertFalse( self.opi.addfetchmailaccount(account) )
+
+		self.assertTrue( self.opi.login("admin","secret") )
+
+		self.assertTrue( self.opi.deletefetchmailaccounts()  )
+
+		id = self.opi.addfetchmailaccount(account)
+		self.assertTrue( id  )
+
+		# Try adding same account once more
+		self.assertFalse( self.opi.addfetchmailaccount(account) )
+
+		# Verify get accounts
+		a = self.opi.getfetchmailaccounts()
+		self.assertTrue( a )
+		self.assertEqual( len(a), 1)
+
+		# Verify get account
+		a = self.opi.getfetchmailaccount( id )
+		self.assertTrue( a )
+
+		self.assertEqual( a["host"], 		"gmail.com")
+		self.assertEqual( a["identity"], 	"user1")
+		self.assertEqual( a["password"], 	"secret")
+		self.assertEqual( a["username"], 	"localuser")
+
+		self.assertTrue( self.opi.deletefetchmailaccount(id) )
+		self.assertFalse( self.opi.deletefetchmailaccount(id) )
+
+		self.assertFalse( self.opi.getfetchmailaccount( id ) )
+
+		# Verify update
+		id = self.opi.addfetchmailaccount(account)
+		self.assertTrue( id  )
+
+		a = self.opi.getfetchmailaccount( id )
+		self.assertTrue( a )
+
+		a["identity"] = "user2"
+		self.assertTrue( self.opi.updatefetchmailaccount( a["id"], a) )
+
+		a = self.opi.getfetchmailaccounts()
+		self.assertTrue( a )
+		self.assertEqual( len(a), 1)
+
 
 if __name__=='__main__':
 	unittest.main()

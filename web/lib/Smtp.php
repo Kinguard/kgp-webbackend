@@ -1,14 +1,16 @@
 <?php
 namespace OPI\smtp;
 
+require_once 'Utils.php';
+
 function getdomains()
 {
 	$app = \Slim\Slim::getInstance();
 
 	$app->response->headers->set('Content-Type', 'application/json');
-	
+
 	$domains = \R::findAll( "domains" );
-	
+
 	print json_encode( \R::exportAll( $domains ) );
 }
 
@@ -32,12 +34,12 @@ function adddomain()
 
 	$d = \R::dispense( "domains" );
 	$d->domain = $domain;
-	
+
 	$id = \R::store( $d );
 
 	$app->response->headers->set('Content-Type', 'application/json');
-	
-	print '{ "id": '.$id.'}';			
+
+	print '{ "id": '.$id.'}';
 }
 
 function deletedomains()
@@ -53,7 +55,7 @@ function deletedomain($id)
 	$app = \Slim\Slim::getInstance();
 
 	$domain = \R::load( "domains", $id );
-	
+
 	if ( $domain->id == 0 )
 	{
 		$app->response->setStatus(404);
@@ -61,7 +63,7 @@ function deletedomain($id)
 	else
 	{
 		\R::trash($domain);
-	}			
+	}
 }
 
 function addaddress( $domain )
@@ -86,10 +88,10 @@ function addaddress( $domain )
 	$domainbean = reset($domainbeans);
 
 	// Check that name isn't used
-	$domainbeans = \R::find( 
-		"domainaddress", 
-		"where address = :address and domains_id = :domid", 
-		[ ':address' => $address, 'domid' => $domainbean->id]);
+	$domainbeans = \R::find(
+		"domainaddress",
+		"where address = :address and domains_id = :domid",
+		[ ':address' => $address, ':domid' => $domainbean->id]);
 
 	if( count( $domainbeans ) != 0 )
 	{
@@ -97,10 +99,10 @@ function addaddress( $domain )
 	}
 
 	$domainaddress = \R::dispense( "domainaddress");
-	
+
 	$domainaddress->address	= $address;
 	$domainaddress->user	= $user;
-	
+
 	$domainbean->xownDomainaddressList[] = $domainaddress;
 
 	\R::store( $domainbean );
@@ -126,3 +128,64 @@ function getaddresses( $domain )
 
 }
 
+function getsettings( )
+{
+	$app = \Slim\Slim::getInstance();
+
+	$app->response->headers->set('Content-Type', 'application/json');
+
+	// Check if domain exists
+	$smtp = \R::findAll( "smtpsettings");
+
+	if( count( $smtp ) == 0 )
+	{
+		$s = \R::dispense( "smtpsettings" );
+		$s->relay = "";
+		$s->username = "";
+		$s->password = "";
+		$s->port = 25;
+
+		\R::store( $s );
+
+		print json_encode( $s->export() );
+	}
+	else
+	{
+		$smtp = reset($smtp);
+		print json_encode( $smtp->export() );
+	}
+
+}
+
+function setsettings( )
+{
+	$app = \Slim\Slim::getInstance();
+
+	$relay 		= $app->request->post('relay');
+	$username	= $app->request->post('username');
+	$password 	= $app->request->post('password');
+	$port 		= $app->request->post('port');
+
+	if( !checknull( $relay, $username, $password, $port ) )
+	{
+		$app->halt(400);
+	}
+
+	// Check if domain exists
+	$s = \R::findAll( "smtpsettings");
+
+	if( count( $s ) == 0 )
+	{
+		$s = \R::dispense( "smtpsettings" );
+	}
+	else
+	{
+		$s = reset($s);
+	}
+	$s->relay 		= $relay;
+	$s->username	= $username;
+	$s->password 	= $password;
+	$s->port 		= $port;
+
+	\R::store( $s );
+}

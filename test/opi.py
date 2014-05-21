@@ -102,5 +102,48 @@ class OPI:
 		if r.status_code == 200:
 			return r.json()
 		return False
+
+	def getsmtpsettings(self):
+		r = self.s.get(self.url+"/smtp/settings" )
+		if r.status_code == 200:
+			return r.json()
+		return False
 		
+	def setsmtpsettings(self, settings):
+		r = self.s.post(self.url+"/smtp/settings", settings )
+		return r.status_code == 200
+
+	#
+	# Fetchmail
+	#
+	def getfetchmailaccounts(self):
+		r = self.s.get(self.url+"/fetchmail/accounts" )
+		if r.status_code == 200:
+			return r.json()
+		return False
+
+	def getfetchmailaccount(self, id):
+		r = self.s.get(self.url+"/fetchmail/accounts/%d" % id )
+		if r.status_code == 200:
+			return r.json()
+		return False
+
+
+	def addfetchmailaccount(self, account):
+		r = self.s.post(self.url+"/fetchmail/accounts", account )
+		if r.status_code == 200:
+			return r.json()["id"]
+		return False
+
+	def updatefetchmailaccount(self, id, account):
+		r = self.s.put(self.url+"/fetchmail/accounts/%s" % id, account )
+		return r.status_code == 200
+
+	def deletefetchmailaccount(self, id):
+		r = self.s.delete(self.url+"/fetchmail/accounts/%d" % id )
+		return r.status_code == 200
+
+	def deletefetchmailaccounts(self):
+		r = self.s.delete(self.url+"/fetchmail/accounts" )
+		return r.status_code == 200
 
