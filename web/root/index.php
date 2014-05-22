@@ -8,13 +8,14 @@
 	require 'Updates.php';
 	require 'Smtp.php';
 	require 'Fetchmail.php';
+	require 'Backup.php';
 
 	require_once 'Session.php';
 	\OPI\session\setup();
 
 
 	\Slim\Slim::registerAutoloader();
-	
+
 	$db_path = realpath(dirname(__FILE__)."/../data/");
 	R::setup('sqlite:'.$db_path.'/test.db');
 
@@ -65,6 +66,20 @@
 	$app->put(		'/api/fetchmail/accounts/:id',	"\OPI\session\\requireadmin",	"\OPI\\fetchmail\updateaccount");
 	$app->delete(	'/api/fetchmail/accounts/:id',	"\OPI\session\\requireadmin",	"\OPI\\fetchmail\deleteaccount");
 	$app->delete(	'/api/fetchmail/accounts',		"\OPI\session\\requireadmin",	"\OPI\\fetchmail\deleteaccounts");
+
+	// Backup Settings
+	$app->get(		'/api/backup/quota',			"\OPI\session\\requireadmin",	"\OPI\\backup\getquota");
+
+	$app->post(		'/api/backup/subscriptions',	"\OPI\session\\requireadmin",	"\OPI\\backup\addsubscription");
+	$app->get(		'/api/backup/subscriptions',	"\OPI\session\\requireadmin",	"\OPI\\backup\getsubscriptions");
+	$app->get(		'/api/backup/subscriptions/:id',"\OPI\session\\requireadmin",	"\OPI\\backup\getsubscription");
+	// For debug and test, should not be added in production
+	$app->delete(	'/api/backup/subscriptions',	"\OPI\session\\requireadmin",	"\OPI\\backup\deletesubscriptions");
+	$app->delete(	'/api/backup/subscriptions/:id',"\OPI\session\\requireadmin",	"\OPI\\backup\deletesubscription");
+
+	$app->get(		'/api/backup/settings',			"\OPI\session\\requireadmin",	"\OPI\\backup\getsettings");
+	$app->post(		'/api/backup/settings',			"\OPI\session\\requireadmin",	"\OPI\\backup\setsettings");
+
 
 	$app->run();
 

@@ -334,6 +334,97 @@ class TestFetchmail(unittest.TestCase):
 		self.assertTrue( a )
 		self.assertEqual( len(a), 1)
 
+class TestBackup(unittest.TestCase):
+
+	def setUp(self):
+		self.opi = OPI(URL)
+
+	def testQuota(self):
+		self.assertFalse( self.opi.getbackupquota() )
+
+		self.assertTrue( self.opi.login("admin","secret") )
+
+		q = self.opi.getbackupquota()
+		self.assertTrue(q)
+		self.assertTrue( q["total"]>0 )
+		self.assertTrue( q["used"]>=0 )
+
+	def testPurchase(self):
+
+		self.assertFalse( self.opi.deletebackupcodes() )
+
+		self.assertTrue( self.opi.login("admin","secret") )
+
+		# Delete all
+		self.assertTrue( self.opi.deletebackupcodes() )
+
+		# Post one
+		code = "ThisIsABackupCode"
+		id = self.opi.addbackupcode( code )
+		self.assertTrue( id )
+
+		# Try add same code again
+		self.assertFalse( self.opi.addbackupcode( code ) )
+
+		# Get one
+		c2 = self.opi.getbackupcode( id )
+		self.assertTrue( c2 )
+		self.assertEqual( c2["code"], code )
+
+		# Get all
+		codes = self.opi.getbackupcodes()
+		self.assertTrue( codes )
+		self.assertEqual( len( codes), 1)
+
+		id2 = self.opi.addbackupcode( "Code2" )
+		self.assertTrue( id2  )
+
+		codes = self.opi.getbackupcodes()
+		self.assertTrue( codes )
+		self.assertEqual( len( codes), 2)
+
+		# Delete one
+		self.assertTrue( self.opi.deletebackupcode( id2 ))
+
+		codes = self.opi.getbackupcodes()
+		self.assertTrue( codes )
+		self.assertEqual( len( codes), 1)
+
+		# Delete all
+		self.assertTrue( self.opi.deletebackupcodes() )
+
+		codes = self.opi.getbackupcodes()
+		self.assertTrue( codes != False )
+		self.assertEqual( len( codes), 0)
+
+	def testSettings(self):
+
+		s1 = { "enabled":True, "location":"remote", "type":"mirror" }
+
+		# try not logged in
+		self.assertFalse( self.opi.getbackupsettings() )
+		self.assertFalse( self.opi.setbackupsettings( s1 ) )
+
+		self.assertTrue( self.opi.login("admin","secret") )
+
+		gs = self.opi.getbackupsettings()
+		self.assertTrue( gs )
+		self.assertTrue( "enabled" in gs )
+		self.assertTrue( "type" in gs )
+		self.assertTrue( "location" in gs )
+
+		self.assertTrue( self.opi.setbackupsettings( s1 ) )
+		gs = self.opi.getbackupsettings()
+
+		self.assertTrue( gs )
+		self.assertEqual( s1["enabled"], gs["enabled"] == "True" )
+		self.assertEqual( s1["location"], gs["location"] )
+		self.assertEqual( s1["type"], gs["type"] )
+
+		del s1["enabled"]
+		self.assertFalse( self.opi.setbackupsettings( s1 ) )
+
+
 
 if __name__=='__main__':
 	unittest.main()

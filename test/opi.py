@@ -33,7 +33,7 @@ class OPI:
 	def deleteuser(self, id):
 		r = self.s.delete(self.url+"/users/%d"%id)
 		return r.status_code == 200
-	
+
 	def createuser(self, user):
 		r = self.s.post(self.url+"/users", user )
 		if r.status_code == 200:
@@ -65,7 +65,7 @@ class OPI:
 		if r.status_code == 200:
 			return r.json()
 		return False
-	
+
 	def setupdates(self, update):
 		r = self.s.post(self.url+"/updates", {'updates': update})
 		return r.status_code == 200
@@ -78,7 +78,7 @@ class OPI:
 		if r.status_code == 200:
 			return r.json()
 		return False
-	
+
 	def adddomain(self, domain):
 		r = self.s.post(self.url+"/smtp/domains", {'domain':domain})
 		if r.status_code == 200:
@@ -96,7 +96,7 @@ class OPI:
 	def addaddress(self, domain, address, user):
 		r = self.s.post(self.url+"/smtp/domains/%s/addresses" % domain, {'address':address, 'user':user})
 		return r.status_code == 200
-	
+
 	def getaddresses(self, domain):
 		r = self.s.get(self.url+"/smtp/domains/%s/addresses" % domain )
 		if r.status_code == 200:
@@ -108,7 +108,7 @@ class OPI:
 		if r.status_code == 200:
 			return r.json()
 		return False
-		
+
 	def setsmtpsettings(self, settings):
 		r = self.s.post(self.url+"/smtp/settings", settings )
 		return r.status_code == 200
@@ -145,5 +145,56 @@ class OPI:
 
 	def deletefetchmailaccounts(self):
 		r = self.s.delete(self.url+"/fetchmail/accounts" )
+		return r.status_code == 200
+
+	#
+	# Backup
+	#
+	def getbackupquota(self):
+		r = self.s.get(self.url+"/backup/quota" )
+		if r.status_code == 200:
+			return r.json()
+		return False
+
+	#
+	# Backup purchasecodes
+	#
+	def deletebackupcodes(self):
+		r = self.s.delete(self.url+"/backup/subscriptions" )
+		return r.status_code == 200
+
+	def deletebackupcode(self, id):
+		r = self.s.delete(self.url+"/backup/subscriptions/%d" % id )
+		return r.status_code == 200
+
+	def addbackupcode(self, code):
+		r = self.s.post(self.url+"/backup/subscriptions", { "code":code} )
+		if r.status_code == 200:
+			return r.json()["id"]
+		return False
+
+	def getbackupcodes(self):
+		r = self.s.get(self.url+"/backup/subscriptions" )
+		if r.status_code == 200:
+			return r.json()
+		return False
+
+	def getbackupcode(self, id):
+		r = self.s.get(self.url+"/backup/subscriptions/%d" % id )
+		if r.status_code == 200:
+			return r.json()
+		return False
+
+	#
+	# Backup settings
+	#
+	def getbackupsettings(self):
+		r = self.s.get(self.url+"/backup/settings" )
+		if r.status_code == 200:
+			return r.json()
+		return False
+
+	def setbackupsettings(self, settings):
+		r = self.s.post(self.url+"/backup/settings", settings )
 		return r.status_code == 200
 

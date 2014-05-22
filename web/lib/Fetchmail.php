@@ -41,7 +41,6 @@ function getaccounts()
 	$accs = \R::findAll( "fetchmailaccounts" );
 
 	print json_encode( \R::exportAll( $accs ) );
-
 }
 
 function addaccount()
