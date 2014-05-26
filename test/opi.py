@@ -16,7 +16,7 @@ class OPI:
 	def loggedin(self):
 		r = self.s.get( self.url+"/session" )
 		if  r.status_code == 200:
-			return r.json()["authenticated"]
+			return r.json()
 		return False
 
 	def logout(self):
@@ -156,6 +156,13 @@ class OPI:
 			return r.json()
 		return False
 
+	def getbackupstatus(self):
+		r = self.s.get(self.url+"/backup/status" )
+		if r.status_code == 200:
+			return r.json()
+		return False
+
+
 	#
 	# Backup purchasecodes
 	#
@@ -196,5 +203,55 @@ class OPI:
 
 	def setbackupsettings(self, settings):
 		r = self.s.post(self.url+"/backup/settings", settings )
+		return r.status_code == 200
+
+	#
+	# Network settings
+	#
+	def getnetworksettings(self):
+		r = self.s.get(self.url+"/network/settings" )
+		if r.status_code == 200:
+			return r.json()
+		return False
+
+	def setnetworksettings(self, settings):
+		r = self.s.post(self.url+"/network/settings", settings )
+		return r.status_code == 200
+
+	#
+	# Group functions
+	#
+	def deletegroups(self):
+		r = self.s.delete(self.url+"/groups" )
+		return r.status_code == 200
+
+	def addgroup(self, group):
+		r = self.s.post(self.url+"/groups", {'group':group})
+		if r.status_code == 200:
+			return r.json()["id"]
+		return False
+
+	def addusergroup(self, group, user ):
+		r = self.s.post(self.url+"/groups/%s"%group, {'user':user})
+		return r.status_code == 200
+
+	def getgroupusers(self, group):
+		r = self.s.get(self.url+"/groups/%s"%group )
+		if r.status_code == 200:
+			return r.json()
+		return False
+
+	def getgroups(self):
+		r = self.s.get(self.url+"/groups" )
+		if r.status_code == 200:
+			return r.json()
+		return False
+
+	def deletegroup(self, group ):
+		r = self.s.delete(self.url+"/groups/%s"%group )
+		return r.status_code == 200
+
+	def deletegroupuser(self, group, user ):
+		r = self.s.delete(self.url+"/groups/%s/%s"%(group, user) )
 		return r.status_code == 200
 

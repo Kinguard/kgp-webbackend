@@ -27,6 +27,11 @@ function getaccount( $id )
 		$app->halt(404);
 	}
 
+	if ( ! isadminoruser( $a->username ) )
+	{
+		$app->halt(401);
+	}
+
 	$app->response->headers->set('Content-Type', 'application/json');
 
 	print json_encode( $a->export() );
@@ -38,7 +43,15 @@ function getaccounts()
 
 	$app->response->headers->set('Content-Type', 'application/json');
 
-	$accs = \R::findAll( "fetchmailaccounts" );
+	if( isadmin() )
+	{
+		$accs = \R::findAll( "fetchmailaccounts" );
+	}
+	else
+	{
+		$user = getuser();
+		$accs = \R::findAll( "fetchmailaccounts", "username = ?", [$user] );
+	}
 
 	print json_encode( \R::exportAll( $accs ) );
 }
@@ -57,9 +70,14 @@ function addaccount()
 		$app->halt(400);
 	}
 
+	if( ! isadminoruser( $username) )
+	{
+		$app->halt(401);
+	}
+
 	if( accountexists( $host, $identity) )
 	{
-		$app->halt(400);
+		$app->halt(409);
 	}
 
 	$a = \R::dispense( "fetchmailaccounts" );
@@ -88,6 +106,12 @@ function updateaccount($id)
 		$app->halt(400);
 	}
 
+	if( ! isadminoruser( $username ) )
+	{
+		$app->halt(401);
+	}
+
+
 	$a = \R::load( "fetchmailaccounts", $id );
 
 	if ( $a->id == 0 )
@@ -96,6 +120,12 @@ function updateaccount($id)
 	}
 	else
 	{
+		# Should not be able to overwrite account
+		if( ! isadminoruser( $a->username ) )
+		{
+			$app->halt(401);
+		}
+
 		$a->host		= $host;
 		$a->identity	= $identity;
 		$a->password	= $password;
@@ -118,6 +148,11 @@ function deleteaccount($id)
 		$app->halt(404);
 	}
 
+	if( ! isadminoruser( $a->username ) )
+	{
+		$app->halt(401);
+	}
+
 	\R::trash( $a );
 }
 
@@ -125,7 +160,17 @@ function deleteaccounts()
 {
 	$app = \Slim\Slim::getInstance();
 
-	$domains = \R::wipe( "fetchmailaccounts" );
+	if( isadmin() )
+	{
+		$domains = \R::wipe( "fetchmailaccounts" );
+	}
+	else
+	{
+		$user = getuser();
+		$d = \R::findAll( "fetchmailaccounts", "username = ?", [ $user ]);
+
+		\R::trashAll( $d );
+	}
 }
 
 

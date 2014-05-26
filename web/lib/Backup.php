@@ -14,6 +14,18 @@ function getquota()
 
 }
 
+function getstatus()
+{
+	$app = \Slim\Slim::getInstance();
+
+	$app->response->headers->set('Content-Type', 'application/json');
+
+	// Hardcode for now
+	print '{ "date": 1401134452, "status":"successful", "info":"Some interesting info"}';
+
+}
+
+
 function codeexists($code)
 {
 	$a = \R::find( "backupcodes",

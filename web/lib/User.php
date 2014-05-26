@@ -9,26 +9,29 @@ function getuser($id)
 	// First try by id
 
 	$user = \R::load( "user", $id );
-	
+
 	if ( $user->id == 0 )
 	{
 		// Try by username
 		$user = \R::find( "user", "where username = :id", [ ':id' => $id]);
 		if( count($user) > 0 )
 		{
-			print json_encode( reset($user)->export()  );
+			$user = reset( $user) ;
 		}
 		else
 		{
-			$app->response->setStatus(404);
+			$app->halt(404);
 		}
 	}
-	else
-	{
-		$app->response->headers->set('Content-Type', 'application/json');
-		print json_encode( $user->export()  );
 
-	}			
+	if( ! isadminoruser( $user->username ) )
+	{
+		$app->halt(401);
+	}
+
+	$app->response->headers->set('Content-Type', 'application/json');
+	print json_encode( $user->export()  );
+
 }
 
 function getusers()
@@ -36,9 +39,9 @@ function getusers()
 	$app = \Slim\Slim::getInstance();
 
 	$app->response->headers->set('Content-Type', 'application/json');
-	
+
 	$users = \R::findAll( "user" );
-	
+
 	print json_encode( \R::exportAll( $users ) );
 }
 
@@ -47,7 +50,7 @@ function deleteuser($id)
 	$app = \Slim\Slim::getInstance();
 
 	$user = \R::load( "user", $id );
-	
+
 	if ( $user->id == 0 )
 	{
 		$app->response->setStatus(404);
@@ -55,7 +58,7 @@ function deleteuser($id)
 	else
 	{
 		\R::trash($user);
-	}			
+	}
 }
 
 function deleteusers()
@@ -76,25 +79,34 @@ function updateuser($id)
 
 	if( $user == null || $display == null || $password == null )
 	{
-		$app->response->setStatus(400);
 		print_r($app->request->params());
+		$app->halt( 400 );
+	}
+
+	if( ! isadminoruser( $user ) )
+	{
+		$app->halt(401);
+	}
+
+	$u = \R::load( "user", $id );
+
+	if ( $u->id == 0 )
+	{
+		$app->response->setStatus(404);
 	}
 	else
 	{
-		$u = \R::load( "user", $id );
-	
-		if ( $u->id == 0 )
+		if( ! isadminoruser( $u->username ) )
 		{
-			$app->response->setStatus(404);
+			$app->halt(401);
 		}
-		else
-		{
-			$u->username	= $user;
-			$u->displayname	= $display;
-			$u->password	= $password;
-			\R::store( $u );
-		}
+
+		$u->username	= $user;
+		$u->displayname	= $display;
+		$u->password	= $password;
+		\R::store( $u );
 	}
+
 }
 
 function createuser()
@@ -121,7 +133,7 @@ function createuser()
 		}
 
 		$u = \R::dispense("user");
-	
+
 		$u["username"] 		= $user;
 		$u["displayname"] 	= $display;
 		$u["password"]		= $password;
@@ -129,8 +141,8 @@ function createuser()
 		$id = \R::store( $u );
 
 		$app->response->headers->set('Content-Type', 'application/json');
-		
-		print '{ "id": '.$id.'}';			
+
+		print '{ "id": '.$id.'}';
 
 	}
 }

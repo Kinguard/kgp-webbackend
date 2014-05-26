@@ -25,10 +25,6 @@ function setup()
 
 }
 
-function isloggedin()
-{
-	return isset($_SESSION["AUTHENTICATED"]) && $_SESSION["AUTHENTICATED"];
-}
 
 function requireloggedin()
 {
@@ -46,15 +42,14 @@ function requireadmin()
 	}
 }
 
-
-function isadmin()
-{
-	return isloggedin() && (isset($_SESSION["ADMIN"]) && $_SESSION["ADMIN"]);
-}
-
 function loggedin()
 {
 	$res["authenticated"] = isloggedin();
+	if( isloggedin() )
+	{
+		$res["user"] = $_SESSION['USER'];
+		$res["admin"] = $_SESSION['ADMIN'];
+	}
 	//$res["session"] = $_SESSION;
 	echo json_encode( $res );
 }

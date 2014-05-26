@@ -1,12 +1,46 @@
 import unittest
 from opi import OPI
+import pprint
 
+pp = pprint.PrettyPrinter(indent=4)
 URL = "http://localhost:8000/index.php"
 
 class TestUser(unittest.TestCase):
 
 	def setUp(self):
 		self.opi = OPI(URL)
+
+	def testSelfOperations(self):
+		self.assertTrue( self.opi.login("admin","secret") )
+
+		self.assertTrue( self.opi.deleteusers() )
+
+		user = { "username":"test","displayname":"Test User","password":"secret"}
+		id = self.opi.createuser( user )
+		self.assertTrue( id )
+
+		user = { "username":"user","displayname":"User User","password":"secret"}
+		id = self.opi.createuser( user )
+		self.assertTrue( id )
+
+		self.assertTrue( self.opi.logout() )
+		self.assertTrue( self.opi.login("user","secret") )
+
+		self.assertFalse( self.opi.getuser("test") )
+
+		uc = self.opi.getuser( "user" )
+		self.assertTrue( uc )
+
+		uc["displayname"] = "updated name"
+		self.assertTrue( self.opi.updateuser( int(uc["id"]), uc) )
+
+		u2 = self.opi.getuser( "user" )
+		self.assertEqual( uc, u2)
+
+		uc["username"] = "fake"
+		self.assertFalse( self.opi.updateuser( int(uc["id"]), uc) )
+
+
 
 	def testCreateDelete(self):
 
@@ -118,19 +152,30 @@ class TestAuth(unittest.TestCase):
 		self.opi = OPI(URL)
 
 	def testLogin(self):
-		self.assertFalse( self.opi.loggedin() )
+		self.assertFalse( self.opi.loggedin()["authenticated"] )
 		self.assertFalse( self.opi.login("Wrong","info") )
-		self.assertFalse( self.opi.loggedin() )
+		self.assertFalse( self.opi.loggedin()["authenticated"] )
 		self.assertTrue( self.opi.login("user","secret") )
-		self.assertTrue( self.opi.loggedin() )
+		s = self.opi.loggedin()
+		self.assertTrue( s )
+		self.assertTrue( s["authenticated" ] )
+		self.assertEqual( s["user"], "user" )
+		self.assertEqual( s["admin"], False )
+		self.assertTrue( self.opi.logout() )
+		self.assertTrue( self.opi.login("admin","secret") )
+		s = self.opi.loggedin()
+		self.assertTrue( s )
+		self.assertTrue( s["authenticated" ] )
+		self.assertEqual( s["user"], "admin" )
+		self.assertEqual( s["admin"], True )
 
 	def testLogout(self):
 		self.assertTrue( self.opi.logout() )
 		self.assertTrue( self.opi.login("user","secret") )
-		self.assertTrue( self.opi.loggedin() )
+		self.assertTrue( self.opi.loggedin()["authenticated"] )
 		self.assertTrue( self.opi.logout() )
 		self.assertTrue( self.opi.logout() )
-		self.assertFalse( self.opi.loggedin() )
+		self.assertFalse( self.opi.loggedin()["authenticated"] )
 
 class TestUpdates(unittest.TestCase):
 
@@ -285,6 +330,94 @@ class TestFetchmail(unittest.TestCase):
 	def setUp(self):
 		self.opi = OPI(URL)
 
+	def testOwnOperations(self):
+		self.assertTrue( self.opi.login("admin","secret") )
+		self.assertTrue( self.opi.deletefetchmailaccounts()  )
+
+		a = { "host":"gmail.com", "identity":"other@account", "password":"secret","username":"dadida" }
+		id = self.opi.addfetchmailaccount( a )
+		self.assertTrue( id  )
+
+		self.assertTrue( self.opi.logout() )
+		self.assertTrue( self.opi.login("user","secret") )
+
+		#
+		# Add account
+		#
+		a = { "host":"gmail.com", "identity":"user1", "password":"secret","username":"user" }
+		self.assertTrue( self.opi.addfetchmailaccount( a ) )
+		self.assertFalse( self.opi.addfetchmailaccount( a ) )
+
+		a = { "host":"gmail.com", "identity":"other", "password":"secret","username":"wronguser" }
+		self.assertFalse( self.opi.addfetchmailaccount( a ) )
+
+		#
+		# Get accounts
+		#
+		acs = self.opi.getfetchmailaccounts()
+		self.assertTrue( isinstance( acs, list ) )
+		self.assertEqual( len(acs), 1)
+
+		#
+		# Get account
+		#
+
+		ac = self.opi.getfetchmailaccount(int(acs[0]["id"]))
+		self.assertTrue( isinstance( ac, dict) )
+		self.assertEqual( ac["identity"], "user1")
+
+		self.assertFalse( self.opi.getfetchmailaccount(id) )
+
+		#
+		# Update account
+		#
+		ac["identity"] = "updated"
+
+		self.assertTrue( self.opi.updatefetchmailaccount( ac["id"], ac) )
+		self.assertFalse( self.opi.updatefetchmailaccount( id, ac) )
+
+		ac2 = self.opi.getfetchmailaccount(int(acs[0]["id"]))
+		self.assertEqual( ac["identity"], ac2["identity"])
+
+		#
+		# Delete account
+		#
+		self.assertFalse( self.opi.deletefetchmailaccount( id ) )
+		self.assertTrue( self.opi.deletefetchmailaccount( int(ac["id"]) ) )
+
+		acs = self.opi.getfetchmailaccounts()
+		self.assertTrue( isinstance( acs, list ) )
+		self.assertEqual( len(acs), 0)
+
+		#
+		# Delete accounts
+		#
+		a = { "host":"gmail.com", "identity":"user1", "password":"secret","username":"user" }
+		self.assertTrue( self.opi.addfetchmailaccount( a ) )
+
+		self.assertTrue( self.opi.deletefetchmailaccounts() )
+
+		acs = self.opi.getfetchmailaccounts()
+		self.assertTrue( isinstance( acs, list ) )
+		self.assertEqual( len(acs), 0)
+
+		#
+		# verify as admin
+		#
+		self.assertTrue( self.opi.logout() )
+		self.assertTrue( self.opi.login("admin","secret") )
+
+		acs = self.opi.getfetchmailaccounts()
+		self.assertTrue( isinstance( acs, list ) )
+		self.assertEqual( len(acs), 1)
+
+		self.assertTrue( self.opi.deletefetchmailaccounts() )
+
+		acs = self.opi.getfetchmailaccounts()
+		self.assertTrue( isinstance( acs, list ) )
+		self.assertEqual( len(acs), 0)
+
+
 	def testFetchmail(self):
 		account = { "host":"gmail.com", "identity":"user1", "password":"secret","username":"localuser" }
 
@@ -295,137 +428,4 @@ class TestFetchmail(unittest.TestCase):
 
 		self.assertTrue( self.opi.deletefetchmailaccounts()  )
 
-		id = self.opi.addfetchmailaccount(account)
-		self.assertTrue( id  )
-
-		# Try adding same account once more
-		self.assertFalse( self.opi.addfetchmailaccount(account) )
-
-		# Verify get accounts
-		a = self.opi.getfetchmailaccounts()
-		self.assertTrue( a )
-		self.assertEqual( len(a), 1)
-
-		# Verify get account
-		a = self.opi.getfetchmailaccount( id )
-		self.assertTrue( a )
-
-		self.assertEqual( a["host"], 		"gmail.com")
-		self.assertEqual( a["identity"], 	"user1")
-		self.assertEqual( a["password"], 	"secret")
-		self.assertEqual( a["username"], 	"localuser")
-
-		self.assertTrue( self.opi.deletefetchmailaccount(id) )
-		self.assertFalse( self.opi.deletefetchmailaccount(id) )
-
-		self.assertFalse( self.opi.getfetchmailaccount( id ) )
-
-		# Verify update
-		id = self.opi.addfetchmailaccount(account)
-		self.assertTrue( id  )
-
-		a = self.opi.getfetchmailaccount( id )
-		self.assertTrue( a )
-
-		a["identity"] = "user2"
-		self.assertTrue( self.opi.updatefetchmailaccount( a["id"], a) )
-
-		a = self.opi.getfetchmailaccounts()
-		self.assertTrue( a )
-		self.assertEqual( len(a), 1)
-
-class TestBackup(unittest.TestCase):
-
-	def setUp(self):
-		self.opi = OPI(URL)
-
-	def testQuota(self):
-		self.assertFalse( self.opi.getbackupquota() )
-
-		self.assertTrue( self.opi.login("admin","secret") )
-
-		q = self.opi.getbackupquota()
-		self.assertTrue(q)
-		self.assertTrue( q["total"]>0 )
-		self.assertTrue( q["used"]>=0 )
-
-	def testPurchase(self):
-
-		self.assertFalse( self.opi.deletebackupcodes() )
-
-		self.assertTrue( self.opi.login("admin","secret") )
-
-		# Delete all
-		self.assertTrue( self.opi.deletebackupcodes() )
-
-		# Post one
-		code = "ThisIsABackupCode"
-		id = self.opi.addbackupcode( code )
-		self.assertTrue( id )
-
-		# Try add same code again
-		self.assertFalse( self.opi.addbackupcode( code ) )
-
-		# Get one
-		c2 = self.opi.getbackupcode( id )
-		self.assertTrue( c2 )
-		self.assertEqual( c2["code"], code )
-
-		# Get all
-		codes = self.opi.getbackupcodes()
-		self.assertTrue( codes )
-		self.assertEqual( len( codes), 1)
-
-		id2 = self.opi.addbackupcode( "Code2" )
-		self.assertTrue( id2  )
-
-		codes = self.opi.getbackupcodes()
-		self.assertTrue( codes )
-		self.assertEqual( len( codes), 2)
-
-		# Delete one
-		self.assertTrue( self.opi.deletebackupcode( id2 ))
-
-		codes = self.opi.getbackupcodes()
-		self.assertTrue( codes )
-		self.assertEqual( len( codes), 1)
-
-		# Delete all
-		self.assertTrue( self.opi.deletebackupcodes() )
-
-		codes = self.opi.getbackupcodes()
-		self.assertTrue( codes != False )
-		self.assertEqual( len( codes), 0)
-
-	def testSettings(self):
-
-		s1 = { "enabled":True, "location":"remote", "type":"mirror" }
-
-		# try not logged in
-		self.assertFalse( self.opi.getbackupsettings() )
-		self.assertFalse( self.opi.setbackupsettings( s1 ) )
-
-		self.assertTrue( self.opi.login("admin","secret") )
-
-		gs = self.opi.getbackupsettings()
-		self.assertTrue( gs )
-		self.assertTrue( "enabled" in gs )
-		self.assertTrue( "type" in gs )
-		self.assertTrue( "location" in gs )
-
-		self.assertTrue( self.opi.setbackupsettings( s1 ) )
-		gs = self.opi.getbackupsettings()
-
-		self.assertTrue( gs )
-		self.assertEqual( s1["enabled"], gs["enabled"] == "True" )
-		self.assertEqual( s1["location"], gs["location"] )
-		self.assertEqual( s1["type"], gs["type"] )
-
-		del s1["enabled"]
-		self.assertFalse( self.opi.setbackupsettings( s1 ) )
-
-
-
-if __name__=='__main__':
-	unittest.main()
 
