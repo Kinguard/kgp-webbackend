@@ -49,6 +49,7 @@ function loggedin()
 	{
 		$res["user"] = $_SESSION['USER'];
 		$res["admin"] = $_SESSION['ADMIN'];
+		$res["displayname"] = $_SESSION["DISPLAYNAME"];
 	}
 	//$res["session"] = $_SESSION;
 	echo json_encode( $res );
@@ -75,6 +76,7 @@ function login()
 			$_SESSION["AUTHENTICATED"] = true;
 			$_SESSION['USER'] = $user;
 			$_SESSION['ADMIN'] = $user == "admin";
+			$_SESSION['DISPLAYNAME'] = "Test Användare";
 			print_r($app->request->params());
 		}
 		else

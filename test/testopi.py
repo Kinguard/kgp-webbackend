@@ -161,6 +161,7 @@ class TestAuth(unittest.TestCase):
 		self.assertTrue( s["authenticated" ] )
 		self.assertEqual( s["user"], "user" )
 		self.assertEqual( s["admin"], False )
+		self.assertTrue( isinstance( s["displayname"], unicode))
 		self.assertTrue( self.opi.logout() )
 		self.assertTrue( self.opi.login("admin","secret") )
 		s = self.opi.loggedin()
