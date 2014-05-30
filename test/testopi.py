@@ -634,6 +634,70 @@ class TestGroups( unittest.TestCase ):
 		self.assertTrue( isinstance( gr, list ) )
 		self.assertEqual( len( gr ), 0 )
 
+class TestNetwork( unittest.TestCase ):
+	def setUp( self ):
+		self.opi = OPI( URL )
+
+	def testNotLoggedIn(self):
+		self.assertFalse( self.opi.getnetworksettings())
+		self.assertFalse( self.opi.setnetworksettings({"type":"dynamic"}))
+
+	def testUserLoggedin( self ):
+		self.assertTrue( self.opi.login( "user", "secret" ) )
+		self.assertFalse( self.opi.getnetworksettings())
+		self.assertFalse( self.opi.setnetworksettings({"type":"dynamic"}))
+
+	def testSettings(self):
+		self.assertTrue( self.opi.login( "admin", "secret" ) )
+
+		s = self.opi.getnetworksettings()
+		self.assertTrue( isinstance( s, dict) )
+
+		self.assertFalse( self.opi.setnetworksettings( {} ) )
+		self.assertFalse( self.opi.setnetworksettings( {"type":"wrong"} ) )
+		self.assertFalse( self.opi.setnetworksettings( {"type":"static"} ) )
+
+		self.assertTrue( self.opi.setnetworksettings( {"type":"static", "ipnumber":"192.168.1.4", "netmask":"255.255.255.0"}))
+		s = self.opi.getnetworksettings()
+		self.assertEqual( s["type"], "static" )
+		self.assertEqual( s["ipnumber"], "192.168.1.4" )
+		self.assertEqual( s["netmask"], "255.255.255.0" )
+		self.assertEqual( s["dns1"], "" )
+		self.assertEqual( s["dns2"], "" )
+		self.assertEqual( s["gateway"], "" )
+
+		self.assertTrue( self.opi.setnetworksettings( {
+													"type":"static",
+													"ipnumber":"192.168.1.2",
+													"netmask":"255.255.240.0",
+													"gateway":"192.168.1.1",
+													"dns1":"8.8.8.8",
+													"dns2":"4.4.4.4"
+		}))
+		s = self.opi.getnetworksettings()
+		self.assertEqual( s["type"], "static" )
+		self.assertEqual( s["ipnumber"], "192.168.1.2" )
+		self.assertEqual( s["netmask"], "255.255.240.0" )
+		self.assertEqual( s["dns1"], "8.8.8.8" )
+		self.assertEqual( s["dns2"], "4.4.4.4" )
+		self.assertEqual( s["gateway"], "192.168.1.1" )
+
+		self.assertTrue( self.opi.setnetworksettings( {"type":"dynamic"}))
+		s = self.opi.getnetworksettings()
+
+		self.assertEqual( s["type"], "dynamic" )
+		self.assertEqual( s["ipnumber"], "" )
+		self.assertEqual( s["netmask"], "" )
+		self.assertEqual( s["dns1"], "" )
+		self.assertEqual( s["dns2"], "" )
+		self.assertEqual( s["gateway"], "" )
+
+		self.assertTrue( isinstance( s["currentipnumber"], unicode ) )
+		self.assertTrue( isinstance( s["currentnetmask"], unicode ) )
+		self.assertTrue( isinstance( s["currentdns1"], unicode ) )
+		self.assertTrue( isinstance( s["currentdns2"], unicode ) )
+		self.assertTrue( isinstance( s["currentgateway"], unicode ) )
+
 
 if __name__ == '__main__':
 	unittest.main()

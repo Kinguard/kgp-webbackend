@@ -30,11 +30,11 @@ function getsettings()
 		$s = reset($settings);
 		if( $s->type == "dynamic" )
 		{
-			$s->curentipnumber	= "192.168.1.82";
-			$s->curentnetmask	= "255.255.255.0";
-			$s->curentgateway	= "192.168.1.1";
-			$s->curentdns1		= "8.8.8.8";
-			$s->curentdns2		= "4.4.4.4";
+			$s->currentipnumber	= "192.168.1.82";
+			$s->currentnetmask	= "255.255.255.0";
+			$s->currentgateway	= "192.168.1.1";
+			$s->currentdns1		= "8.8.8.8";
+			$s->currentdns2		= "4.4.4.4";
 		}
 
 		print json_encode( $s->export() );
