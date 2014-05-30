@@ -1,6 +1,8 @@
 <?php
 
-	set_include_path("../aux".PATH_SEPARATOR ."../lib");
+        $basedir = realpath(dirname(__FILE__)."/..");
+
+	set_include_path( $basedir."/aux".PATH_SEPARATOR .$basedir."/lib");
 
 	require 'Slim/Slim.php';
 	require 'rb/rb.php';
@@ -44,11 +46,11 @@
 	$app->delete(	'/api/users', 		"\OPI\session\\requireadmin",		"\OPI\users\deleteusers");
 
 	// Group functions
-	$app->get(		'/api/groups',				"\OPI\session\\requireadmin",	"\OPI\groups\getgroups" );
-	$app->get(		'/api/groups/:name',		"\OPI\session\\requireadmin",	"\OPI\groups\getusers" );
-	$app->post(		'/api/groups',				"\OPI\session\\requireadmin",	"\OPI\groups\creategroup" );
-	$app->post(		'/api/groups/:name',		"\OPI\session\\requireadmin",	"\OPI\groups\adduser" );
-	$app->delete(	'/api/groups',				"\OPI\session\\requireadmin",	"\OPI\groups\deletegroups" );
+	$app->get(	'/api/groups',			"\OPI\session\\requireadmin",	"\OPI\groups\getgroups" );
+	$app->get(	'/api/groups/:name',		"\OPI\session\\requireadmin",	"\OPI\groups\getusers" );
+	$app->post(	'/api/groups',			"\OPI\session\\requireadmin",	"\OPI\groups\creategroup" );
+	$app->post(	'/api/groups/:name',		"\OPI\session\\requireadmin",	"\OPI\groups\adduser" );
+	$app->delete(	'/api/groups',			"\OPI\session\\requireadmin",	"\OPI\groups\deletegroups" );
 	$app->delete(	'/api/groups/:name',		"\OPI\session\\requireadmin",	"\OPI\groups\deletegroup" );
 	$app->delete(	'/api/groups/:name/:usr',	"\OPI\session\\requireadmin",	"\OPI\groups\\removeuser" );
 
@@ -101,4 +103,3 @@
 
 	$app->run();
 
-?>
