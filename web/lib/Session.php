@@ -47,9 +47,9 @@ function loggedin()
 	$res["authenticated"] = isloggedin();
 	if( isloggedin() )
 	{
-		$res["user"] = $_SESSION['USER'];
-		$res["admin"] = $_SESSION['ADMIN'];
-		$res["displayname"] = $_SESSION["DISPLAYNAME"];
+		$res["user"]["username"] = $_SESSION['USER'];
+		$res["user"]["admin"] = $_SESSION['ADMIN'];
+		$res["user"]["displayname"] = $_SESSION["DISPLAYNAME"];
 	}
 	//$res["session"] = $_SESSION;
 	echo json_encode( $res );

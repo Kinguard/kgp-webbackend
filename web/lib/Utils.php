@@ -15,6 +15,19 @@ function checknull()
 	return true;
 }
 
+function checknullarray( $arr )
+{
+    foreach( $arr as $arg )
+    {
+            if( $arg == null )
+            {
+                    return false;
+            }
+    }
+
+    return true;
+}
+
 function isloggedin()
 {
 	return isset($_SESSION["AUTHENTICATED"]) && $_SESSION["AUTHENTICATED"];

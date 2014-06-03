@@ -2,35 +2,28 @@
 
 namespace OPI\users;
 
+require_once 'models/UserModel.php';
+require_once 'Utils.php';
+
 function getuser($id)
 {
 	$app = \Slim\Slim::getInstance();
 
-	// First try by id
+        $user = \OPI\UserModel\getuser( $id );
 
-	$user = \R::load( "user", $id );
+        if( ! $user )
+        {
+            $app->halt(404);
+        }
 
-	if ( $user->id == 0 )
-	{
-		// Try by username
-		$user = \R::find( "user", "where username = :id", [ ':id' => $id]);
-		if( count($user) > 0 )
-		{
-			$user = reset( $user) ;
-		}
-		else
-		{
-			$app->halt(404);
-		}
-	}
 
-	if( ! isadminoruser( $user->username ) )
+        if( ! isadminoruser( $user["username"] ) )
 	{
 		$app->halt(401);
 	}
 
 	$app->response->headers->set('Content-Type', 'application/json');
-	print json_encode( $user->export()  );
+	print json_encode( $user );
 
 }
 
@@ -40,110 +33,88 @@ function getusers()
 
 	$app->response->headers->set('Content-Type', 'application/json');
 
-	$users = \R::findAll( "user" );
+        $users = \OPI\UserModel\getusers();
 
-	print json_encode( \R::exportAll( $users ) );
+	print json_encode( $users );
 }
 
 function deleteuser($id)
 {
 	$app = \Slim\Slim::getInstance();
 
-	$user = \R::load( "user", $id );
-
-	if ( $user->id == 0 )
-	{
-		$app->response->setStatus(404);
-	}
-	else
-	{
-		\R::trash($user);
-	}
+        if( !\OPI\UserModel\deleteuser( $id ) )
+        {
+            $app->halt(404);
+        }
 }
 
 function deleteusers()
 {
-	$app = \Slim\Slim::getInstance();
-
-	$user = \R::wipe( "user" );
+    \OPI\UserModel\deleteusers();
 }
 
 /* Todo: skall man kunna ändra userid? */
 function updateuser($id)
 {
-	$app = \Slim\Slim::getInstance();
+    $app = \Slim\Slim::getInstance();
+    $user = array();
+    $user['username']   = $app->request->post('username');
+    $user['displayname']= $app->request->post('displayname');
+    $user['password']   = $app->request->post('password');
 
-	$user 		= $app->request->put('username');
-	$display 	= $app->request->put('displayname');
-	$password	= $app->request->put('password');
+    if( !checknullarray( $user  ) )
+    {
+            print_r($app->request->params());
+            $app->halt(400);
+    }
 
-	if( $user == null || $display == null || $password == null )
-	{
-		print_r($app->request->params());
-		$app->halt( 400 );
-	}
+    if( ! isadminoruser( $user["username"] ) )
+    {
+            $app->halt(401);
+    }
 
-	if( ! isadminoruser( $user ) )
-	{
-		$app->halt(401);
-	}
+    $u = \OPI\UserModel\getuser( $id );
 
-	$u = \R::load( "user", $id );
+    if (! $u )
+    {
+        $app->halt(404);
+    }
 
-	if ( $u->id == 0 )
-	{
-		$app->response->setStatus(404);
-	}
-	else
-	{
-		if( ! isadminoruser( $u->username ) )
-		{
-			$app->halt(401);
-		}
+    if( ! isadminoruser( $u["username"] ) )
+    {
+        $app->halt(401);
+    }
 
-		$u->username	= $user;
-		$u->displayname	= $display;
-		$u->password	= $password;
-		\R::store( $u );
-	}
-
+    if( !\OPI\UserModel\updateuser($id, $user) )
+    {
+       $app->halt(404);
+    }
 }
 
 function createuser()
 {
 	$app = \Slim\Slim::getInstance();
+        $user = array();
+	$user['username']   = $app->request->post('username');
+	$user['displayname']= $app->request->post('displayname');
+	$user['password']   = $app->request->post('password');
 
-	$user 		= $app->request->post('username');
-	$display 	= $app->request->post('displayname');
-	$password	= $app->request->post('password');
-
-	if( $user == null || $display == null || $password == null )
+	if( !checknullarray( $user  ) )
 	{
-		$app->response->setStatus(400);
 		print_r($app->request->params());
+		$app->halt(400);
 	}
-	else
-	{
 
-		// Check if user exists
-		$tmpuser = \R::find( "user", "where username = :id", [ ':id' => $user]);
-		if( count($tmpuser) > 0 )
-		{
-			$app->halt(409);
-		}
+        $id = \OPI\UserModel\createuser( $user );
 
-		$u = \R::dispense("user");
+        if (! $id )
+        {
+            $app->halt(409);
+        }
 
-		$u["username"] 		= $user;
-		$u["displayname"] 	= $display;
-		$u["password"]		= $password;
+        $app->response->headers->set('Content-Type', 'application/json');
 
-		$id = \R::store( $u );
+        print '{ "id": '.$id.'}';
 
-		$app->response->headers->set('Content-Type', 'application/json');
-
-		print '{ "id": '.$id.'}';
-
-	}
 }
 

@@ -65,7 +65,8 @@ class TestUser( unittest.TestCase ):
 		self.assertEqual( uc["password"], user["password"] )
 
 		user["username"] = "tempuser2"
-		self.assertTrue( self.opi.createuser( user ) )
+		uc2id = self.opi.createuser( user )
+		self.assertTrue( uc2id )
 		self.assertEqual( len( self.opi.getusers() ), 2 )
 
 		self.assertTrue( self.opi.logout() )
@@ -111,20 +112,25 @@ class TestUser( unittest.TestCase ):
 		self.assertFalse( self.opi.deleteuser( 0 ) )
 
 		user = { "username":"tempuser", "displayname":"Temp User", "password":"secret"}
-		id = self.opi.createuser( user )
-		self.assertTrue( id )
+		uid1 = self.opi.createuser( user )
+		self.assertTrue( uid1 )
 
-		self.assertTrue( self.opi.deleteuser( id ) )
+		self.assertTrue( self.opi.deleteuser( uid1 ) )
 
 		self.assertEqual( len( self.opi.getusers() ), 0 )
 
-		self.opi.createuser( user )
+		uid1 = self.opi.createuser( user )
 		user["username"] = "Usertwo"
-		id = self.opi.createuser( user )
+		uid2 = self.opi.createuser( user )
 		self.assertEqual( len( self.opi.getusers() ), 2 )
 
-		self.assertTrue( self.opi.deleteuser( id ) )
+		self.assertTrue( self.opi.deleteuser( uid1 ) )
 		self.assertEqual( len( self.opi.getusers() ), 1 )
+
+		# Delete by name
+		self.assertTrue( self.opi.deleteuser( "Usertwo" ) )
+		self.assertEqual( len( self.opi.getusers() ), 0 )
+
 
 	def testUpdate( self ):
 		self.assertTrue( self.opi.login( "admin", "secret" ) )
@@ -132,18 +138,26 @@ class TestUser( unittest.TestCase ):
 		self.assertTrue( self.opi.deleteusers() )
 
 		user = { "username":"tempuser", "displayname":"Temp User", "password":"secret"}
-		id = self.opi.createuser( user )
-		self.assertTrue( id )
+		uid = self.opi.createuser( user )
+		self.assertTrue( uid )
 
 		user["displayname"] = "updated"
-		self.assertTrue( self.opi.updateuser( id, user ) )
+		self.assertTrue( self.opi.updateuser( uid, user ) )
 
-		uc = self.opi.getuser( id )
-		self.assertEqual( int( uc["id"] ), id )
+		uc = self.opi.getuser( uid )
+		self.assertEqual( int( uc["id"] ), uid )
 		self.assertEqual( uc["username"], user["username"] )
 		self.assertEqual( uc["displayname"], "updated" )
 		self.assertEqual( uc["displayname"], user["displayname"] )
 		self.assertEqual( uc["password"], user["password"] )
+
+		self.assertEqual( len( self.opi.getusers() ), 1 )
+
+		user["displayname"] = "updated2"
+		self.assertTrue( self.opi.updateuser( "tempuser", user ) )
+
+		uc = self.opi.getuser( "tempuser" )
+		self.assertEqual( uc["displayname"], "updated2" )
 
 		self.assertEqual( len( self.opi.getusers() ), 1 )
 
@@ -158,18 +172,19 @@ class TestAuth( unittest.TestCase ):
 		self.assertFalse( self.opi.loggedin()["authenticated"] )
 		self.assertTrue( self.opi.login( "user", "secret" ) )
 		s = self.opi.loggedin()
+		print s
 		self.assertTrue( s )
 		self.assertTrue( s["authenticated" ] )
-		self.assertEqual( s["user"], "user" )
-		self.assertEqual( s["admin"], False )
-		self.assertTrue( isinstance( s["displayname"], unicode ) )
+		self.assertEqual( s["user"]["username"], "user" )
+		self.assertEqual( s["user"]["admin"], False )
+		self.assertTrue( isinstance( s["user"]["displayname"], unicode ) )
 		self.assertTrue( self.opi.logout() )
 		self.assertTrue( self.opi.login( "admin", "secret" ) )
 		s = self.opi.loggedin()
 		self.assertTrue( s )
 		self.assertTrue( s["authenticated" ] )
-		self.assertEqual( s["user"], "admin" )
-		self.assertEqual( s["admin"], True )
+		self.assertEqual( s["user"]["username"], "admin" )
+		self.assertEqual( s["user"]["admin"], True )
 
 	def testLogout( self ):
 		self.assertTrue( self.opi.logout() )

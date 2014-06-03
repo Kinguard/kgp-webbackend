@@ -5,7 +5,7 @@
 	set_include_path( $basedir."/aux".PATH_SEPARATOR .$basedir."/lib");
 
 	require 'Slim/Slim.php';
-	require 'rb/rb.php';
+	require_once 'rb/rb.php';
 	require_once 'Utils.php';
 	require 'User.php';
 	require 'Groups.php';

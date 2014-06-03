@@ -30,8 +30,8 @@ class OPI:
 		r = self.s.delete(self.url+"/users")
 		return  r.status_code == 200
 
-	def deleteuser(self, id):
-		r = self.s.delete(self.url+"/users/%d"%id)
+	def deleteuser(self, uid):
+		r = self.s.delete(self.url+"/users/%s"%uid)
 		return r.status_code == 200
 
 	def createuser(self, user):
@@ -41,7 +41,7 @@ class OPI:
 		return False
 
 	def updateuser(self, id, user):
-		r = self.s.put(self.url+"/users/%d"%id, user )
+		r = self.s.put(self.url+"/users/%s"%id, user )
 		return r.status_code == 200
 
 
