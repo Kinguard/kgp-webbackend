@@ -44,6 +44,10 @@ class OPI:
 		r = self.s.put(self.url+"/users/%s"%id, user )
 		return r.status_code == 200
 
+	def updatepassword(self, user, new, old):
+		r = self.s.post(self.url+"/users/%s/changepassword" % user
+						, {"oldpassword":old, "newpassword":new} )
+		return r.status_code == 200
 
 	def getuser(self, id):
 		r = self.s.get(self.url+"/users/%s"%id)

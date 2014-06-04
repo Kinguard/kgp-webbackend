@@ -4,6 +4,32 @@ namespace OPI\UserModel;
 
 require_once 'rb/rb.php';
 
+/*
+ * Helper functions
+ */
+function _getuser( $id )
+{
+    // First try by id
+
+    $user = \R::load( "user", $id );
+
+    if ( $user->id == 0 )
+    {
+            // Try by username
+            $user = \R::find( "user", "where username = :id", [ ':id' => $id]);
+            if( count($user) > 0 )
+            {
+                    $user = reset( $user) ;
+            }
+    }
+
+    return $user ? $user : false;
+}
+
+
+/*
+ * Public functions
+ */
 function userexists( $id )
 {
 	$user = \R::find( "user", "where username = :id", [ ':id' => $id]);
@@ -21,17 +47,7 @@ function getuser( $id )
 {
     // First try by id
 
-    $user = \R::load( "user", $id );
-
-    if ( $user->id == 0 )
-    {
-            // Try by username
-            $user = \R::find( "user", "where username = :id", [ ':id' => $id]);
-            if( count($user) > 0 )
-            {
-                    $user = reset( $user) ;
-            }
-    }
+    $user = _getuser($id );
 
     return $user ? $user->export() : false;
 }
@@ -122,5 +138,50 @@ function updateuser($user)
     $tmpuser->displayname   = $user['displayname'];
     $tmpuser->password      = $user['password'];
     \R::store( $tmpuser );
+    return true;
+}
+
+function updatepassword( $user, $new, $old)
+{
+    $u = _getuser($user);
+
+    if ( !$u )
+    {
+        return false;
+    }
+
+    // Logged in user has to provide old password to change own pwd
+    if( $user == \OPI\session\user() )
+    {
+        if( ($old=="") || ($old == null) )
+        {
+            return false;
+        }
+
+        if( $old != $u["password"] )
+        {
+            return false;
+        }
+    }
+
+    // If not admin old password is needed and you can
+    // only change your own password
+    if( !isadmin() )
+    {
+        if( $user != \OPI\session\user() )
+        {
+            return false;
+        }
+
+        if ( $u["password"] != $old )
+        {
+            return false;
+        }
+    }
+
+    $u["password"] = $new;
+
+    \R::store($u);
+
     return true;
 }

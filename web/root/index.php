@@ -38,10 +38,11 @@
 	$app->delete(	'/api/session',		"\OPI\session\logout");
 
 	// User functions
-	$app->post(		'/api/users', 		"\OPI\session\\requireadmin",		"\OPI\users\createuser");
-	$app->put(		'/api/users/:id', 	"\OPI\session\\requireloggedin",	"\OPI\users\updateuser");
-	$app->get(		'/api/users',		"\OPI\session\\requireadmin",		"\OPI\users\getusers" );
-	$app->get(		'/api/users/:id',	"\OPI\session\\requireloggedin",	"\OPI\users\getuser");
+	$app->post(	'/api/users', 		"\OPI\session\\requireadmin",		"\OPI\users\createuser");
+	$app->post(	'/api/users/:id/changepassword', "\OPI\session\\requireloggedin",	"\OPI\users\updatepassword");
+	$app->put(	'/api/users/:id', 	"\OPI\session\\requireloggedin",	"\OPI\users\updateuser");
+	$app->get(	'/api/users',		"\OPI\session\\requireadmin",		"\OPI\users\getusers" );
+	$app->get(	'/api/users/:id',	"\OPI\session\\requireloggedin",	"\OPI\users\getuser");
 	$app->delete(	'/api/users/:id',	"\OPI\session\\requireadmin",		"\OPI\users\deleteuser");
 	$app->delete(	'/api/users', 		"\OPI\session\\requireadmin",		"\OPI\users\deleteusers");
 

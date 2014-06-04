@@ -28,6 +28,10 @@ function setup()
 
 }
 
+function user()
+{
+    return isset($_SESSION['USER']) ? $_SESSION['USER']: "";
+}
 
 function requireloggedin()
 {
@@ -73,8 +77,9 @@ function login()
 {
     $app = \Slim\Slim::getInstance();
 
-    $user 		= $app->request->post('username');
+    $user 	= $app->request->post('username');
     $password	= $app->request->post('password');
+
 
     if( $user == null || $password == null )
     {
@@ -90,8 +95,11 @@ function login()
         $_SESSION['USER'] = $user;
         $_SESSION['ADMIN'] = $user == "admin";
         $_SESSION['DISPLAYNAME'] = "Test Användare";
+
+        $app->stop();
     }
-    else if(validateuser($user, $password) )
+
+    if(validateuser($user, $password) )
     {
         $u = \OPI\UserModel\getuser($user);
 
@@ -100,13 +108,13 @@ function login()
         $_SESSION['USER'] = $u["username"];
         $_SESSION['ADMIN'] = \OPI\GroupModel\useringroup("admin", $user);
         $_SESSION['DISPLAYNAME'] = $u["displayname"];
+
+        $app->stop();
     }
-    else
-    {
-        $app->response->setStatus(401);
-        print_r($app->request->params());
-        logout();
-    }
+
+    $app->response->setStatus(401);
+    print_r($app->request->params());
+    logout();
 }
 
 function logout()

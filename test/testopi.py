@@ -41,6 +41,58 @@ class TestUser( unittest.TestCase ):
 		uc["username"] = "fake"
 		self.assertFalse( self.opi.updateuser( int( uc["id"] ), uc ) )
 
+	def testPassword(self):
+		self.assertTrue( self.opi.login( "admin", "secret" ) )
+
+		self.assertTrue( self.opi.deleteusers() )
+		self.assertTrue( self.opi.deletegroups() )
+
+		u1 = { "username":"u1", "displayname":"Temp User1", "password":"secret"}
+		u2 = { "username":"u2", "displayname":"Temp User2", "password":"secret"}
+		uid1 = self.opi.createuser( u1 )
+		self.assertTrue( uid1 )
+		uid2 = self.opi.createuser( u2 )
+		self.assertTrue( uid2 )
+
+		self.assertTrue( self.opi.addgroup("admin") )
+		self.assertTrue( self.opi.addusergroup("admin", "u1"))
+
+		# Admin should be able to change password without knowing old pwd
+		self.assertTrue( self.opi.updatepassword("u2", "new", ""))
+		self.assertTrue( self.opi.logout() )
+		self.assertFalse( self.opi.login( "u2", "secret" ) )
+		self.assertTrue( self.opi.login( "u2", "new" ) )
+
+		# Ordinary user should not be able to change others pwd
+		self.assertFalse( self.opi.updatepassword("u1", "new", "secret"))
+		self.assertFalse( self.opi.updatepassword("u1", "new", ""))
+
+		# Ordinary user should not be able to change own pwd without old
+		self.assertFalse( self.opi.updatepassword("u2", "update", ""))
+		self.assertTrue( self.opi.updatepassword("u2", "update", "new"))
+
+		self.assertTrue( self.opi.logout() )
+		self.assertFalse( self.opi.login( "u2", "secret" ) )
+		self.assertFalse( self.opi.login( "u2", "new" ) )
+		self.assertTrue( self.opi.login( "u2", "update" ) )
+
+		# Test admin user
+		self.assertTrue( self.opi.logout() )
+		self.assertTrue( self.opi.login( "u1", "secret" ) )
+
+		self.assertTrue( self.opi.updatepassword("u2", "u1test", ""))
+		self.assertTrue( self.opi.updatepassword("u2", "u1t2", "nonsens"))
+
+		self.assertTrue( self.opi.logout() )
+		self.assertTrue( self.opi.login( "u2", "u1t2" ) )
+		self.assertTrue( self.opi.logout() )
+		self.assertTrue( self.opi.login( "u1", "secret" ) )
+
+		# Change own password
+		self.assertFalse( self.opi.updatepassword("u1", "u1test", ""))
+		self.assertFalse( self.opi.updatepassword("u1", "u1t2", "nonsens"))
+		self.assertTrue( self.opi.updatepassword("u1", "u1t2", "secret"))
+
 
 	def testUser( self ):
 		self.assertTrue( self.opi.login( "admin", "secret" ) )

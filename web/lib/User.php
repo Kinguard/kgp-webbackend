@@ -53,6 +53,37 @@ function deleteusers()
     \OPI\UserModel\deleteusers();
 }
 
+function updatepassword($id)
+{
+    $app = \Slim\Slim::getInstance();
+    $old   = $app->request->post('oldpassword');
+    $new   = $app->request->post('newpassword');
+
+    if( !checknull( $new) )
+    {
+        print_r($app->request->params());
+        $app->halt(400);
+    }
+
+    $u = \OPI\UserModel\getuser( $id );
+    if (! $u )
+    {
+        $app->halt(404);
+    }
+
+    if( ! isadminoruser( $u["username"] ) )
+    {
+        $app->halt(401);
+    }
+
+    if( !\OPI\UserModel\updatepassword($u["username"], $new, $old) )
+    {
+        $app->halt(400);
+    }
+
+}
+
+
 /* Todo: skall man kunna ändra userid? */
 function updateuser($id)
 {
