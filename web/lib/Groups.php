@@ -2,30 +2,8 @@
 namespace OPI\groups;
 
 require_once 'Utils.php';
-
-function groupexists( $group )
-{
-	$g = \R::find( "group", "where name = :group", [ ':group' => $group]);
-
-	if( count( $g ) == 0 )
-	{
-		return False;
-	}
-
-	return reset($g);
-}
-
-function userexists( $id )
-{
-	$user = \R::find( "user", "where username = :id", [ ':id' => $id]);
-
-	if( count( $user ) == 0 )
-	{
-		return False;
-	}
-
-	return reset($user);
-}
+require_once 'models/UserModel.php';
+require_once 'models/GroupModel.php';
 
 function getgroups()
 {
@@ -33,25 +11,23 @@ function getgroups()
 
 	$app->response->headers->set('Content-Type', 'application/json');
 
-	$groups = \R::findAll( "group" );
+	$groups = \OPI\GroupModel\getgroups();
 
-	print json_encode( \R::exportAll( $groups ) );
+	print json_encode( $groups );
 }
 
 function getusers( $group )
 {
 	$app = \Slim\Slim::getInstance();
 
-	$g = groupexists( $group );
-
-	if( ! $g )
-	{
+	if( ! \OPI\GroupModel\groupexists( $group ) )
+        {
 		$app->halt( 404 );
 	}
 
 	$app->response->headers->set('Content-Type', 'application/json');
 
-	print json_encode( \R::exportAll( $g->sharedUserList ) );
+	print json_encode( \OPI\GroupModel\getusers($group) );
 }
 
 function creategroup()
@@ -66,16 +42,13 @@ function creategroup()
 		$app->halt(400);
 	}
 
-	if( groupexists( $group ) )
+        if( \OPI\GroupModel\groupexists( $group ) )
 	{
 		$app->halt(409);
 	}
 
-	$g = \R::dispense( "group" );
 
-	$g->name = $group;
-
-	$id = \R::store( $g );
+	$id = \OPI\GroupModel\creategroup($group);
 
 	$app->response->headers->set('Content-Type', 'application/json');
 
@@ -93,67 +66,35 @@ function adduser($group)
 		$app->halt(400);
 	}
 
-	$gid = groupexists( $group );
-	$uid = userexists( $user );
-
-	if( !$gid || !$uid )
-	{
+        if( !\OPI\GroupModel\adduser($group, $user) )
+        {
 		$app->halt(404);
-	}
+        }
 
-	$gid->sharedUserList[] = $uid;
-
-	\R::storeAll( [$gid, $uid] );
 }
 
 function deletegroups()
 {
-	$groups = \R::wipe( "group" );
+    \OPI\GroupModel\deletegroups();
 }
 
 
 function deletegroup($group)
 {
-	$app = \Slim\Slim::getInstance();
 
-	$g = groupexists( $group );
-
-	if( ! $g )
-	{
-		$app->halt( 404 );
-	}
-
-	\R::trash( $g );
+        if( !\OPI\GroupModel\deletegroup($group) )
+        {
+            $app->halt( 404 );
+        }
 }
 
 function removeuser($group, $user)
 {
-	$app = \Slim\Slim::getInstance();
+    $app = \Slim\Slim::getInstance();
 
-	$gid = groupexists( $group );
-	$uid = userexists( $user );
-
-	if( !$uid || !$gid )
-	{
+    if( !\OPI\GroupModel\removeuser($group, $user) )
+    {
 		$app->halt(404);
-	}
-
-	$found = false;
-	foreach( $gid->sharedUserList as $guser )
-	{
-		if( $uid->id == $guser->id )
-		{
-			$found = true;
-		}
-	}
-
-	if( ! $found )
-	{
-		$app->halt(404);
-	}
-
-	unset( $gid->sharedUserList[$uid->id] );
-
-	\R::storeAll( [$uid, $gid] );
+    }
 }
 

@@ -42,6 +42,43 @@ class TestUser( unittest.TestCase ):
 		self.assertFalse( self.opi.updateuser( int( uc["id"] ), uc ) )
 
 
+	def testUser( self ):
+		self.assertTrue( self.opi.login( "admin", "secret" ) )
+
+		self.assertTrue( self.opi.deleteusers() )
+		self.assertTrue( self.opi.deletegroups() )
+
+		user = { "username":"tempuser", "displayname":"Temp User", "password":"secret"}
+		user2 = { "username":"temp2", "displayname":"Temp User2", "password":"secret"}
+		userid = self.opi.createuser( user )
+		self.assertTrue( userid )
+		userid2 = self.opi.createuser( user2 )
+		self.assertTrue( userid2 )
+
+		self.assertTrue( self.opi.logout() )
+		self.assertTrue( self.opi.login( "tempuser", "secret" ) )
+
+		lg = self.opi.loggedin()
+		self.assertTrue( lg["authenticated"])
+		self.assertFalse( lg["user"]["admin"])
+		self.assertEqual(lg["user"]["displayname"], "Temp User")
+
+		self.assertFalse( self.opi.getuser( "temp2" ) )
+
+		self.assertTrue( self.opi.logout() )
+		self.assertTrue( self.opi.login( "admin", "secret" ) )
+		self.assertTrue( self.opi.addgroup("admin") )
+		self.assertTrue( self.opi.addusergroup("admin", "tempuser"))
+
+		self.assertTrue( self.opi.logout() )
+		self.assertTrue( self.opi.login( "tempuser", "secret" ) )
+
+		lg = self.opi.loggedin()
+		self.assertTrue( lg["authenticated"])
+		self.assertTrue( lg["user"]["admin"])
+		self.assertEqual(lg["user"]["displayname"], "Temp User")
+
+		self.assertTrue( self.opi.getuser( "temp2" ) )
 
 	def testCreateDelete( self ):
 
@@ -172,7 +209,6 @@ class TestAuth( unittest.TestCase ):
 		self.assertFalse( self.opi.loggedin()["authenticated"] )
 		self.assertTrue( self.opi.login( "user", "secret" ) )
 		s = self.opi.loggedin()
-		print s
 		self.assertTrue( s )
 		self.assertTrue( s["authenticated" ] )
 		self.assertEqual( s["user"]["username"], "user" )

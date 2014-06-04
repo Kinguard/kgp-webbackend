@@ -85,7 +85,7 @@ function updateuser($id)
         $app->halt(401);
     }
 
-    if( !\OPI\UserModel\updateuser($id, $user) )
+    if( !\OPI\UserModel\updateuser($user) )
     {
        $app->halt(404);
     }

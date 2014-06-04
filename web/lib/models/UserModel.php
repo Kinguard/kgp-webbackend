@@ -4,6 +4,19 @@ namespace OPI\UserModel;
 
 require_once 'rb/rb.php';
 
+function userexists( $id )
+{
+	$user = \R::find( "user", "where username = :id", [ ':id' => $id]);
+
+	if( count( $user ) == 0 )
+	{
+		return False;
+	}
+
+	return true;
+}
+
+
 function getuser( $id )
 {
     // First try by id
@@ -86,14 +99,13 @@ function createuser( $user )
 function updateuser($user)
 {
     $tmpuser = array();
-    error_log( print_r($user, true));
+
     if(array_key_exists("id", $user) )
     {
         $tmpuser = \R::find( "user", "where id = :id", [ ':id' => $user["id"]]);
     }
     else if(array_key_exists("username", $user) )
     {
-        error_log("1");
         $tmpuser = \R::find( "user", "where username = :id", [ ':id' => $user["username"]]);
     }
     else

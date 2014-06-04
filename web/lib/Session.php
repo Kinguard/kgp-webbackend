@@ -1,6 +1,9 @@
 <?php
 namespace OPI\session;
 
+require_once 'models/UserModel.php';
+require_once 'models/GroupModel.php';
+
 const TIMEOUT = 1800; // 30 min
 
 function setup()
@@ -9,9 +12,9 @@ function setup()
 
 	// ini_set('session.cookie_secure',1);
 	ini_set('session.cookie_httponly',1);
-	ini_set('session.use_only_cookies',1);	
+	ini_set('session.use_only_cookies',1);
 
-	ini_set('session.name','OPISESSION');	
+	ini_set('session.name','OPISESSION');
 
 	session_start();
 
@@ -55,37 +58,55 @@ function loggedin()
 	echo json_encode( $res );
 }
 
+function validateuser($user, $password)
+{
+    $u = \OPI\UserModel\getuser($user);
+    if( ! $u )
+    {
+        return false;
+    }
+
+    return $u["password"] == $password;
+}
+
 function login()
 {
-	$app = \Slim\Slim::getInstance();
+    $app = \Slim\Slim::getInstance();
 
-	$user 		= $app->request->post('username');
-	$password	= $app->request->post('password');
+    $user 		= $app->request->post('username');
+    $password	= $app->request->post('password');
 
-	if( $user == null || $password == null )
-	{
-		$app->response->setStatus(401);
-		print_r($app->request->params());
-		logout();
-	}
-	else
-	{
-		if( ($user == "admin" || $user == "user") && $password == "secret" )
-		{
-			session_regenerate_id(true);
-			$_SESSION["AUTHENTICATED"] = true;
-			$_SESSION['USER'] = $user;
-			$_SESSION['ADMIN'] = $user == "admin";
-			$_SESSION['DISPLAYNAME'] = "Test Användare";
-			print_r($app->request->params());
-		}
-		else
-		{
-			$app->response->setStatus(401);
-			print_r($app->request->params());
-			logout();
-		}
-	}
+    if( $user == null || $password == null )
+    {
+            print_r($app->request->params());
+            logout();
+            $app->halt(401);
+    }
+
+    if( ($user == "admin" || $user == "user") && $password == "secret" )
+    {
+        session_regenerate_id(true);
+        $_SESSION["AUTHENTICATED"] = true;
+        $_SESSION['USER'] = $user;
+        $_SESSION['ADMIN'] = $user == "admin";
+        $_SESSION['DISPLAYNAME'] = "Test Användare";
+    }
+    else if(validateuser($user, $password) )
+    {
+        $u = \OPI\UserModel\getuser($user);
+
+        session_regenerate_id(true);
+        $_SESSION["AUTHENTICATED"] = true;
+        $_SESSION['USER'] = $u["username"];
+        $_SESSION['ADMIN'] = \OPI\GroupModel\useringroup("admin", $user);
+        $_SESSION['DISPLAYNAME'] = $u["displayname"];
+    }
+    else
+    {
+        $app->response->setStatus(401);
+        print_r($app->request->params());
+        logout();
+    }
 }
 
 function logout()
@@ -106,7 +127,7 @@ function initXcacheSessionHandler()
 		{
 			return '';   //must return '' if no value, as per PHP docs
 		}
-		
+
 		return xcache_get($id);
 	};
 
