@@ -105,3 +105,134 @@ function setsettings()
 	\R::store( $s );
 
 }
+
+function getports()
+{
+    // Check if settings exists
+    $p = \R::findAll( "networkports");
+
+    if( count( $p ) == 0 )
+    {
+            $p = \R::dispense( "networksettings" ,3);
+            $p[0]->port = 443;
+            $p[0]->enabled = True;
+            $p[1]->port = 143;
+            $p[1]->enabled = True;
+            $p[2]->port = 25;
+            $p[2]->enabled = True;
+            \R::storeAll($p);
+    }
+
+    $res = array();
+    foreach ($p as $bean) {
+        $res[$bean->port]=$bean->enabled;
+    }
+
+    $app = \Slim\Slim::getInstance();
+
+    $app->response->headers->set('Content-Type', 'application/json');
+
+    print json_encode( $res );
+}
+
+function setports()
+{
+    $app = \Slim\Slim::getInstance();
+
+    $ports 	= $app->request->post();
+
+    foreach ($ports as $key => $value) {
+
+        $portno = intval($key);
+        if( $portno == 0)
+        {
+            $app->halt(400);
+        }
+        if( False === array_search( $portno, [25,443,143]))
+        {
+            $app->halt(400);
+        }
+
+        if( $value == "True")
+        {
+            $enabled = True;
+        }
+        else if( $value == "False" )
+        {
+            $enabled = False;
+        }
+        else
+        {
+            $app->halt(404);
+        }
+
+        $port = \R::find( "networkports", "where port = :port", [ ':port' => $portno]);
+        if( count($port) == 0)
+        {
+            $port = \R::dispense("networkports");
+            $port->port= $key;
+            $port->enabled = $enabled;
+        }
+        else if( count($port) > 0 )
+        {
+                $port = reset( $port) ;
+                $port->enabled = $enabled;
+        }
+        \R::store($port);
+    }
+}
+
+function getport($port)
+{
+    $app = \Slim\Slim::getInstance();
+
+    $port = \R::find( "networkports", "where port = :port", [ ':port' => $port]);
+    if( count($port) == 0)
+    {
+        $app->halt(404);
+    }
+    $port = reset($port);
+    $app->response->headers->set('Content-Type', 'application/json');
+
+    $res = array( "enabled"=> $port->enabled );
+    print json_encode( $res );
+}
+
+function setport($port)
+{
+    $app = \Slim\Slim::getInstance();
+
+    if( False === array_search( $port, [25,443,143]))
+    {
+        $app->halt(404);
+    }
+
+    $value	= $app->request->put("enabled");
+    if( ! $value )
+    {
+        $app->halt(400);
+    }
+
+    if( $value == "True")
+    {
+        $enabled = True;
+    }
+    else if( $value == "False" )
+    {
+        $enabled = False;
+    }
+    else
+    {
+        $app->halt(404);
+    }
+
+    $port = \R::find( "networkports", "where port = :port", [ ':port' => $port]);
+    if( count($port) == 0)
+    {
+        $app->halt(404);
+    }
+    $port = reset($port);
+    $port->enabled = $enabled;
+
+    \R::store($port);
+}

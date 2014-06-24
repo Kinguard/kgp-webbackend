@@ -53,7 +53,7 @@
 	$app->post(	'/api/groups/:name',		"\OPI\session\\requireadmin",	"\OPI\groups\adduser" );
 	$app->delete(	'/api/groups',			"\OPI\session\\requireadmin",	"\OPI\groups\deletegroups" );
 	$app->delete(	'/api/groups/:name',		"\OPI\session\\requireadmin",	"\OPI\groups\deletegroup" );
-	$app->delete(	'/api/groups/:name/:usr',	"\OPI\session\\requireadmin",	"\OPI\groups\\removeuser" );
+	$app->delete(	'/api/groups/:name/:user',	"\OPI\session\\requireadmin",	"\OPI\groups\\removeuser" );
 
 	// Update functions
 	$app->get(		'/api/updates',		"\OPI\session\\requireadmin",	"\OPI\updates\getstate");
@@ -100,6 +100,10 @@
 	// Network Settings
 	$app->get(		'/api/network/settings',		"\OPI\session\\requireadmin",	"\OPI\\network\getsettings");
 	$app->post(		'/api/network/settings',		"\OPI\session\\requireadmin",	"\OPI\\network\setsettings");
+	$app->get(		'/api/network/ports',           	"\OPI\session\\requireadmin",	"\OPI\\network\getports");
+	$app->post(		'/api/network/ports',   		"\OPI\session\\requireadmin",	"\OPI\\network\setports");
+	$app->get(		'/api/network/ports/:port',           	"\OPI\session\\requireadmin",	"\OPI\\network\getport");
+	$app->put(		'/api/network/ports/:port',   		"\OPI\session\\requireadmin",	"\OPI\\network\setport");
 
 
 	$app->run();

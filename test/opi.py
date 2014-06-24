@@ -222,6 +222,25 @@ class OPI:
 		r = self.s.post(self.url+"/network/settings", settings )
 		return r.status_code == 200
 
+	def getports(self):
+		r = self.s.get(self.url+"/network/ports")
+		if r.status_code == 200:
+			return r.json()
+		return False
+
+	def getport(self, port):
+		r = self.s.get(self.url+"/network/ports/%d" % port )
+		if r.status_code == 200:
+			return r.json()
+		return False
+
+	def setports(self, ports):
+		r = self.s.post(self.url+"/network/ports", ports )
+		return r.status_code == 200
+
+	def setport(self, port, value):
+		r = self.s.put(self.url+"/network/ports/%d" % port, {"enabled":value} )
+		return r.status_code == 200
 	#
 	# Group functions
 	#

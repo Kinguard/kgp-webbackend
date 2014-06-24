@@ -801,6 +801,39 @@ class TestNetwork( unittest.TestCase ):
 		self.assertTrue( isinstance( s["currentdns2"], unicode ) )
 		self.assertTrue( isinstance( s["currentgateway"], unicode ) )
 
+	def testgetPorts(self):
+		self.assertTrue( self.opi.login( "admin", "secret" ) )
+		p = self.opi.getports()
+		self.assertEqual(3, len(p) )
+		ports = [443,25,143]
+		for (port, value) in p.items():
+			self.assertTrue(int(port) in ports )
+			self.assertTrue( int(value) in [True, False])
+
+	def testsetPorts(self):
+		self.assertTrue( self.opi.login( "admin", "secret" ) )
+		self.assertFalse( self.opi.setports({25:True,"nan":"nab",143:True}) )
+		self.assertTrue( self.opi.setports({25:True,443:False,143:True}) )
+		p = self.opi.getports()
+		self.assertEqual(3, len(p) )
+		self.assertEqual(p["443"], "0")
+		self.assertEqual(p["143"], "1")
+		self.assertEqual(p["25"], "1")
+
+	def testgetPort(self):
+		self.assertTrue( self.opi.login( "admin", "secret" ) )
+		self.assertTrue( self.opi.setports({25:True,443:False,143:True}) )
+		self.assertEqual( self.opi.getport( 25 )["enabled"], "1")
+		self.assertEqual( self.opi.getport( 443 )["enabled"], "0")
+		self.assertEqual( self.opi.getport( 143 )["enabled"], "1")
+
+	def testsetPort(self):
+		self.assertTrue( self.opi.login( "admin", "secret" ) )
+		self.assertTrue( self.opi.setport(25, True))
+		self.assertEqual( self.opi.getport( 25 )["enabled"], "1")
+		self.assertTrue( self.opi.setport(25, False))
+		self.assertEqual( self.opi.getport( 25 )["enabled"], "0")
+		self.assertFalse( self.opi.setport(15, False))
 
 if __name__ == '__main__':
 	unittest.main()
