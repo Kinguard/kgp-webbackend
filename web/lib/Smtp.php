@@ -108,6 +108,58 @@ function addaddress( $domain )
 	\R::store( $domainbean );
 }
 
+function deleteaddresses( $domain )
+{
+	$app = \Slim\Slim::getInstance();
+
+        // Check if domain exists
+	$domainbeans = \R::find( "domains", "where domain = :domain", [ ':domain' => $domain]);
+	if( count( $domainbeans ) == 0 )
+	{
+		$app->halt(404);
+	}
+
+	$domainbean = reset($domainbeans);
+
+	$domainbean->xownDomainaddressList = array();
+
+        \R::store($domainbean);
+}
+
+function deleteaddress( $domain, $address )
+{
+	$app = \Slim\Slim::getInstance();
+
+        // Check if domain exists
+	$domainbeans = \R::find( "domains", "where domain = :domain", [ ':domain' => $domain]);
+	if( count( $domainbeans ) == 0 )
+	{
+		$app->halt(404);
+	}
+
+	$domainbean = reset($domainbeans);
+
+        $id = 0;
+        foreach ( $domainbean->ownDomainaddressList as $a )
+        {
+            if( $a->address == $address )
+            {
+                $id = $a->id;
+            }
+        }
+
+        if( $id == 0)
+        {
+            $app->halt(404);
+        }
+
+        unset($domainbean->ownDomainaddressList[$id]);
+
+        \R::store($domainbean);
+
+}
+
+
 function getaddresses( $domain )
 {
 

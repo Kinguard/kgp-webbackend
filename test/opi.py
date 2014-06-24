@@ -107,6 +107,15 @@ class OPI:
 			return r.json()
 		return False
 
+	def deleteaddresses(self, domain):
+		r = self.s.delete(self.url + "/smtp/domains/%s/addresses" % domain)
+		return r.status_code == 200
+
+	def deleteaddress(self, domain, address):
+		r = self.s.delete(self.url + "/smtp/domains/%s/addresses/%s" % (domain, address))
+		print r.text
+		return r.status_code == 200
+
 	def getsmtpsettings(self):
 		r = self.s.get(self.url+"/smtp/settings" )
 		if r.status_code == 200:

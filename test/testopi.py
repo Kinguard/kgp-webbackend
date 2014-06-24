@@ -405,6 +405,25 @@ class TestSmtp( unittest.TestCase ):
 		self.assertTrue( ad )
 		self.assertEqual( len( ad ), 2 )
 
+		self.assertTrue( self.opi.deleteaddresses("example.com") )
+		ad = self.opi.getaddresses( "example.com" )
+		self.assertTrue( isinstance(ad, list) )
+		self.assertEqual( len( ad ), 0 )
+
+		self.assertTrue( self.opi.addaddress( "example.com", "tor", "tor" ) )
+		self.assertTrue( self.opi.addaddress( "example.com", "tar", "tor" ) )
+		ad = self.opi.getaddresses( "example.com" )
+		self.assertTrue( ad )
+		self.assertEqual( len( ad ), 2 )
+
+		self.assertTrue( self.opi.deleteaddress("example.com", "tor") )
+		ad = self.opi.getaddresses( "example.com" )
+		self.assertTrue( ad )
+		self.assertEqual( len( ad ), 1 )
+
+		self.assertFalse( self.opi.deleteaddress("example.com", "tor") )
+
+
 	def testSettings( self ):
 		self.assertFalse( self.opi.getsmtpsettings() )
 		self.assertTrue( self.opi.login( "admin", "secret" ) )

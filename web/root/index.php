@@ -67,8 +67,10 @@
 	$app->delete(	'/api/smtp/domains/:id',	"\OPI\session\\requireadmin",	"\OPI\smtp\deletedomain");
 
 	// SMTP Mail-addresses
-	$app->post(		'/api/smtp/domains/:name/addresses',		"\OPI\session\\requireadmin",	"\OPI\smtp\addaddress");
-	$app->get(		'/api/smtp/domains/:name/addresses',		"\OPI\session\\requireadmin",	"\OPI\smtp\getaddresses");
+	$app->post(	'/api/smtp/domains/:name/addresses',	"\OPI\session\\requireadmin",	"\OPI\smtp\addaddress");
+	$app->get(	'/api/smtp/domains/:name/addresses',	"\OPI\session\\requireadmin",	"\OPI\smtp\getaddresses");
+	$app->delete(	'/api/smtp/domains/:name/addresses',	"\OPI\session\\requireadmin",	"\OPI\smtp\deleteaddresses");
+	$app->delete(	'/api/smtp/domains/:name/addresses/:address',	"\OPI\session\\requireadmin",	"\OPI\smtp\deleteaddress");
 
 	// SMTP Settings
 	$app->get(		'/api/smtp/settings',		"\OPI\session\\requireadmin",	"\OPI\smtp\getsettings");
