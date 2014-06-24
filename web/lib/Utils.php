@@ -56,3 +56,16 @@ function getuser()
 {
 	return $_SESSION['USER'];
 }
+
+function errmsg($code, $msg)
+{
+    $app = \Slim\Slim::getInstance();
+
+    $rep = array();
+    $rep["errorcode"]=$code;
+    $rep["errormessage"]=$msg;
+
+    $app->status($code);
+    print json_encode($rep);
+    $app->stop();
+}

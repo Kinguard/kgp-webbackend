@@ -71,7 +71,7 @@ class OPI:
 		return False
 
 	def setupdates(self, update):
-		r = self.s.post(self.url+"/updates", {'updates': update})
+		r = self.s.post(self.url+"/updates", {'doupdates': update})
 		return r.status_code == 200
 
 	#

@@ -8,26 +8,39 @@ require_once 'rb/rb.php';
  */
 function getgroup( $group )
 {
-	$g = \R::find( "group", "where name = :group", [ ':group' => $group]);
+    // First try by ID
+    $g = \R::load( "group", $group );
+   if ( $g->id == 0 )
+   {
 
-	if( count( $g ) == 0 )
-	{
-		return False;
-	}
+        $g = \R::find( "group", "where name = :group", [ ':group' => $group]);
 
-	return reset($g);
+        if( count( $g ) == 0 )
+        {
+                return False;
+        }
+
+        $g = reset($g);
+    }
+    return $g;
 }
 
 function getuser( $id )
 {
-	$user = \R::find( "user", "where username = :id", [ ':id' => $id]);
+    // First try by id
+    $user = \R::load( "user", $id );
 
-	if( count( $user ) == 0 )
-	{
-		return False;
-	}
+    if ( $user->id == 0 )
+    {
+            // Try by username
+            $user = \R::find( "user", "where username = :id", [ ':id' => $id]);
+            if( count($user) > 0 )
+            {
+                    $user = reset( $user) ;
+            }
+    }
 
-	return reset($user);
+    return $user ? $user : false;
 }
 
 /*
@@ -35,14 +48,8 @@ function getuser( $id )
  */
 function groupexists( $group )
 {
-	$g = \R::find( "group", "where name = :group", [ ':group' => $group]);
 
-	if( count( $g ) == 0 )
-	{
-		return False;
-	}
-
-        return true;
+    return False != getgroup($group);
 }
 
 function getgroups()

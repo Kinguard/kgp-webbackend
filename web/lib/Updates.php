@@ -36,7 +36,7 @@ function setstate()
 {
 	$app = \Slim\Slim::getInstance();
 
-	$update	= $app->request->put('updates');
+	$update	= $app->request->put('doupdates');
 
 	if( $update == null )
 	{

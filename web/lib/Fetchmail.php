@@ -22,17 +22,17 @@ function getaccount( $id )
 
 	$a = \R::load( "fetchmailaccounts", $id);
 
+        $app->response->headers->set('Content-Type', 'application/json');
+
 	if( $a->id == 0 )
 	{
-		$app->halt(404);
+            errmsg(404, "User not found");
 	}
 
 	if ( ! isadminoruser( $a->username ) )
 	{
-		$app->halt(401);
+            errmsg(401, "Not allowed");
 	}
-
-	$app->response->headers->set('Content-Type', 'application/json');
 
 	print json_encode( $a->export() );
 }
