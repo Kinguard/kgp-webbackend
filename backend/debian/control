@@ -1,0 +1,15 @@
+Source: opi-webbackend
+Section: unknown
+Priority: extra
+Maintainer: PA Nilsson <pa@openproducts.se>
+Build-Depends: debhelper (>= 8.0.0)
+Standards-Version: 3.9.4
+Homepage: <insert the upstream URL, if relevant>
+#Vcs-Git: git://git.debian.org/collab-maint/opi-webbackend.git
+#Vcs-Browser: http://git.debian.org/?p=collab-maint/opi-webbackend.git;a=summary
+
+Package: opi-webbackend
+Architecture: all
+Depends: ${misc:Depends}
+Description: <insert up to 60 chars description>
+ <insert long description, indented with spaces>

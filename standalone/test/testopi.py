@@ -3,8 +3,10 @@ from opi import OPI
 import pprint
 
 pp = pprint.PrettyPrinter( indent = 4 )
+#URL = "http://opiapi.local"
 URL = "http://localhost:8000/index.php"
 # URL = "http://localhost:8000/"
+
 
 class TestUser( unittest.TestCase ):
 

@@ -1,3 +1,13 @@
 .metadata
-web/nbproject
-web/data/test.db
+standalone/web/nbproject
+standalone/web/data/test.db
+backend/debian/opi-webbackend
+backend/debian/opi-webbackend.*.log
+backend/debian/files
+backend/debian/*substvars
+*tar.*z
+opi-webbackend*.deb
+opi-webbackend*.dsc
+opi-webbackend*.changes
+opi-webbackend*.upload
+*~

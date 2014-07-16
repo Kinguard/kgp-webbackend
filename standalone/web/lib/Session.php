@@ -8,7 +8,7 @@ const TIMEOUT = 1800; // 30 min
 
 function setup()
 {
-	initXcacheSessionHandler();
+	//initXcacheSessionHandler();
 
 	// ini_set('session.cookie_secure',1);
 	ini_set('session.cookie_httponly',1);
