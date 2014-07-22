@@ -2,7 +2,7 @@
 
 namespace OPI\users;
 
-require_once 'models/UserModel.php';
+require_once 'opimodels/UserModel.php';
 require_once 'Utils.php';
 
 function getuser($id)

@@ -1,8 +1,8 @@
 <?php
 namespace OPI\session;
 
-require_once 'models/UserModel.php';
-require_once 'models/GroupModel.php';
+require_once 'opimodels/UserModel.php';
+require_once 'opimodels/GroupModel.php';
 
 const TIMEOUT = 1800; // 30 min
 
@@ -88,26 +88,17 @@ function login()
             $app->halt(401);
     }
 
-    if( ($user == "admin" || $user == "user") && $password == "secret" )
+    $token = \OPI\UserModel\authenticateuser($user, $password);
+
+    if( $token )
     {
+        //TODO: Perhaps safeguard token in session better
         session_regenerate_id(true);
         $_SESSION["AUTHENTICATED"] = true;
+        $_SESSION["TOKEN"] = $token;
         $_SESSION['USER'] = $user;
-        $_SESSION['ADMIN'] = $user == "admin";
-        $_SESSION['DISPLAYNAME'] = "Test Användare";
-
-        $app->stop();
-    }
-
-    if(validateuser($user, $password) )
-    {
-        $u = \OPI\UserModel\getuser($user);
-
-        session_regenerate_id(true);
-        $_SESSION["AUTHENTICATED"] = true;
-        $_SESSION['USER'] = $u["username"];
         $_SESSION['ADMIN'] = \OPI\GroupModel\useringroup("admin", $user);
-        $_SESSION['DISPLAYNAME'] = $u["displayname"];
+        $_SESSION['DISPLAYNAME'] = $user;
 
         $app->stop();
     }
@@ -115,6 +106,11 @@ function login()
     $app->response->setStatus(401);
     print_r($app->request->params());
     logout();
+}
+
+function gettoken()
+{
+    return isset($_SESSION['TOKEN']) ? $_SESSION['TOKEN']: "";
 }
 
 function logout()

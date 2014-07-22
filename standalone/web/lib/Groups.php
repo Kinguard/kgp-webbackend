@@ -2,8 +2,8 @@
 namespace OPI\groups;
 
 require_once 'Utils.php';
-require_once 'models/UserModel.php';
-require_once 'models/GroupModel.php';
+require_once 'opimodels/UserModel.php';
+require_once 'opimodels/GroupModel.php';
 
 function getgroups()
 {

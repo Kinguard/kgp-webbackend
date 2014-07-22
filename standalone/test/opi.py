@@ -36,9 +36,7 @@ class OPI:
 
 	def createuser(self, user):
 		r = self.s.post(self.url+"/users", user )
-		if r.status_code == 200:
-			return r.json()["id"]
-		return False
+		return r.status_code == 200
 
 	def updateuser(self, id, user):
 		r = self.s.put(self.url+"/users/%s"%id, user )
