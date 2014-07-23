@@ -114,4 +114,66 @@ class OPIBackend
         
         return $this->_dorequest($req);
     }
+
+
+    function getgroups($token)
+    {
+        $req = array();
+        $req["cmd"] = "groupsget";
+        $req["token"] = $token;
+
+        return $this->_dorequest($req);
+    }
+
+    function addgroup($token, $group)
+    {
+        $req = array();
+        $req["cmd"] = "groupadd";
+        $req["token"] = $token;
+        $req["group"] = $group;
+
+        return $this->_dorequest($req);
+    }
+
+    function addgroupmember($token, $group, $member)
+    {
+        $req = array();
+        $req["cmd"] = "groupaddmember";
+        $req["token"] = $token;
+        $req["group"] = $group;
+        $req["member"] = $member;
+
+        return $this->_dorequest($req);
+    }
+
+    function getgroupmembers($token, $group)
+    {
+        $req = array();
+        $req["cmd"] = "groupgetmembers";
+        $req["token"] = $token;
+        $req["group"] = $group;
+
+        return $this->_dorequest($req);
+    }
+
+    function deletegroup($token, $group)
+    {
+        $req = array();
+        $req["cmd"] = "groupremove";
+        $req["token"] = $token;
+        $req["group"] = $group;
+
+        return $this->_dorequest($req);
+    }
+
+    function deletegroupuser($token, $group, $member)
+    {
+        $req = array();
+        $req["cmd"] = "groupremovemember";
+        $req["token"] = $token;
+        $req["group"] = $group;
+        $req["member"] = $member;
+
+        return $this->_dorequest($req);
+    }
 }

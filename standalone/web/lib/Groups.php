@@ -42,17 +42,19 @@ function creategroup()
 		$app->halt(400);
 	}
 
-        if( \OPI\GroupModel\groupexists( $group ) )
-	{
-		$app->halt(409);
-	}
-
 
 	$id = \OPI\GroupModel\creategroup($group);
 
-	$app->response->headers->set('Content-Type', 'application/json');
+        if( ! $id )
+        {
+		$app->halt(409);
+        }
+        else
+        {
+            $app->response->headers->set('Content-Type', 'application/json');
 
-	print '{ "id": '.$id.'}';
+            print '{ "id": "'.$id.'"}';
+        }
 }
 
 function adduser($group)

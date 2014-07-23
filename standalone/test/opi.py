@@ -2,7 +2,7 @@ import requests
 
 class OPI:
 
-	def __init__(self, url):
+	def __init__(self, url="http://localhost:8000/index.php"):
 		self.url = url+"/api"
 		self.s = requests.session()
 
