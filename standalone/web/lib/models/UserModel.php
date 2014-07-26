@@ -141,7 +141,7 @@ function updateuser($user)
     return true;
 }
 
-function updatepassword( $user, $new, $old)
+function updatepassword( $user, $old, $new)
 {
     $u = _getuser($user);
 

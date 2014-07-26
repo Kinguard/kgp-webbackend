@@ -98,7 +98,8 @@ function login()
         $_SESSION["TOKEN"] = $token;
         $_SESSION['USER'] = $user;
         $_SESSION['ADMIN'] = \OPI\GroupModel\useringroup("admin", $user);
-        $_SESSION['DISPLAYNAME'] = $user;
+        $u = \OPI\UserModel\getuser($user);
+        $_SESSION['DISPLAYNAME'] = $u["displayname"];
 
         $app->stop();
     }

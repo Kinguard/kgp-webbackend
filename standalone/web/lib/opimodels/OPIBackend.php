@@ -74,7 +74,19 @@ class OPIBackend
         
         return $this->_dorequest($req);
     }
- 
+
+    function updateuserpassword($token, $user, $password, $newpassword)
+    {
+        $req = array();
+        $req["cmd"] = "updateuserpassword";
+        $req["token"] = $token;
+        $req["username"] = $user;
+        $req["password"] = $password;
+        $req["newpassword"] = $newpassword;
+
+        return $this->_dorequest($req);
+    }
+
     function updateuser($token, $user, $display)
     {
         $req = array();

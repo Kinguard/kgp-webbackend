@@ -76,7 +76,7 @@ function updatepassword($id)
         $app->halt(401);
     }
 
-    if( !\OPI\UserModel\updatepassword($u["username"], $new, $old) )
+    if( !\OPI\UserModel\updatepassword($u["username"], $old, $new) )
     {
         $app->halt(400);
     }
@@ -89,14 +89,13 @@ function updateuser($id)
 {
     $app = \Slim\Slim::getInstance();
     $user = array();
-    $user['username']   = $app->request->post('username');
-    $user['displayname']= $app->request->post('displayname');
-    $user['password']   = $app->request->post('password');
+    $user['username']   = $app->request->put('username');
+    $user['displayname']= $app->request->put('displayname');
 
-    if( !checknullarray( $user  ) )
+    if( !checknullarray( $user ) )
     {
-            print_r($app->request->params());
-            $app->halt(400);
+        print_r($app->request->params());
+        $app->halt(400);
     }
 
     if( ! isadminoruser( $user["username"] ) )
@@ -124,28 +123,28 @@ function updateuser($id)
 
 function createuser()
 {
-	$app = \Slim\Slim::getInstance();
-        $user = array();
-	$user['username']   = $app->request->post('username');
-	$user['displayname']= $app->request->post('displayname');
-	$user['password']   = $app->request->post('password');
+    $app = \Slim\Slim::getInstance();
+    $user = array();
+    $user['username']   = $app->request->post('username');
+    $user['displayname']= $app->request->post('displayname');
+    $user['password']   = $app->request->post('password');
 
-	if( !checknullarray( $user  ) )
-	{
-		print_r($app->request->params());
-		$app->halt(400);
-	}
+    if( !checknullarray( $user  ) )
+    {
+            print_r($app->request->params());
+            $app->halt(400);
+    }
 
-        $id = \OPI\UserModel\createuser( $user );
+    $id = \OPI\UserModel\createuser( $user );
 
-        if (! $id )
-        {
-            $app->halt(409);
-        }
+    if (! $id )
+    {
+        $app->halt(409);
+    }
 
-        $app->response->headers->set('Content-Type', 'application/json');
+    $app->response->headers->set('Content-Type', 'application/json');
 
-        print '{ "id": '.$id.'}';
+    print '{ "id": "'.$id.'"}';
 
 }
 

@@ -25,7 +25,6 @@ function authenticateuser( $user, $password )
  */
 function createuser( $user )
 {
-    error_log( print_r($user,true) );
     $username   = $user["username"];
     $display    = $user["displayname"];
     $password   = $user["password"];
@@ -33,7 +32,7 @@ function createuser( $user )
     $b = \OPIBackend::instance();
     list($status, $rep) = $b->createuser( \OPI\session\gettoken(), $username, $password, $display );
 
-    return $status;
+    return $status?$username:false;
 }
 
 function updateuser($user)
@@ -67,7 +66,7 @@ function getusers()
     $b = \OPIBackend::instance();
 
     list($status, $rep ) = $b->getusers( \OPI\session\gettoken() );
-    
+
     return $status ? $rep["users"] : false;
 }
 
@@ -78,10 +77,19 @@ function getuser( $username )
 
     list($status, $rep) = $b->getuser( \OPI\session\gettoken(), $username );
 
+    if( $status )
+    {
+        $rep["id"] = $rep["username"];
+    }
+
     return $status ? $rep : false;
 }
 
-function updatepassword( $user, $new, $old)
+function updatepassword( $user, $old, $new)
 {
-    return true;
+    $b = \OPIBackend::instance();
+
+    list($status, $rep) = $b->updateuserpassword( \OPI\session\gettoken(), $user, $old, $new );
+
+    return $status;
 }

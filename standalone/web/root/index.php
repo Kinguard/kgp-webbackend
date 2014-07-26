@@ -44,16 +44,18 @@
 	$app->get(	'/api/users',		"\OPI\session\\requireadmin",		"\OPI\users\getusers" );
 	$app->get(	'/api/users/:id',	"\OPI\session\\requireloggedin",	"\OPI\users\getuser");
 	$app->delete(	'/api/users/:id',	"\OPI\session\\requireadmin",		"\OPI\users\deleteuser");
-	$app->delete(	'/api/users', 		"\OPI\session\\requireadmin",		"\OPI\users\deleteusers");
+        // Only for testing
+	//$app->delete(	'/api/users', 		"\OPI\session\\requireadmin",		"\OPI\users\deleteusers");
 
 	// Group functions
 	$app->get(	'/api/groups',			"\OPI\session\\requireadmin",	"\OPI\groups\getgroups" );
 	$app->get(	'/api/groups/:name',		"\OPI\session\\requireadmin",	"\OPI\groups\getusers" );
 	$app->post(	'/api/groups',			"\OPI\session\\requireadmin",	"\OPI\groups\creategroup" );
 	$app->post(	'/api/groups/:name',		"\OPI\session\\requireadmin",	"\OPI\groups\adduser" );
-	$app->delete(	'/api/groups',			"\OPI\session\\requireadmin",	"\OPI\groups\deletegroups" );
 	$app->delete(	'/api/groups/:name',		"\OPI\session\\requireadmin",	"\OPI\groups\deletegroup" );
 	$app->delete(	'/api/groups/:name/:user',	"\OPI\session\\requireadmin",	"\OPI\groups\\removeuser" );
+        // Only for testing
+	//$app->delete(	'/api/groups',			"\OPI\session\\requireadmin",	"\OPI\groups\deletegroups" );
 
 	// Update functions
 	$app->get(	'/api/updates',		"\OPI\session\\requireadmin",	"\OPI\updates\getstate");

@@ -1,22 +1,52 @@
 import unittest
 from opi import OPI
 import pprint
+import Secop
 
 pp = pprint.PrettyPrinter( indent = 4 )
 #URL = "http://opiapi.local"
 URL = "http://localhost:8000/index.php"
 # URL = "http://localhost:8000/"
 
+def setupsecop():
+	s = Secop.Secop()
+	s.init("Secret password")
+	s.sockauth()
 
-class TestUser( unittest.TestCase ):
+	# Remove all users
+	(status, users) = s.getusers()
+	if not status:
+		print("Failed to get users")
+		exit()
+	for user in users["users"]:
+		s.removeuser( user )
 
+	# Remove all groups
+	(status, groups) = s.getgroups()
+	if not status:
+		print("Failed to get groups")
+		exit()
+	for group in groups["groups"]:
+		s.removegroup( group )
+
+	# Add users and groups expected in test
+	s.adduser("admin","secret")
+	s.adduser("user", "secret")
+	s.addgroup("admin")
+	s.addgroupmember("admin","admin")
+
+
+class TestBase( unittest.TestCase ):
 	def setUp( self ):
+		setupsecop()
 		self.opi = OPI( URL )
+
+class TestUser( TestBase ):
 
 	def testSelfOperations( self ):
 		self.assertTrue( self.opi.login( "admin", "secret" ) )
 
-		self.assertTrue( self.opi.deleteusers() )
+		#self.assertTrue( self.opi.deleteusers() )
 
 		user = { "username":"test", "displayname":"Test User", "password":"secret"}
 		userid = self.opi.createuser( user )
@@ -35,19 +65,19 @@ class TestUser( unittest.TestCase ):
 		self.assertTrue( uc )
 
 		uc["displayname"] = "updated name"
-		self.assertTrue( self.opi.updateuser( int( uc["id"] ), uc ) )
+		self.assertTrue( self.opi.updateuser(  uc["id"], uc ) )
 
 		u2 = self.opi.getuser( "user" )
 		self.assertEqual( uc, u2 )
 
 		uc["username"] = "fake"
-		self.assertFalse( self.opi.updateuser( int( uc["id"] ), uc ) )
+		self.assertFalse( self.opi.updateuser( uc["id"], uc ) )
 
 	def testPassword(self):
 		self.assertTrue( self.opi.login( "admin", "secret" ) )
 
-		self.assertTrue( self.opi.deleteusers() )
-		self.assertTrue( self.opi.deletegroups() )
+		#self.assertTrue( self.opi.deleteusers() )
+		#self.assertTrue( self.opi.deletegroups() )
 
 		u1 = { "username":"u1", "displayname":"Temp User1", "password":"secret"}
 		u2 = { "username":"u2", "displayname":"Temp User2", "password":"secret"}
@@ -56,7 +86,6 @@ class TestUser( unittest.TestCase ):
 		uid2 = self.opi.createuser( u2 )
 		self.assertTrue( uid2 )
 
-		self.assertTrue( self.opi.addgroup("admin") )
 		self.assertTrue( self.opi.addusergroup("admin", "u1"))
 
 		# Admin should be able to change password without knowing old pwd
@@ -99,8 +128,8 @@ class TestUser( unittest.TestCase ):
 	def testUser( self ):
 		self.assertTrue( self.opi.login( "admin", "secret" ) )
 
-		self.assertTrue( self.opi.deleteusers() )
-		self.assertTrue( self.opi.deletegroups() )
+		#self.assertTrue( self.opi.deleteusers() )
+		#self.assertTrue( self.opi.deletegroups() )
 
 		user = { "username":"tempuser", "displayname":"Temp User", "password":"secret"}
 		user2 = { "username":"temp2", "displayname":"Temp User2", "password":"secret"}
@@ -121,7 +150,6 @@ class TestUser( unittest.TestCase ):
 
 		self.assertTrue( self.opi.logout() )
 		self.assertTrue( self.opi.login( "admin", "secret" ) )
-		self.assertTrue( self.opi.addgroup("admin") )
 		self.assertTrue( self.opi.addusergroup("admin", "tempuser"))
 
 		self.assertTrue( self.opi.logout() )
@@ -138,27 +166,28 @@ class TestUser( unittest.TestCase ):
 
 		self.assertTrue( self.opi.login( "admin", "secret" ) )
 
-		self.assertTrue( self.opi.deleteusers() )
+		#self.assertTrue( self.opi.deleteusers() )
 
 		users = self.opi.getusers()
-		self.assertTrue( len( users ) == 0 )
+		self.assertTrue( len( users ) == 2 )
 
 		user = { "username":"tempuser", "displayname":"Temp User", "password":"secret"}
 		userid = self.opi.createuser( user )
 		self.assertTrue( userid )
 
-		self.assertEqual( len( self.opi.getusers() ), 1 )
+		self.assertEqual( len( self.opi.getusers() ), 2+1 )
 
 		uc = self.opi.getuser( userid )
-		self.assertEqual( int( uc["id"] ), userid )
+		pp.pprint(uc)
+		pp.pprint(userid)
+		self.assertEqual( uc["id"], userid )
 		self.assertEqual( uc["username"], user["username"] )
 		self.assertEqual( uc["displayname"], user["displayname"] )
-		self.assertEqual( uc["password"], user["password"] )
 
 		user["username"] = "tempuser2"
 		uc2id = self.opi.createuser( user )
 		self.assertTrue( uc2id )
-		self.assertEqual( len( self.opi.getusers() ), 2 )
+		self.assertEqual( len( self.opi.getusers() ), 2+2 )
 
 		self.assertTrue( self.opi.logout() )
 
@@ -167,7 +196,7 @@ class TestUser( unittest.TestCase ):
 
 		self.assertTrue( self.opi.login( "admin", "secret" ) )
 
-		self.assertTrue( self.opi.deleteusers() )
+		#self.assertTrue( self.opi.deleteusers() )
 
 		user = { "username":"tempuser", "displayname":"Temp User", "password":"secret"}
 		id = self.opi.createuser( user )
@@ -175,19 +204,17 @@ class TestUser( unittest.TestCase ):
 
 		# Get by ID
 		uc = self.opi.getuser( id )
-		self.assertEqual( int( uc["id"] ), id )
+		self.assertEqual( uc["id"], id )
 		self.assertEqual( uc["username"], user["username"] )
 		self.assertEqual( uc["displayname"], user["displayname"] )
-		self.assertEqual( uc["password"], user["password"] )
 
 		self.assertFalse( self.opi.getuser( 0 ) )
 
 		# Get by Username
 		uc = self.opi.getuser( "tempuser" )
-		self.assertEqual( int( uc["id"] ), id )
+		self.assertEqual( uc["id"], id )
 		self.assertEqual( uc["username"], user["username"] )
 		self.assertEqual( uc["displayname"], user["displayname"] )
-		self.assertEqual( uc["password"], user["password"] )
 
 		self.assertFalse( self.opi.getuser( "Unknown user" ) )
 
@@ -195,10 +222,10 @@ class TestUser( unittest.TestCase ):
 	def testDelete( self ):
 		self.assertTrue( self.opi.login( "admin", "secret" ) )
 
-		self.assertTrue( self.opi.deleteusers() )
+		#self.assertTrue( self.opi.deleteusers() )
 
 		users = self.opi.getusers()
-		self.assertTrue( len( users ) == 0 )
+		self.assertTrue( len( users ) == 0+2 )
 
 		self.assertFalse( self.opi.deleteuser( 0 ) )
 
@@ -208,25 +235,25 @@ class TestUser( unittest.TestCase ):
 
 		self.assertTrue( self.opi.deleteuser( uid1 ) )
 
-		self.assertEqual( len( self.opi.getusers() ), 0 )
+		self.assertEqual( len( self.opi.getusers() ), 0+2 )
 
 		uid1 = self.opi.createuser( user )
 		user["username"] = "Usertwo"
 		uid2 = self.opi.createuser( user )
-		self.assertEqual( len( self.opi.getusers() ), 2 )
+		self.assertEqual( len( self.opi.getusers() ), 2+2 )
 
 		self.assertTrue( self.opi.deleteuser( uid1 ) )
-		self.assertEqual( len( self.opi.getusers() ), 1 )
+		self.assertEqual( len( self.opi.getusers() ), 1+2 )
 
 		# Delete by name
 		self.assertTrue( self.opi.deleteuser( "Usertwo" ) )
-		self.assertEqual( len( self.opi.getusers() ), 0 )
+		self.assertEqual( len( self.opi.getusers() ), 0+2 )
 
 
 	def testUpdate( self ):
 		self.assertTrue( self.opi.login( "admin", "secret" ) )
 
-		self.assertTrue( self.opi.deleteusers() )
+		#self.assertTrue( self.opi.deleteusers() )
 
 		user = { "username":"tempuser", "displayname":"Temp User", "password":"secret"}
 		uid = self.opi.createuser( user )
@@ -236,13 +263,12 @@ class TestUser( unittest.TestCase ):
 		self.assertTrue( self.opi.updateuser( uid, user ) )
 
 		uc = self.opi.getuser( uid )
-		self.assertEqual( int( uc["id"] ), uid )
+		self.assertEqual( uc["id"], uid )
 		self.assertEqual( uc["username"], user["username"] )
 		self.assertEqual( uc["displayname"], "updated" )
 		self.assertEqual( uc["displayname"], user["displayname"] )
-		self.assertEqual( uc["password"], user["password"] )
 
-		self.assertEqual( len( self.opi.getusers() ), 1 )
+		self.assertEqual( len( self.opi.getusers() ), 1+2 )
 
 		user["displayname"] = "updated2"
 		self.assertTrue( self.opi.updateuser( "tempuser", user ) )
@@ -250,12 +276,9 @@ class TestUser( unittest.TestCase ):
 		uc = self.opi.getuser( "tempuser" )
 		self.assertEqual( uc["displayname"], "updated2" )
 
-		self.assertEqual( len( self.opi.getusers() ), 1 )
+		self.assertEqual( len( self.opi.getusers() ), 1+2 )
 
-class TestAuth( unittest.TestCase ):
-
-	def setUp( self ):
-		self.opi = OPI( URL )
+class TestAuth( TestBase ):
 
 	def testLogin( self ):
 		self.assertFalse( self.opi.loggedin()["authenticated"] )
@@ -284,10 +307,7 @@ class TestAuth( unittest.TestCase ):
 		self.assertTrue( self.opi.logout() )
 		self.assertFalse( self.opi.loggedin()["authenticated"] )
 
-class TestUpdates( unittest.TestCase ):
-
-	def setUp( self ):
-		self.opi = OPI( URL )
+class TestUpdates( TestBase ):
 
 	def testUpdates( self ):
 		# Make sure not logged in can do updates
@@ -321,10 +341,7 @@ class TestUpdates( unittest.TestCase ):
 		self.assertFalse( self.opi.getupdates() )
 		self.assertFalse( self.opi.setupdates( 1 ) )
 
-class TestSmtp( unittest.TestCase ):
-
-	def setUp( self ):
-		self.opi = OPI( URL )
+class TestSmtp( TestBase ):
 
 	def testDomains( self ):
 		# test without login
@@ -451,10 +468,7 @@ class TestSmtp( unittest.TestCase ):
 		self.assertEqual( s["password"], "MySecret" )
 		self.assertEqual( s["relay"], "gmail.com" )
 
-class TestFetchmail( unittest.TestCase ):
-
-	def setUp( self ):
-		self.opi = OPI( URL )
+class TestFetchmail( TestBase ):
 
 	def testOwnOperations( self ):
 		self.assertTrue( self.opi.login( "admin", "secret" ) )
@@ -592,10 +606,7 @@ class TestFetchmail( unittest.TestCase ):
 		self.assertTrue( a )
 		self.assertEqual( len( a ), 1 )
 
-class TestBackup( unittest.TestCase ):
-
-	def setUp( self ):
-		self.opi = OPI( URL )
+class TestBackup( TestBase ):
 
 	def testQuota( self ):
 		self.assertFalse( self.opi.getbackupquota() )
@@ -682,9 +693,7 @@ class TestBackup( unittest.TestCase ):
 		del s1["enabled"]
 		self.assertFalse( self.opi.setbackupsettings( s1 ) )
 
-class TestGroups( unittest.TestCase ):
-	def setUp( self ):
-		self.opi = OPI( URL )
+class TestGroups( TestBase ):
 
 	def testNotLoggedin( self ):
 		self.assertFalse( self.opi.getgroups() )
@@ -707,14 +716,14 @@ class TestGroups( unittest.TestCase ):
 
 	def testCreate( self ):
 		self.assertTrue( self.opi.login( "admin", "secret" ) )
-		self.assertTrue( self.opi.deletegroups() )
-		self.assertTrue( self.opi.deleteusers() )
+		#self.assertTrue( self.opi.deletegroups() )
+		#self.assertTrue( self.opi.deleteusers() )
 		self.assertTrue( self.opi.addgroup( "test1" ) )
 		self.assertTrue( self.opi.addgroup( "test2" ) )
 
 		gr = self.opi.getgroups()
 		self.assertTrue( isinstance( gr, list ) )
-		self.assertEqual( len( gr ), 2 )
+		self.assertEqual( len( gr ), 2+1 )
 
 		self.assertTrue( self.opi.createuser( {"username":"u1", "displayname":"testuser1", "password":"secret"} ) )
 		self.assertTrue( self.opi.createuser( {"username":"u2", "displayname":"testuser2", "password":"secret"} ) )
@@ -733,8 +742,8 @@ class TestGroups( unittest.TestCase ):
 	def testDelete( self ):
 		self.assertTrue( self.opi.login( "admin", "secret" ) )
 
-		self.assertTrue( self.opi.deletegroups() )
-		self.assertTrue( self.opi.deleteusers() )
+		#self.assertTrue( self.opi.deletegroups() )
+		#self.assertTrue( self.opi.deleteusers() )
 
 		self.assertTrue( self.opi.addgroup( "test1" ) )
 		self.assertTrue( self.opi.addgroup( "test2" ) )
@@ -753,14 +762,12 @@ class TestGroups( unittest.TestCase ):
 		self.assertTrue( self.opi.deletegroup( "test1" ) )
 		self.assertFalse( self.opi.getgroupusers( "test1" ) )
 
-		self.assertTrue( self.opi.deletegroups() )
-		gr = self.opi.getgroups()
-		self.assertTrue( isinstance( gr, list ) )
-		self.assertEqual( len( gr ), 0 )
+		#self.assertTrue( self.opi.deletegroups() )
+		#gr = self.opi.getgroups()
+		#self.assertTrue( isinstance( gr, list ) )
+		#self.assertEqual( len( gr ), 0 )
 
-class TestNetwork( unittest.TestCase ):
-	def setUp( self ):
-		self.opi = OPI( URL )
+class TestNetwork( TestBase ):
 
 	def testNotLoggedIn(self):
 		self.assertFalse( self.opi.getnetworksettings())
