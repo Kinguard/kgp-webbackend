@@ -1,0 +1,13 @@
+Source: opi-webbackend
+Section: web
+Priority: extra
+Maintainer: PA Nilsson <pa@openproducts.se>
+Build-Depends: debhelper (>= 8.0.0)
+Standards-Version: 3.9.4
+Homepage: http://www.openproducts.se
+
+Package: opi-webbackend
+Architecture: all
+Depends: ${misc:Depends}
+Description: OPI admin web backend
+ Web based admin backend for OPI 
