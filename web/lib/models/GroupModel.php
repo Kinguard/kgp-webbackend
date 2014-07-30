@@ -8,7 +8,7 @@
 
 namespace OPI\GroupModel;
 
-require_once 'opimodels/OPIBackend.php';
+require_once 'models/OPIBackend.php';
 
 
 function creategroup( $group )

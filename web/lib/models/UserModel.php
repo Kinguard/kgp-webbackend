@@ -8,7 +8,7 @@
 
 namespace OPI\UserModel;
 
-require_once 'opimodels/OPIBackend.php';
+require_once 'models/OPIBackend.php';
 
 
 function authenticateuser( $user, $password )

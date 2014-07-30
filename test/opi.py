@@ -136,7 +136,7 @@ class OPI:
 		return False
 
 	def getfetchmailaccount(self, id):
-		r = self.s.get(self.url+"/fetchmail/accounts/%d" % id )
+		r = self.s.get(self.url+"/fetchmail/accounts/%s" % id )
 		if r.status_code == 200:
 			return r.json()
 		return False
@@ -153,7 +153,7 @@ class OPI:
 		return r.status_code == 200
 
 	def deletefetchmailaccount(self, id):
-		r = self.s.delete(self.url+"/fetchmail/accounts/%d" % id )
+		r = self.s.delete(self.url+"/fetchmail/accounts/%s" % id )
 		return r.status_code == 200
 
 	def deletefetchmailaccounts(self):
@@ -184,7 +184,7 @@ class OPI:
 		return r.status_code == 200
 
 	def deletebackupcode(self, id):
-		r = self.s.delete(self.url+"/backup/subscriptions/%d" % id )
+		r = self.s.delete(self.url+"/backup/subscriptions/%s" % id )
 		return r.status_code == 200
 
 	def addbackupcode(self, code):
@@ -200,7 +200,7 @@ class OPI:
 		return False
 
 	def getbackupcode(self, id):
-		r = self.s.get(self.url+"/backup/subscriptions/%d" % id )
+		r = self.s.get(self.url+"/backup/subscriptions/%s" % id )
 		if r.status_code == 200:
 			return r.json()
 		return False

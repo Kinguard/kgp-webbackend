@@ -2,6 +2,7 @@
 namespace OPI\backup;
 
 require_once 'Utils.php';
+require_once 'models/BackupModel.php';
 
 function getquota()
 {
@@ -9,9 +10,7 @@ function getquota()
 
 	$app->response->headers->set('Content-Type', 'application/json');
 
-	// Hardcode for now
-	print '{ "total": 8589934592, "used":2061584302}';
-
+	print json_encode( \OPI\BackupModel\getquota() );
 }
 
 function getstatus()
@@ -20,16 +19,14 @@ function getstatus()
 
 	$app->response->headers->set('Content-Type', 'application/json');
 
-	// Hardcode for now
-	print '{ "date": 1401134452, "status":"successful", "info":"Some interesting info"}';
-
+	print json_encode( \OPI\BackupModel\getstatus() );
 }
 
 
 function codeexists($code)
 {
-	$a = \R::find( "backupcodes",
-		"where code = :code" ,	[ ':code' => $code ] );
+	$a = \OPI\BackupModel\getsubscription($code);
+
 	if( count( $a ) > 0 )
 	{
 		return true;
@@ -55,30 +52,27 @@ function addsubscription()
 		$app->halt(409);
 	}
 
-	$codebean = \R::dispense( "backupcodes" );
-	$codebean->code = $code;
-
-	$id = \R::store( $codebean );
-
+	$id = \OPI\BackupModel\addsubscription($code);
+	
 	$app->response->headers->set('Content-Type', 'application/json');
 
-	print '{ "id": '.$id.'}';
+	print '{ "id": "'.$id.'"}';
 }
 
 function getsubscription( $id )
 {
 	$app = \Slim\Slim::getInstance();
 
-	$a = \R::load( "backupcodes", $id);
+	$a = \OPI\BackupModel\getsubscription( $id);
 
-	if( $a->id == 0 )
+	if( count($a) == 0 )
 	{
 		$app->halt(404);
 	}
 
 	$app->response->headers->set('Content-Type', 'application/json');
 
-	print json_encode( $a->export() );
+	print json_encode( $a );
 }
 
 
@@ -88,30 +82,21 @@ function getsubscriptions()
 
 	$app->response->headers->set('Content-Type', 'application/json');
 
-	$accs = \R::findAll( "backupcodes" );
-
-	print json_encode( \R::exportAll( $accs ) );
-
+	print json_encode( \OPI\BackupModel\getsubscriptions() );
 }
 
 function deletesubscription($id)
 {
 	$app = \Slim\Slim::getInstance();
 
-	$a = \R::load( "backupcodes", $id);
+	$a = \OPI\BackupModel\getsubscription( $id );
 
-	if( $a->id == 0 )
+	if( count($a) == 0 )
 	{
 		$app->halt(404);
 	}
 
-	\R::trash( $a );
-}
-
-
-function deletesubscriptions()
-{
-	\R::wipe( "backupcodes" );
+	\OPI\BackupModel\deletesubscription( $id );
 }
 
 function getsettings()
@@ -120,26 +105,7 @@ function getsettings()
 
 	$app->response->headers->set('Content-Type', 'application/json');
 
-	// Check if settings exists
-	$settings = \R::findAll( "backupsettings");
-
-	if( count( $settings ) == 0 )
-	{
-		$s = \R::dispense( "backupsettings" );
-		$s->enabled = true;
-		$s->location = "remote";
-		$s->type = "timeline";
-
-		\R::store( $s );
-
-		print json_encode( $s->export() );
-	}
-	else
-	{
-		$settings = reset($settings);
-		print json_encode( $settings->export() );
-	}
-
+	print json_encode( \OPI\BackupModel\getsettings() );
 }
 
 function setsettings()
@@ -166,23 +132,5 @@ function setsettings()
 		$app->halt(400);
 	}
 
-
-	// Check if settings exists
-	$s = \R::findAll( "backupsettings");
-
-	if( count( $s ) == 0 )
-	{
-		$s = \R::dispense( "backupsettings" );
-	}
-	else
-	{
-		$s = reset($s);
-	}
-
-	$s->enabled 	= $enabled;
-	$s->location	= $location;
-	$s->type 		= $type;
-
-	\R::store( $s );
-
+	\OPI\BackupModel\setsettings($enabled, $location, $type);
 }

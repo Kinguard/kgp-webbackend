@@ -2,12 +2,12 @@
 namespace OPI\fetchmail;
 
 require_once 'Utils.php';
+require_once 'models/FetchmailModel.php';
 
 function accountexists($host, $identity)
 {
-	$a = \R::find( "fetchmailaccounts",
-		"where host = :host and identity = :identity" ,
-		[ ':host' => $host, ':identity' => $identity] );
+	$a = \OPI\FetchmailModel\getaccountbyhost($host, $identity);
+
 	if( count( $a ) > 0 )
 	{
 		return true;
@@ -20,21 +20,21 @@ function getaccount( $id )
 {
 	$app = \Slim\Slim::getInstance();
 
-	$a = \R::load( "fetchmailaccounts", $id);
+	$a = \OPI\FetchmailModel\getaccount($id);
 
-        $app->response->headers->set('Content-Type', 'application/json');
+    $app->response->headers->set('Content-Type', 'application/json');
 
-	if( $a->id == 0 )
+	if( count($a) == 0 )
 	{
             errmsg(404, "User not found");
 	}
 
-	if ( ! isadminoruser( $a->username ) )
+	if ( ! isadminoruser( $a["username"] ) )
 	{
             errmsg(401, "Not allowed");
 	}
 
-	print json_encode( $a->export() );
+	print json_encode( $a );
 }
 
 function getaccounts()
@@ -43,17 +43,13 @@ function getaccounts()
 
 	$app->response->headers->set('Content-Type', 'application/json');
 
-	if( isadmin() )
-	{
-		$accs = \R::findAll( "fetchmailaccounts" );
-	}
-	else
+	$user = NULL;
+	if( ! isadmin() )
 	{
 		$user = getuser();
-		$accs = \R::findAll( "fetchmailaccounts", "username = ?", [$user] );
 	}
 
-	print json_encode( \R::exportAll( $accs ) );
+	print json_encode( \OPI\FetchmailModel\getaccounts( $user ) );
 }
 
 function addaccount()
@@ -80,16 +76,11 @@ function addaccount()
 		$app->halt(409);
 	}
 
-	$a = \R::dispense( "fetchmailaccounts" );
-	$a->host		= $host;
-	$a->identity	= $identity;
-	$a->password	= $password;
-	$a->username	= $username;
-	$id = \R::store($a);
+	$id = \OPI\FetchmailModel\addaccount( $host, $identity, $password, $username );
 
 	$app->response->headers->set('Content-Type', 'application/json');
 
-	print '{ "id": '.$id.'}';
+	print '{ "id": "'.$id.'"}';
 }
 
 function updateaccount($id)
@@ -112,66 +103,39 @@ function updateaccount($id)
 	}
 
 
-	$a = \R::load( "fetchmailaccounts", $id );
+	$a = \OPI\FetchmailModel\getaccount($id);
 
-	if ( $a->id == 0 )
+	if ( count($a) == 0 )
 	{
 		$app->response->setStatus(404);
 	}
 	else
 	{
 		# Should not be able to overwrite account
-		if( ! isadminoruser( $a->username ) )
+		if( ! isadminoruser( $a["username"] ) )
 		{
 			$app->halt(401);
 		}
 
-		$a->host		= $host;
-		$a->identity	= $identity;
-		$a->password	= $password;
-		$a->username	= $username;
-		$id = \R::store($a);
+		\OPI\FetchmailModel\updateaccount($host, $identity, $password, $username );
 	}
-
-
-
 }
 
 function deleteaccount($id)
 {
 	$app = \Slim\Slim::getInstance();
 
-	$a = \R::load( "fetchmailaccounts", $id);
+	$a = \OPI\FetchmailModel\getaccount($id);
 
-	if( $a->id == 0 )
+	if( count($a) == 0 )
 	{
 		$app->halt(404);
 	}
 
-	if( ! isadminoruser( $a->username ) )
+	if( ! isadminoruser( $a["username"] ) )
 	{
 		$app->halt(401);
 	}
 
-	\R::trash( $a );
+	\OPI\FetchmailModel\deleteaccount($id);
 }
-
-function deleteaccounts()
-{
-	$app = \Slim\Slim::getInstance();
-
-	if( isadmin() )
-	{
-		$domains = \R::wipe( "fetchmailaccounts" );
-	}
-	else
-	{
-		$user = getuser();
-		$d = \R::findAll( "fetchmailaccounts", "username = ?", [ $user ]);
-
-		\R::trashAll( $d );
-	}
-}
-
-
-

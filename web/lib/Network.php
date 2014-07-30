@@ -2,6 +2,7 @@
 namespace OPI\network;
 
 require_once 'Utils.php';
+require_once 'models/NetworkModel.php';
 
 function getsettings()
 {
@@ -9,37 +10,7 @@ function getsettings()
 
 	$app->response->headers->set('Content-Type', 'application/json');
 
-	// Check if settings exists
-	$settings = \R::findAll( "networksettings");
-
-	if( count( $settings ) == 0 )
-	{
-		$s = \R::dispense( "networksettings" );
-		$s->type		= "dynamic";
-		$s->ipnumber	= "192.168.1.82";
-		$s->netmask		= "255.255.255.0";
-		$s->gateway		= "192.168.1.1";
-		$s->dns1		= "8.8.8.8";
-		$s->dns2		= "4.4.4.4";
-		\R::store( $s );
-
-		print json_encode( $s->export() );
-	}
-	else
-	{
-		$s = reset($settings);
-		if( $s->type == "dynamic" )
-		{
-			$s->currentipnumber	= "192.168.1.82";
-			$s->currentnetmask	= "255.255.255.0";
-			$s->currentgateway	= "192.168.1.1";
-			$s->currentdns1		= "8.8.8.8";
-			$s->currentdns2		= "4.4.4.4";
-		}
-
-		print json_encode( $s->export() );
-	}
-
+	print json_encode(\OPI\NetworkModel\getsettings() );
 }
 
 function setsettings()
@@ -64,27 +35,9 @@ function setsettings()
 		$app->halt(400);
 	}
 
-	// Check if settings exists
-	$s = \R::findAll( "networksettings");
-
-	if( count( $s ) == 0 )
-	{
-		$s = \R::dispense( "networksettings" );
-	}
-	else
-	{
-		$s = reset($s);
-	}
-
-
 	if( $type == "dynamic" )
 	{
-		$s->type		= $type;
-		$s->ipnumber	= "";
-		$s->netmask		= "";
-		$s->gateway		= "";
-		$s->dns1		= "";
-		$s->dns2		= "";
+		\OPI\NetworkModel\setdynamic();
 	}
 	else
 	{
@@ -94,45 +47,30 @@ function setsettings()
 		{
 			$app->halt(400);
 		}
-		$s->type		= $type;
-		$s->ipnumber	= $ipnumber;
-		$s->netmask		= $netmask;
-		$s->gateway		= $gateway	? $gateway:	"";
-		$s->dns1		= $dns1		? $dns1:	"";
-		$s->dns2		= $dns1		? $dns2:	"";
+
+		// TODO: This wont work depending on which args that are set
+		\OPI\NetworkModel\setstatic(
+			$ipnumber, 
+			$netmask, 
+			$gateway	? $gateway:	"", 
+			$dns1		? $dns1:	"", 
+			$dns2		? $dns2:	"");
+		
 	}
-
-	\R::store( $s );
-
 }
 
 function getports()
 {
-    // Check if settings exists
-    $p = \R::findAll( "networkports");
+	$app = \Slim\Slim::getInstance();
 
-    if( count( $p ) == 0 )
-    {
-            $p = \R::dispense( "networksettings" ,3);
-            $p[0]->port = 443;
-            $p[0]->enabled = True;
-            $p[1]->port = 143;
-            $p[1]->enabled = True;
-            $p[2]->port = 25;
-            $p[2]->enabled = True;
-            \R::storeAll($p);
-    }
+	$app->response->headers->set('Content-Type', 'application/json');
 
-    $res = array();
-    foreach ($p as $bean) {
-        $res[$bean->port]=$bean->enabled;
-    }
+    print json_encode(\OPI\NetworkModel\getports() );
+}
 
-    $app = \Slim\Slim::getInstance();
-
-    $app->response->headers->set('Content-Type', 'application/json');
-
-    print json_encode( $res );
+function _validateport($portno)
+{
+	return !(False === array_search( $portno, [25,80,443,143,993]));
 }
 
 function setports()
@@ -141,6 +79,8 @@ function setports()
 
     $ports 	= $app->request->post();
 
+	$set = array();
+
     foreach ($ports as $key => $value) {
 
         $portno = intval($key);
@@ -148,7 +88,7 @@ function setports()
         {
             $app->halt(400);
         }
-        if( False === array_search( $portno, [25,443,143]))
+        if( False === _validateport( $portno) )
         {
             $app->halt(400);
         }
@@ -166,35 +106,25 @@ function setports()
             $app->halt(404);
         }
 
-        $port = \R::find( "networkports", "where port = :port", [ ':port' => $portno]);
-        if( count($port) == 0)
-        {
-            $port = \R::dispense("networkports");
-            $port->port= $key;
-            $port->enabled = $enabled;
-        }
-        else if( count($port) > 0 )
-        {
-                $port = reset( $port) ;
-                $port->enabled = $enabled;
-        }
-        \R::store($port);
+		$set[$key] = $enabled;
     }
+
+	\OPI\NetworkModel\setports($set);
 }
 
 function getport($port)
 {
     $app = \Slim\Slim::getInstance();
 
-    $port = \R::find( "networkports", "where port = :port", [ ':port' => $port]);
-    if( count($port) == 0)
+	if( !_validateport($port) )
     {
         $app->halt(404);
     }
-    $port = reset($port);
+
     $app->response->headers->set('Content-Type', 'application/json');
 
-    $res = array( "enabled"=> $port->enabled );
+    $res = array( "enabled"=> \OPI\NetworkModel\getportstatus( $port ) );
+
     print json_encode( $res );
 }
 
@@ -202,7 +132,7 @@ function setport($port)
 {
     $app = \Slim\Slim::getInstance();
 
-    if( False === array_search( $port, [25,443,143]))
+    if( !_validateport( $port) )
     {
         $app->halt(404);
     }
@@ -226,13 +156,5 @@ function setport($port)
         $app->halt(404);
     }
 
-    $port = \R::find( "networkports", "where port = :port", [ ':port' => $port]);
-    if( count($port) == 0)
-    {
-        $app->halt(404);
-    }
-    $port = reset($port);
-    $port->enabled = $enabled;
-
-    \R::store($port);
+	\OPI\NetworkModel\setport($port, $enabled);
 }

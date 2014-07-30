@@ -1,63 +1,34 @@
 <?php
+
 namespace OPI\updates;
 
+require_once 'models/UpdateModel.php';
 
-function getcurrentstate()
-{
-	$updates = \R::findAll( "updates" );
+function getstate() {
 	
-	if( count( $updates) == 0 )
-	{
-		// First get nothing here, create
-		$up = \R::dispense( "updates" );
-		$up->doupdates = true;
-		\R::store( $up );
-	}
-	else
-	{
-		// There can be only one!
-		$up = reset($updates);
-	}
-
-	return $up;
-}
-
-function getstate()
-{
-	$up = getcurrentstate();
+	$ret["doupdates"] = \OPI\UpdateModel\getstate();
 
 	$app = \Slim\Slim::getInstance();
 	$app->response->headers->set('Content-Type', 'application/json');
 
-	print json_encode( $up->export() );
+	print json_encode($ret);
 }
 
-function setstate()
-{
+function setstate() {
 	$app = \Slim\Slim::getInstance();
 
-	$update	= $app->request->put('doupdates');
+	$update = $app->request->put('doupdates');
 
-	if( $update == null )
-	{
+	if ($update == null) {
 		$app->response->setStatus(400);
 		print_r($app->request->params());
-	}
-	else
-	{
-		if ( $update == "0" or $update == "1")
-		{
-			$up = getcurrentstate();
-			
-			$up->doupdates = $update;
-			
-			\R::store( $up );	
-		}
-		else
-		{
+	} else {
+		if ($update == "0" or $update == "1") {
+
+			\OPI\UpdateModel\setstate( $update );
+		} else {
 			$app->response->setStatus(400);
 			print_r($app->request->params());
 		}
 	}
-
 }
