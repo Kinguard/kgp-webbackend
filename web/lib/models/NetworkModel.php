@@ -52,3 +52,11 @@ function setport( $port, $status )
 {
 	
 }
+
+function getopiname()
+{
+	return "my-opi";
+}
+function setopiname( $name )
+{
+}

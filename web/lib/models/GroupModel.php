@@ -36,7 +36,17 @@ function getusers( $group )
 
     list($status, $res) = $b->getgroupmembers( \OPI\session\gettoken(), $group );
 
-    return $status?$res["members"]:false;
+    if( $status )
+    {
+       $ret = array();
+       foreach($res["members"] as $user )
+       {
+           $ret[] = array( "id"=>$user,"name"=>$user);
+       }
+       return $ret;
+    }
+
+    return false;
 }
 
 
@@ -46,7 +56,16 @@ function getgroups()
 
     list($status, $res) = $b->getgroups( \OPI\session\gettoken() );
 
-    return $status?$res["groups"]:false;
+    if( $status )
+    {
+        $ret = array();
+        foreach($res["groups"] as $group)
+        {
+          $ret[]=array("id"=>$group, "name"=>$group);
+        }
+        return $ret;
+    }
+    return false;
 }
 
 
@@ -73,7 +92,18 @@ function groupexists( $group )
 {
     $groups = getgroups();
 
-    return in_array($group, $groups);
+    if( $groups )
+    {
+        foreach($groups as $grp)
+        {
+            if( $group == $grp["name"] )
+            {
+                return true;
+            }
+        }
+    }
+
+    return false;
 }
 
 
@@ -81,5 +111,16 @@ function useringroup($group, $user)
 {
     $users = getusers($group);
 
-    return in_array($user, $users);
+    if( $users )
+    {
+        foreach( $users as $usr )
+        {
+            if( $user == $usr["name"] )
+            {
+                return true;
+            }
+        }
+    }
+
+    return false;
 }

@@ -1,3 +1,17 @@
+opi-webbackend (1.2) testing; urgency=low
+
+  * Added functionality for shutdown 
+  * Added functionality for set/get opiname
+  * Minor bugfixes
+
+ -- Tor Krill <tor@openproducts.se>  Thu, 31 Jul 2014 15:55:39 +0200
+
+opi-webbackend (1.1) testing; urgency=low
+
+  * Removed redbean deps. Make ready for real backend
+
+ -- Tor Krill <tor@openproducts.se>  Wed, 30 Jul 2014 21:13:08 +0200
+
 opi-webbackend (1.0) testing; urgency=low
 
   * Initial release 

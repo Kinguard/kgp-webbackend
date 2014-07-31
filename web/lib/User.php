@@ -78,7 +78,7 @@ function updatepassword($id)
 
     if( !\OPI\UserModel\updatepassword($u["username"], $old, $new) )
     {
-        $app->halt(400);
+        $app->halt(406);
     }
 
 }

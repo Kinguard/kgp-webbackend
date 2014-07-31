@@ -81,7 +81,7 @@ class OPIBackend
         $req["cmd"] = "updateuserpassword";
         $req["token"] = $token;
         $req["username"] = $user;
-        $req["password"] = $password;
+        $req["password"] = $password?$password:"";
         $req["newpassword"] = $newpassword;
 
         return $this->_dorequest($req);
@@ -185,6 +185,16 @@ class OPIBackend
         $req["token"] = $token;
         $req["group"] = $group;
         $req["member"] = $member;
+
+        return $this->_dorequest($req);
+    }
+
+    function shutdown( $token, $action)
+    {
+        $req = array();
+        $req["cmd"] = "shutdown";
+        $req["token"] = $token;
+        $req["action"] = $action;
 
         return $this->_dorequest($req);
     }

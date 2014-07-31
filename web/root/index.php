@@ -13,6 +13,7 @@ require 'Smtp.php';
 require 'Fetchmail.php';
 require 'Backup.php';
 require 'Network.php';
+require 'Device.php';
 
 require_once 'Session.php';
 \OPI\session\setup();
@@ -99,6 +100,11 @@ $app->post('/api/network/ports', "\OPI\session\\requireadmin", "\OPI\\network\se
 $app->get('/api/network/ports/:port', "\OPI\session\\requireadmin", "\OPI\\network\getport");
 $app->put('/api/network/ports/:port', "\OPI\session\\requireadmin", "\OPI\\network\setport");
 
+$app->get('/api/network/opiname', "\OPI\session\\requireadmin", "\OPI\\network\getopiname");
+$app->post('/api/network/opiname/:name', "\OPI\session\\requireadmin", "\OPI\\network\setopiname");
+
+// Misc other stuff
+$app->post('/api/shutdown', "\OPI\session\\requireadmin", "\OPI\\device\shutdown");
 
 $app->run();
 

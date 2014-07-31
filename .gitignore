@@ -1,4 +1,8 @@
 .metadata
+debian/opi-webbackend
+debian/opi-webbackend.substvars
+debian/opi-webbackend.*.log
+debian/files
 standalone/web/nbproject
 standalone/web/data/test.db
 backend/debian/opi-webbackend
@@ -11,3 +15,5 @@ opi-webbackend*.dsc
 opi-webbackend*.changes
 opi-webbackend*.upload
 *~
+web/nbproject
+/web/nbproject/private/

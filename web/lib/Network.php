@@ -158,3 +158,14 @@ function setport($port)
 
 	\OPI\NetworkModel\setport($port, $enabled);
 }
+function getopiname()
+{
+	$app = \Slim\Slim::getInstance();
+	$app->response->headers->set('Content-Type', 'application/json');
+	printf('{"opiname": "%s"}',\OPI\NetworkModel\getopiname() );
+}
+
+function setopiname($name)
+{
+	//\OPI\NetworkModel\setopiname($name);
+}
