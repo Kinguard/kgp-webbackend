@@ -20,4 +20,13 @@ function shutdown()
 	}
 
 	\OPI\DeviceModel\shutdown( $action );
+
+	if( $action == "reboot" )
+	{
+		$app->response->headers->set('Content-Type', 'application/json');
+		$ret = array();
+		$ret["timeout"]=45;
+		$ret["url"] = "/";
+		print json_encode( $ret );
+	}
 }

@@ -10,5 +10,5 @@ function shutdown( $action )
 
 	list($status, $res) = $b->shutdown( \OPI\session\gettoken(), $action);
 
-	return $status?$res["token"]:false;
+	return $status;
 }
