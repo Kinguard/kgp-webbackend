@@ -21,6 +21,8 @@ function shutdown()
 
 	\OPI\DeviceModel\shutdown( $action );
 
+	\OPI\session\logout();
+
 	if( $action == "reboot" )
 	{
 		$app->response->headers->set('Content-Type', 'application/json');
