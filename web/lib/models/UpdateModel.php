@@ -8,12 +8,24 @@
 
 namespace OPI\UpdateModel;
 
+require_once 'models/OPIBackend.php';
+
 function getstate()
 {
-	return 1;
+	$b = \OPIBackend::instance();
+	list($status,$res) = $b->update_getstate( \OPI\session\gettoken());	
+	if($status && isset($res['update']) && $res['update'] == "yes") {
+		return "1";
+	} else {
+		return "0";
+	}
 }
 
 function setstate($state)
 {
+	$b = \OPIBackend::instance();
+	list($status,$res) = $b->update_setstate( \OPI\session\gettoken(),$state);
+	
+	return $status;
 	
 }

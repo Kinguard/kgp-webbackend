@@ -45,10 +45,13 @@ class OPIBackend
         {
             return array(false, "Not connected");
         }
-
+        error_log(print_r($req,1),3,"/tmp/backend.log");
+        
         fwrite($this->sock,json_encode($req));
 
         $res=json_decode(fgets($this->sock,16384),true);
+
+        error_log(print_r($res,1),3,"/tmp/backend.log");
         
         return $this->_processreply($res);
     }
@@ -198,4 +201,55 @@ class OPIBackend
 
         return $this->_dorequest($req);
     }
+    function update_getstate($token) {
+    	$req = array();
+    	$req["cmd"] = "update_getstate";
+    	$req["token"] = $token;
+    	 
+    	return $this->_dorequest($req);
+    }
+    
+    function update_setstate($token,$state) {
+    	$req = array();
+    	$req["cmd"] = "update_setstate";
+    	$req["token"] = $token;
+    	$req["state"] = $state;
+    
+    	return $this->_dorequest($req);
+    }
+    
+    function backup_getsettings($token) {
+    	$req = array();
+    	$req["cmd"] = "backup_getsettings";
+    	$req["token"] = $token;
+    
+    	return $this->_dorequest($req);
+    }
+
+    function backup_setsettings($token,$location,$type) {
+    	$req = array();
+    	$req["cmd"] = "backup_setsettings";
+    	$req["token"] = $token;
+    	$req["type"] = $type;
+    	$req["location"] = $location;
+    
+    	return $this->_dorequest($req);
+    }
+    
+    function backup_getQuota($token) {
+    	$req = array();
+    	$req["cmd"] = "backup_getQuota";
+    	$req["token"] = $token;
+    
+    	return $this->_dorequest($req);
+    }
+
+    function backup_getstatus($token) {
+    	$req = array();
+    	$req["cmd"] = "backup_getstatus";
+    	$req["token"] = $token;
+    
+    	return $this->_dorequest($req);
+    }
+    
 }

@@ -25,7 +25,10 @@ function setstate() {
 	} else {
 		if ($update == "0" or $update == "1") {
 
-			\OPI\UpdateModel\setstate( $update );
+			$status = \OPI\UpdateModel\setstate( $update );
+			$res['status'] = $status;
+			$res['doupdates'] = $update;
+			print json_encode($res);
 		} else {
 			$app->response->setStatus(400);
 			print_r($app->request->params());

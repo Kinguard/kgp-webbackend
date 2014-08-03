@@ -132,5 +132,9 @@ function setsettings()
 		$app->halt(400);
 	}
 
-	\OPI\BackupModel\setsettings($enabled, $location, $type);
+	if($enabled == "false") {
+		$location = "none";
+	}
+	
+	\OPI\BackupModel\setsettings($location, $type);
 }
