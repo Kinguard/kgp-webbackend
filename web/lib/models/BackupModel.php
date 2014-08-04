@@ -5,7 +5,7 @@ namespace OPI\BackupModel;
 function getquota()
 {
 	$b = \OPIBackend::instance();
-	list($status,$res) = $b->backup_getQuota( \OPI\session\gettoken());
+	list($status,$res) = $b->backupgetQuota( \OPI\session\gettoken());
 	
 	return array(
 		"total"		=> $res['quota'],
@@ -17,7 +17,7 @@ function getstatus()
 {
 
 	$b = \OPIBackend::instance();
-	list($status,$res) = $b->backup_getstatus( \OPI\session\gettoken());
+	list($status,$res) = $b->backupgetstatus( \OPI\session\gettoken());
 	
 	return array(
 		"date"		=> $res["date"], 
@@ -56,7 +56,7 @@ function deletesubscription( $id )
 function getsettings()
 {
 	$b = \OPIBackend::instance();
-	list($status,$res) = $b->backup_getsettings( \OPI\session\gettoken());
+	list($status,$res) = $b->backupgetsettings( \OPI\session\gettoken());
 	
 	return $res;
 /*
@@ -71,7 +71,7 @@ function getsettings()
 function setsettings($location, $type)
 {
 	$b = \OPIBackend::instance();
-	list($status,$res) = $b->backup_setsettings( \OPI\session\gettoken(),$location,$type);
+	list($status,$res) = $b->backupsetsettings( \OPI\session\gettoken(),$location,$type);
 	
 	return $status;
 	

@@ -201,34 +201,34 @@ class OPIBackend
 
         return $this->_dorequest($req);
     }
-    function update_getstate($token) {
+    function updategetstate($token) {
     	$req = array();
-    	$req["cmd"] = "update_getstate";
+    	$req["cmd"] = "updategetstate";
     	$req["token"] = $token;
     	 
     	return $this->_dorequest($req);
     }
     
-    function update_setstate($token,$state) {
+    function updatesetstate($token,$state) {
     	$req = array();
-    	$req["cmd"] = "update_setstate";
+    	$req["cmd"] = "updatesetstate";
     	$req["token"] = $token;
     	$req["state"] = $state;
     
     	return $this->_dorequest($req);
     }
     
-    function backup_getsettings($token) {
+    function backupgetsettings($token) {
     	$req = array();
-    	$req["cmd"] = "backup_getsettings";
+    	$req["cmd"] = "backupgetsettings";
     	$req["token"] = $token;
     
     	return $this->_dorequest($req);
     }
 
-    function backup_setsettings($token,$location,$type) {
+    function backupsetsettings($token,$location,$type) {
     	$req = array();
-    	$req["cmd"] = "backup_setsettings";
+    	$req["cmd"] = "backupsetsettings";
     	$req["token"] = $token;
     	$req["type"] = $type;
     	$req["location"] = $location;
@@ -236,17 +236,17 @@ class OPIBackend
     	return $this->_dorequest($req);
     }
     
-    function backup_getQuota($token) {
+    function backupgetQuota($token) {
     	$req = array();
-    	$req["cmd"] = "backup_getQuota";
+    	$req["cmd"] = "backupgetQuota";
     	$req["token"] = $token;
     
     	return $this->_dorequest($req);
     }
 
-    function backup_getstatus($token) {
+    function backupgetstatus($token) {
     	$req = array();
-    	$req["cmd"] = "backup_getstatus";
+    	$req["cmd"] = "backupgetstatus";
     	$req["token"] = $token;
     
     	return $this->_dorequest($req);

@@ -13,7 +13,7 @@ require_once 'models/OPIBackend.php';
 function getstate()
 {
 	$b = \OPIBackend::instance();
-	list($status,$res) = $b->update_getstate( \OPI\session\gettoken());	
+	list($status,$res) = $b->updategetstate( \OPI\session\gettoken());	
 	if($status && isset($res['update']) && $res['update'] == "yes") {
 		return "1";
 	} else {
@@ -24,7 +24,7 @@ function getstate()
 function setstate($state)
 {
 	$b = \OPIBackend::instance();
-	list($status,$res) = $b->update_setstate( \OPI\session\gettoken(),$state);
+	list($status,$res) = $b->updatesetstate( \OPI\session\gettoken(),$state);
 	
 	return $status;
 	
