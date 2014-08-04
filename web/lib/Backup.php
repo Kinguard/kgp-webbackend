@@ -117,7 +117,8 @@ function setsettings()
 	$type 		= $app->request->post('type');
 
 	// Validate indata
-	if( !checknull( $enabled, $location, $type ) )
+	//if( !checknull( $enabled, $location, $type ) )
+	if( !checknull( $enabled, $location ) )
 	{
 		$app->halt(400);
 	}
@@ -127,11 +128,12 @@ function setsettings()
 		$app->halt(400);
 	}
 
+	/*
 	if( ! in_array( $type, array( "timeline", "mirror") ) )
 	{
 		$app->halt(400);
 	}
-
+	*/
 	if($enabled == "false") {
 		$location = "none";
 	}
