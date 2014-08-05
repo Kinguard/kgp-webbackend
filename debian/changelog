@@ -1,3 +1,9 @@
+opi-webbackend (1.4) vili; urgency=low
+
+  * Removed logging from do_request
+
+ -- PA Nilsson <pa@openproducts.se>  Mon, 04 Aug 2014 13:07:32 +0200
+
 opi-webbackend (1.3) vili; urgency=low
 
   * Updates for backup and update backend calls

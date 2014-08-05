@@ -45,13 +45,11 @@ class OPIBackend
         {
             return array(false, "Not connected");
         }
-        error_log(print_r($req,1),3,"/tmp/backend.log");
         
         fwrite($this->sock,json_encode($req));
 
         $res=json_decode(fgets($this->sock,16384),true);
 
-        error_log(print_r($res,1),3,"/tmp/backend.log");
         
         return $this->_processreply($res);
     }
