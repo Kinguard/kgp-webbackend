@@ -49,7 +49,6 @@ class OPIBackend
         fwrite($this->sock,json_encode($req));
 
         $res=json_decode(fgets($this->sock,16384),true);
-
         
         return $this->_processreply($res);
     }
@@ -199,55 +198,64 @@ class OPIBackend
 
         return $this->_dorequest($req);
     }
-    function updategetstate($token) {
-    	$req = array();
-    	$req["cmd"] = "updategetstate";
-    	$req["token"] = $token;
-    	 
-    	return $this->_dorequest($req);
-    }
-    
-    function updatesetstate($token,$state) {
-    	$req = array();
-    	$req["cmd"] = "updatesetstate";
-    	$req["token"] = $token;
-    	$req["state"] = $state;
-    
-    	return $this->_dorequest($req);
-    }
-    
-    function backupgetsettings($token) {
-    	$req = array();
-    	$req["cmd"] = "backupgetsettings";
-    	$req["token"] = $token;
-    
-    	return $this->_dorequest($req);
+
+	function updategetstate($token) {
+		$req = array();
+		$req["cmd"] = "updategetstate";
+		$req["token"] = $token;
+
+		return $this->_dorequest($req);
+	}
+
+	function updatesetstate($token,$state) {
+		$req = array();
+		$req["cmd"] = "updatesetstate";
+		$req["token"] = $token;
+		$req["state"] = $state;
+
+		return $this->_dorequest($req);
+	}
+
+	function backupgetsettings($token) {
+		$req = array();
+		$req["cmd"] = "backupgetsettings";
+		$req["token"] = $token;
+
+		return $this->_dorequest($req);
+	}
+
+	function backupsetsettings($token,$location,$type) {
+		$req = array();
+		$req["cmd"] = "backupsetsettings";
+		$req["token"] = $token;
+		$req["type"] = $type;
+		$req["location"] = $location;
+
+		return $this->_dorequest($req);
+	}
+
+	function backupgetQuota($token) {
+		$req = array();
+		$req["cmd"] = "backupgetQuota";
+		$req["token"] = $token;
+
+		return $this->_dorequest($req);
+	}
+
+	function backupgetstatus($token) {
+		$req = array();
+		$req["cmd"] = "backupgetstatus";
+		$req["token"] = $token;
+
+		return $this->_dorequest($req);
+	}
+
+    function smtpgetdomains($token) {
+		$req = array();
+		$req["cmd"] = "smtpgetdomains";
+		$req["token"] = $token;
+
+		return $this->_dorequest($req);
     }
 
-    function backupsetsettings($token,$location,$type) {
-    	$req = array();
-    	$req["cmd"] = "backupsetsettings";
-    	$req["token"] = $token;
-    	$req["type"] = $type;
-    	$req["location"] = $location;
-    
-    	return $this->_dorequest($req);
-    }
-    
-    function backupgetQuota($token) {
-    	$req = array();
-    	$req["cmd"] = "backupgetQuota";
-    	$req["token"] = $token;
-    
-    	return $this->_dorequest($req);
-    }
-
-    function backupgetstatus($token) {
-    	$req = array();
-    	$req["cmd"] = "backupgetstatus";
-    	$req["token"] = $token;
-    
-    	return $this->_dorequest($req);
-    }
-    
 }
