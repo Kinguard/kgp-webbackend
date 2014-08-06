@@ -1,11 +1,5 @@
 <?php
 
-/* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 class OPIBackend
 {
     
@@ -250,12 +244,65 @@ class OPIBackend
 		return $this->_dorequest($req);
 	}
 
-    function smtpgetdomains($token) {
+	function smtpgetdomains($token)
+	{
 		$req = array();
 		$req["cmd"] = "smtpgetdomains";
 		$req["token"] = $token;
 
 		return $this->_dorequest($req);
-    }
+	}
 
+	function smtpadddomain($token, $domain)
+	{
+		$req = array();
+		$req["cmd"] = "smtpadddomain";
+		$req["token"] = $token;
+		$req["domain"] = $domain;
+
+		return $this->_dorequest($req);
+	}
+
+	function smtpdeletedomain($token, $domain)
+	{
+		$req = array();
+		$req["cmd"] = "smtpdeletedomain";
+		$req["token"] = $token;
+		$req["domain"] = $domain;
+
+		return $this->_dorequest($req);
+	}
+
+	function smtpgetaddresses($token, $domain)
+	{
+		$req = array();
+		$req["cmd"] = "smtpgetaddresses";
+		$req["token"] = $token;
+		$req["domain"] = $domain;
+
+		return $this->_dorequest($req);
+	}
+
+	function smtpaddaddress($token, $domain, $address, $username)
+	{
+		$req = array();
+		$req["cmd"] = "smtpaddaddress";
+		$req["token"] = $token;
+		$req["domain"] = $domain;
+		$req["address"] = $address;
+		$req["username"] = $username;
+
+		return $this->_dorequest($req);
+	}
+
+	function smtpdeleteaddress($token, $domain, $address)
+	{
+		$req = array();
+		$req["cmd"] = "smtpdeleteaddress";
+		$req["token"] = $token;
+		$req["domain"] = $domain;
+		$req["address"] = $address;
+
+		return $this->_dorequest($req);
+	}
 }
