@@ -332,4 +332,12 @@ class OPIBackend
     		 
     		return $this->_dorequest($req);
 	}
+	function networkgetopiname($token) 
+	{
+	    	$req = array();
+    		$req["cmd"] = "networkgetopiname";
+	    	$req["token"] = $token;
+    	
+	    	return $this->_dorequest($req);
+	}
 }

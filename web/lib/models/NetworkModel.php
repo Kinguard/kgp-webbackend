@@ -62,13 +62,15 @@ function setport( $port, $state )
 {
 	$b = \OPIBackend::instance();
 	list($status,$res) = $b->networksetportstatus( \OPI\session\gettoken(),$port,$state);
-	if(!$status) error_log($res."\n",3,"/tmp/webbackend.log");
 	return $status;
 }
 
 function getopiname()
 {
-	return "my-opi";
+	$b = \OPIBackend::instance();
+	list($status,$res) = $b->networkgetopiname( \OPI\session\gettoken());
+	if($status) return $res["opiname"];
+	else return false;
 }
 function setopiname( $name )
 {

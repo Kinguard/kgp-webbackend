@@ -159,16 +159,20 @@ function setport($port)
 
 
     $status = \OPI\NetworkModel\setport($port, $enabled);	
+	if(!$status) $app->halt(400);
     $res['status'] = $status;
 	$res['enabled'] = $enabled;
 	print json_encode($res);
-	if(!$status) $app->halt(400);
 }
 function getopiname()
 {
 	$app = \Slim\Slim::getInstance();
 	$app->response->headers->set('Content-Type', 'application/json');
-	printf('{"opiname": "%s"}',\OPI\NetworkModel\getopiname() );
+	$opiname = \OPI\NetworkModel\getopiname();
+	if($opiname === false) {
+		if(!$status) $app->halt(400);
+	}
+	printf('{"opiname": "%s"}',$opiname );
 }
 
 function setopiname($name)
