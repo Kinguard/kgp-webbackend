@@ -1,11 +1,5 @@
 <?php
 
-/* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 class OPIBackend
 {
     
@@ -49,7 +43,6 @@ class OPIBackend
         fwrite($this->sock,json_encode($req));
 
         $res=json_decode(fgets($this->sock,16384),true);
-
         
         return $this->_processreply($res);
     }
@@ -199,74 +192,144 @@ class OPIBackend
 
         return $this->_dorequest($req);
     }
-    function updategetstate($token) {
-    	$req = array();
-    	$req["cmd"] = "updategetstate";
-    	$req["token"] = $token;
-    	 
-    	return $this->_dorequest($req);
-    }
     
-    function updatesetstate($token,$state) {
-    	$req = array();
-    	$req["cmd"] = "updatesetstate";
-    	$req["token"] = $token;
-    	$req["state"] = $state;
-    
-    	return $this->_dorequest($req);
-    }
-    
-    function backupgetsettings($token) {
-    	$req = array();
-    	$req["cmd"] = "backupgetsettings";
-    	$req["token"] = $token;
-    
-    	return $this->_dorequest($req);
-    }
+	function updategetstate($token) 
+	{
+		$req = array();
+		$req["cmd"] = "updategetstate";
+		$req["token"] = $token;
 
-    function backupsetsettings($token,$location,$type) {
-    	$req = array();
-    	$req["cmd"] = "backupsetsettings";
-    	$req["token"] = $token;
-    	$req["type"] = $type;
-    	$req["location"] = $location;
-    
-    	return $this->_dorequest($req);
-    }
-    
-    function backupgetQuota($token) {
-    	$req = array();
-    	$req["cmd"] = "backupgetQuota";
-    	$req["token"] = $token;
-    
-    	return $this->_dorequest($req);
-    }
+		return $this->_dorequest($req);
+	}
 
-    function backupgetstatus($token) {
-    	$req = array();
-    	$req["cmd"] = "backupgetstatus";
-    	$req["token"] = $token;
-    
-    	return $this->_dorequest($req);
-    }
-    
-    function networkgetportstatus($token,$port) {
-    	$req = array();
-    	$req["cmd"] = "networkgetportstatus";
-    	$req["token"] = $token;
-    	$req["port"] = $port;
+	function updatesetstate($token,$state) 
+	{
+		$req = array();
+		$req["cmd"] = "updatesetstate";
+		$req["token"] = $token;
+		$req["state"] = $state;
+
+		return $this->_dorequest($req);
+	}
+
+	function backupgetsettings($token) 
+	{
+		$req = array();
+		$req["cmd"] = "backupgetsettings";
+		$req["token"] = $token;
+
+		return $this->_dorequest($req);
+	}
+
+	function backupsetsettings($token,$location,$type) 
+	{
+		$req = array();
+		$req["cmd"] = "backupsetsettings";
+		$req["token"] = $token;
+		$req["type"] = $type;
+		$req["location"] = $location;
+
+		return $this->_dorequest($req);
+	}
+
+	function backupgetQuota($token) 
+	{
+		$req = array();
+		$req["cmd"] = "backupgetQuota";
+		$req["token"] = $token;
+
+		return $this->_dorequest($req);
+	}
+
+	function backupgetstatus($token) 
+	{
+		$req = array();
+		$req["cmd"] = "backupgetstatus";
+		$req["token"] = $token;
+
+		return $this->_dorequest($req);
+	}
+
+	function smtpgetdomains($token)
+	{
+		$req = array();
+		$req["cmd"] = "smtpgetdomains";
+		$req["token"] = $token;
+
+		return $this->_dorequest($req);
+	}
+
+	function smtpadddomain($token, $domain)
+	{
+		$req = array();
+		$req["cmd"] = "smtpadddomain";
+		$req["token"] = $token;
+		$req["domain"] = $domain;
+
+		return $this->_dorequest($req);
+	}
+
+	function smtpdeletedomain($token, $domain)
+	{
+		$req = array();
+		$req["cmd"] = "smtpdeletedomain";
+		$req["token"] = $token;
+		$req["domain"] = $domain;
+
+		return $this->_dorequest($req);
+	}
+
+	function smtpgetaddresses($token, $domain)
+	{
+		$req = array();
+		$req["cmd"] = "smtpgetaddresses";
+		$req["token"] = $token;
+		$req["domain"] = $domain;
+
+		return $this->_dorequest($req);
+	}
+
+	function smtpaddaddress($token, $domain, $address, $username)
+	{
+		$req = array();
+		$req["cmd"] = "smtpaddaddress";
+		$req["token"] = $token;
+		$req["domain"] = $domain;
+		$req["address"] = $address;
+		$req["username"] = $username;
+
+		return $this->_dorequest($req);
+	}
+
+	function smtpdeleteaddress($token, $domain, $address)
+	{
+		$req = array();
+		$req["cmd"] = "smtpdeleteaddress";
+		$req["token"] = $token;
+		$req["domain"] = $domain;
+		$req["address"] = $address;
+
+		return $this->_dorequest($req);
+	}
+
+	function networkgetportstatus($token,$port) 
+	{
+	    	$req = array();
+    		$req["cmd"] = "networkgetportstatus";
+	    	$req["token"] = $token;
+	    	$req["port"] = $port;
     	
-    	return $this->_dorequest($req);
-    }
+	    	return $this->_dorequest($req);
+	}
 
-    function networksetportstatus($token,$port,$state) {
-    	$req = array();
-    	$req["cmd"] = "networksetportstatus";
-    	$req["token"] = $token;
-    	$req["port"] = $port;
-    	$req["set_open"] = $state;
-    	 
-    	return $this->_dorequest($req);
-    }
-    
+	function networksetportstatus($token,$port,$state)
+	{
+    		$req = array();
+    		$req["cmd"] = "networksetportstatus";
+    		$req["token"] = $token;
+    		$req["port"] = $port;
+    		$req["set_open"] = $state;
+    		 
+    		return $this->_dorequest($req);
+	}
 }

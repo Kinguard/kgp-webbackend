@@ -8,55 +8,119 @@
 
 namespace OPI\SMTPModel;
 
+require_once 'models/OPIBackend.php';
 
 function getdomains()
 {
-	$ret = array(
-		array("domain" => "example.com"),
-		array("domain" => "example2.com"),
-	);
-	
-	return $ret;
+	$b = \OPIBackend::instance();
+
+	list($status, $res) = $b->smtpgetdomains(\OPI\session\gettoken() );
+
+	if( $status )
+	{
+		$ret = array();
+		foreach($res["domains"] as $domain )
+		{
+			$ret[]["domain"] = $domain;
+		}
+		return  $ret;
+	}
+	return false;
 }
 
 function domainexists( $domain )
 {
-	return True;
+	$b = \OPIBackend::instance();
+
+	list($status, $res) = $b->smtpgetdomains(\OPI\session\gettoken() );
+
+	if( $status )
+	{
+		return in_array($domain, $res["domains"]);
+	}
+
+	return false;
 }
 
 function adddomain( $domain )
 {
-	return $domain;
+	$b = \OPIBackend::instance();
+
+	list($status, $res) = $b->smtpadddomain(\OPI\session\gettoken(), $domain );
+	if( $status )
+	{
+		return $domain;
+	}
+
+	return false;
 }
 
 function deletedomain( $domain )
 {
-	
+	$b = \OPIBackend::instance();
+
+	list($status, $res) = $b->smtpdeletedomain(\OPI\session\gettoken(), $domain );
+
+	return $status;
 }
 
-function addaddress( $domain, $address )
+function addaddress( $domain, $address, $username )
 {
-	
+	$b = \OPIBackend::instance();
+
+	list($status, $res) = $b->smtpaddaddress(
+		\OPI\session\gettoken(), $domain, $address, $username );
+
+	return $status;
 }
 
 function addressexists( $domain, $address )
 {
+	$b = \OPIBackend::instance();
+
+	list($status, $res) = $b->smtpgetaddresses(\OPI\session\gettoken(), $domain );
+	if( $status )
+	{
+		foreach( $res["addresses"] as $address )
+		{
+			if( $address["address"] == $address )
+			{
+				return true;
+			}
+		}
+	}
 	return false;
 }
 
 function deleteaddress( $domain, $address )
 {
-	
+	$b = \OPIBackend::instance();
+
+	list($status, $res) = $b->smtpdeleteaddress(
+		\OPI\session\gettoken(), $domain, $address );
+
+	return $status;
 }
 
 function getaddresses( $domain )
 {
-	$ret = array(
-		array( "address"=>"tor", "user"=>"tor"),
-		array( "address"=>"jenny", "user"=>"jenny"),
-	);
-	
-	return $ret;
+	$b = \OPIBackend::instance();
+
+	list($status, $res) = $b->smtpgetaddresses(\OPI\session\gettoken(), $domain );
+
+	if( $status )
+	{
+		$ret = array();
+		foreach($res["addresses"] as $address )
+		{
+			$ret[]= array(
+				"address" => $address["address"],
+				"user" => $address["username"]);
+		}
+		return  $ret;
+	}
+
+	return false;
 }
 
 function getsettings()

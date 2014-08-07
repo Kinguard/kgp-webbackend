@@ -1,3 +1,9 @@
+opi-webbackend (1.5) vili; urgency=low
+
+  * initial support for smtp users and domains
+
+ -- Tor Krill <tor@openproducts.se>  Wed, 06 Aug 2014 15:59:05 +0200
+
 opi-webbackend (1.4) vili; urgency=low
 
   * Removed logging from do_request

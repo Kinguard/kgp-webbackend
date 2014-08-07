@@ -63,10 +63,18 @@ function addaddress( $domain )
 		$app->halt(400);
 	}
 
+	list($adr_part,$dmn_part) = explode( "@", $address,2);
+
+	if( $dmn_part != $domain )
+	{
+		$app->halt(400);
+	}
+	$address = $adr_part;
+
 	// Check if domain exists
 	if(!\OPI\SMTPModel\domainexists($domain) )
 	{
-		$app->halt(401);
+		$app->halt(404);
 	}
 
 	// Check that name isn't used
@@ -75,7 +83,7 @@ function addaddress( $domain )
 		$app->halt(400);
 	}
 
-	\OPI\SMTPModel\addaddress($domain, $address);
+	\OPI\SMTPModel\addaddress($domain, $address, $user);
 }
 
 function deleteaddress( $domain, $address )
