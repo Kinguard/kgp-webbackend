@@ -24,6 +24,15 @@ function setstatic($ip, $netmask, $gw = "", $dns1="", $dns2="")
 	
 }
 
+
+function setports( $ports )
+{
+	foreach( $ports as $port )
+	{
+		
+	}
+}
+
 function getports()
 {
 	return array(
@@ -35,22 +44,26 @@ function getports()
 	);
 }
 
+
 function getportstatus( $port )
 {
-	return True;
-}
-
-function setports( $ports )
-{
-	foreach( $ports as $port )
-	{
-		
+	$b = \OPIBackend::instance();
+	list($status,$res) = $b->networkgetportstatus( \OPI\session\gettoken(),$port);
+	
+	if($status && isset($res['is_open']) && $res['is_open'] == "yes") {
+		return "1";
+	} else {
+		return "0";
 	}
 }
 
-function setport( $port, $status )
+
+function setport( $port, $state )
 {
-	
+	$b = \OPIBackend::instance();
+	list($status,$res) = $b->networksetportstatus( \OPI\session\gettoken(),$port,$state);
+	if(!$status) error_log($res."\n",3,"/tmp/webbackend.log");
+	return $status;
 }
 
 function getopiname()

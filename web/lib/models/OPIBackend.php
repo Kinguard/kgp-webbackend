@@ -250,4 +250,23 @@ class OPIBackend
     	return $this->_dorequest($req);
     }
     
+    function networkgetportstatus($token,$port) {
+    	$req = array();
+    	$req["cmd"] = "networkgetportstatus";
+    	$req["token"] = $token;
+    	$req["port"] = $port;
+    	
+    	return $this->_dorequest($req);
+    }
+
+    function networksetportstatus($token,$port,$state) {
+    	$req = array();
+    	$req["cmd"] = "networksetportstatus";
+    	$req["token"] = $token;
+    	$req["port"] = $port;
+    	$req["set_open"] = $state;
+    	 
+    	return $this->_dorequest($req);
+    }
+    
 }

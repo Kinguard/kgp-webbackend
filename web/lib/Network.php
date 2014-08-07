@@ -58,6 +58,11 @@ function setsettings()
 		
 	}
 }
+function _validateport($portno)
+{
+	return !(False === array_search( $portno, [25,80,443,143,993,2525]));
+}
+
 
 function getports()
 {
@@ -68,10 +73,6 @@ function getports()
     print json_encode(\OPI\NetworkModel\getports() );
 }
 
-function _validateport($portno)
-{
-	return !(False === array_search( $portno, [25,80,443,143,993]));
-}
 
 function setports()
 {
@@ -140,7 +141,7 @@ function setport($port)
     $value	= $app->request->put("enabled");
     if( ! $value )
     {
-        $app->halt(400);
+    	$app->halt(400);
     }
 
     if( $value == "True")
@@ -156,7 +157,12 @@ function setport($port)
         $app->halt(404);
     }
 
-	\OPI\NetworkModel\setport($port, $enabled);
+
+    $status = \OPI\NetworkModel\setport($port, $enabled);	
+    $res['status'] = $status;
+	$res['enabled'] = $enabled;
+	print json_encode($res);
+	if(!$status) $app->halt(400);
 }
 function getopiname()
 {
