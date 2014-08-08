@@ -2,6 +2,8 @@
 
 namespace OPI\FetchmailModel;
 
+require_once 'models/OPIBackend.php';
+
 
 function _toid($host,$id)
 {
@@ -15,12 +17,20 @@ function _fromid($id)
 
 function getaccountbyhost($host, $identity)
 {
-	return	array(
-			"host"		=> $host,
-			"identity"	=> $identity,
-			"password"	=> "secretthere",
-			"username"	=> "userhere"
-		);	
+	$b = \OPIBackend::instance();
+
+	list($status, $res) = $b->fetchmailgetaccount( \OPI\session\gettoken(),
+			$host, $identity );
+
+	if( $status )
+	{
+		return array(
+			"host"		=> $res["host"],
+			"identity"	=> $res["identity"],
+			"username"	=> $res["username"]
+		);
+	}
+	return array();
 }
 
 function getaccount($id)
@@ -32,41 +42,65 @@ function getaccount($id)
 
 function getaccounts( $user = NULL)
 {
-	// If user not null, only fetch accounts for that user
-	// TODO: Implement
-	$ret = array(
-		array(
-			"id"		=> "id1",
-			"host"		=> "gmail.com",
-			"identity"	=> "userthere",
-			"password"	=> "secretthere",
-			"username"	=> "userhere"
-		),
-		array(
-			"id"		=> "id2",
-			"host"		=> "gmail.com",
-			"identity"	=> "user2there",
-			"password"	=> "secretthere",
-			"username"	=> "user2here"
-		),
-	);
+	$b = \OPIBackend::instance();
 
-	return $ret;
+	list($status, $res) = $b->fetchmailgetaccounts( \OPI\session\gettoken(), $user );
+
+	if( $status )
+	{
+		$ret = array();
+		foreach( $res["accounts"] as $account )
+		{
+			$ret[] = array(
+			"id"		=> _toid($account["host"], $account["identity"]),
+			"host"		=> $account["host"],
+			"identity"	=> $account["identity"],
+			"username"	=> $account["username"]
+			);
+		}
+
+		return $ret;
+	}
+
+	return false;
 }
 
 function addaccount( $host, $identity, $password, $username)
 {
-	return _toid($host, $identity);
+	$b = \OPIBackend::instance();
+
+	list($status, $res) = $b->fetchmailaddaccount( \OPI\session\gettoken(),
+		$host,
+		$identity,
+		$password,
+		$username );
+
+	return $status?_toid($host, $identity):$status;
 }
 
 function updateaccount( $host, $identity, $password, $username)
 {
-	
+	$b = \OPIBackend::instance();
+
+	list($status, $res) = $b->fetchmailupdateaccount( \OPI\session\gettoken(),
+		$host,
+		$identity,
+		$password,
+		$username );
+
+	return $status?_toid($host, $identity):$status;
 }
 
 function deleteaccount( $id )
 {
 	list($host, $identity) = _fromid($id);
 	
+	$b = \OPIBackend::instance();
+
+	list($status, $res) = $b->fetchmaildeleteaccount( \OPI\session\gettoken(),
+		$host,
+		$identity );
+
+	return $status?_toid($host, $identity):$status;
 }
 

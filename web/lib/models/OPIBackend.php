@@ -340,4 +340,64 @@ class OPIBackend
     	
 	    	return $this->_dorequest($req);
 	}
+
+	function fetchmailgetaccounts($token, $username)
+	{
+		$req = array();
+		$req["cmd"] = "fetchmailgetaccounts";
+		$req["token"] = $token;
+		$req["username"] = $username;
+
+		return $this->_dorequest($req);
+	}
+
+
+	function fetchmailgetaccount($token, $hostname, $identity)
+	{
+		$req = array();
+		$req["cmd"] = "fetchmailgetaccount";
+		$req["token"] = $token;
+		$req["hostname"] = $hostname;
+		$req["identity"] = $identity;
+
+		return $this->_dorequest($req);
+	}
+
+	function fetchmailaddaccount($token, $hostname, $identity, $password, $username)
+	{
+		$req = array();
+		$req["cmd"] = "fetchmailaddaccount";
+		$req["token"] = $token;
+		$req["hostname"] = $hostname;
+		$req["identity"] = $identity;
+		$req["password"] = $password;
+		$req["username"] = $username;
+
+		return $this->_dorequest($req);
+	}
+
+	function fetchmailupdateaccount($token, $hostname, $identity, $password, $username)
+	{
+		$req = array();
+		$req["cmd"] = "fetchmailupdateaccount";
+		$req["token"] = $token;
+		$req["hostname"] = $hostname;
+		$req["identity"] = $identity;
+		$req["password"] = $password;
+		$req["username"] = $username;
+
+		return $this->_dorequest($req);
+	}
+
+	function fetchmaildeleteaccount($token, $hostname, $identity)
+	{
+		$req = array();
+		$req["cmd"] = "fetchmaildeleteaccount";
+		$req["token"] = $token;
+		$req["hostname"] = $hostname;
+		$req["identity"] = $identity;
+
+		return $this->_dorequest($req);
+	}
+
 }
