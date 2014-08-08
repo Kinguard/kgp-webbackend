@@ -1,3 +1,9 @@
+opi-webbackend (1.6) vili; urgency=low
+
+  * Initial integration of Fetchmail
+
+ -- Tor Krill <tor@openproducts.se>  Fri, 08 Aug 2014 15:52:43 +0200
+
 opi-webbackend (1.5) vili; urgency=low
 
   * initial support for smtp users and domains
