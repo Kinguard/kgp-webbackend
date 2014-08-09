@@ -54,7 +54,7 @@ function isadminoruser( $user )
 
 function getuser()
 {
-	return $_SESSION['USER'];
+	return isset($_SESSION['USER']) ? $_SESSION['USER'] : false;
 }
 
 function errmsg($code, $msg)

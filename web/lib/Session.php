@@ -51,8 +51,9 @@ function requireadmin()
 
 function loggedin()
 {
-	$res["authenticated"] = isloggedin();
-	if( isloggedin() )
+	
+	$res["authenticated"] = isloggedin() && \OPI\UserModel\getuser(getuser());
+	if( $res["authenticated"] )
 	{
 		$res["user"]["username"] = $_SESSION['USER'];
 		$res["user"]["admin"] = $_SESSION['ADMIN'];
@@ -89,7 +90,6 @@ function login()
     }
 
     $token = \OPI\UserModel\authenticateuser($user, $password);
-
     if( $token )
     {
         //TODO: Perhaps safeguard token in session better
