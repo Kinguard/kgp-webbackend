@@ -137,5 +137,8 @@ function deleteaccount($id)
 		$app->halt(401);
 	}
 
-	\OPI\FetchmailModel\deleteaccount($id);
+	if( ! \OPI\FetchmailModel\deleteaccount($id) )
+	{
+		$app->halt(400);
+	}
 }

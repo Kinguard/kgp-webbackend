@@ -1,9 +1,15 @@
-opi-webbackend (1.6) vili; urgency=low
+opi-webbackend (1.7) vili; urgency=low
 
-  * Checking with opi-backend that the user is logged into the backed as well
-    for session handling.
+  * Checking with opi-backend that the user is logged into the
+    backed as well for session handling.
 
  -- PA Nilsson <pa@openproducts.se>  Sat, 09 Aug 2014 17:54:45 +0200
+
+opi-webbackend (1.6) vili; urgency=low
+
+  * Initial integration of Fetchmail
+
+ -- Tor Krill <tor@openproducts.se>  Fri, 08 Aug 2014 15:52:43 +0200
 
 opi-webbackend (1.5) vili; urgency=low
 
