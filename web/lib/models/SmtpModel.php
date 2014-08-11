@@ -125,17 +125,36 @@ function getaddresses( $domain )
 
 function getsettings()
 {
-	$ret = array(
-		"relay"	=> "gmail.com",
-		"username"	=> "u2",
-		"password"	=> "MySecret",
-		"port"		=> "25"
-	);
-	
-	return $ret;
+	$b = \OPIBackend::instance();
+
+	list($status, $res) = $b->smtpgetsettings(\OPI\session\gettoken() );
+
+	if( $status )
+	{
+
+		return array(
+			"usecustom"	=> $res["usecustom"],
+			"relay"		=> $res["relay"],
+			"username"	=> $res["username"],
+			"password"	=> $res["password"],
+			"port"		=> $res["port"]
+		);
+	}
+	return $status;
 }
 
 function setsettings( $settings )
 {
-	
+	$b = \OPIBackend::instance();
+
+	list($status, $res) = $b->smtpsetsettings(
+		\OPI\session\gettoken(),
+		$settings["usecustom"],
+		$settings["relay"],
+		$settings["port"],
+		$settings["username"],
+		$settings["password"]
+		);
+
+	return $status;
 }

@@ -312,6 +312,29 @@ class OPIBackend
 		return $this->_dorequest($req);
 	}
 
+	function smtpgetsettings($token)
+	{
+		$req = array();
+		$req["cmd"] = "smtpgetsettings";
+		$req["token"] = $token;
+
+		return $this->_dorequest($req);
+	}
+
+	function smtpsetsettings($token, $custom, $host, $port, $user, $password)
+	{
+		$req = array();
+		$req["cmd"] =		"smtpsetsettings";
+		$req["token"] =		$token;
+		$req["usecustom"] =	$custom;
+		$req["hostname"] =	$host;
+		$req["port"] =		$port;
+		$req["username"] =	$user;
+		$req["password"] =	$password;
+
+		return $this->_dorequest($req);
+	}
+
 	function networkgetportstatus($token,$port) 
 	{
 	    	$req = array();

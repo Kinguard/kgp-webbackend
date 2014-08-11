@@ -135,16 +135,18 @@ function setsettings( )
 {
 	$app = \Slim\Slim::getInstance();
 
+	$usecustom	= $app->request->post('usecustom');
 	$relay 		= $app->request->post('relay');
 	$username	= $app->request->post('username');
 	$password 	= $app->request->post('password');
 	$port 		= $app->request->post('port');
 
-	if( !checknull( $relay, $username, $password, $port ) )
+	if( !checknull( $usecustom, $relay, $username, $password, $port ) )
 	{
 		$app->halt(400);
 	}
 	$settings = array(
+		"usecustom"	=> $usecustom,
 		"relay"		=> $relay,
 		"username"	=> $username,
 		"password"	=> $password,
