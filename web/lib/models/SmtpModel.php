@@ -114,7 +114,7 @@ function getaddresses( $domain )
 		foreach($res["addresses"] as $address )
 		{
 			$ret[]= array(
-				"address" => $address["address"],
+				"address" => $address["address"]."@".$domain,
 				"user" => $address["username"]);
 		}
 		return  $ret;

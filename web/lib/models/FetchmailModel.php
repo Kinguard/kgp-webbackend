@@ -25,6 +25,7 @@ function getaccountbyhost($host, $identity)
 	if( $status )
 	{
 		return array(
+			"email"		=> $res["email"],
 			"host"		=> $res["host"],
 			"identity"	=> $res["identity"],
 			"username"	=> $res["username"]
@@ -53,6 +54,7 @@ function getaccounts( $user = NULL)
 		{
 			$ret[] = array(
 			"id"		=> _toid($account["host"], $account["identity"]),
+			"email"		=> $account["email"],
 			"host"		=> $account["host"],
 			"identity"	=> $account["identity"],
 			"username"	=> $account["username"]
@@ -65,11 +67,12 @@ function getaccounts( $user = NULL)
 	return false;
 }
 
-function addaccount( $host, $identity, $password, $username)
+function addaccount( $email, $host, $identity, $password, $username)
 {
 	$b = \OPIBackend::instance();
 
 	list($status, $res) = $b->fetchmailaddaccount( \OPI\session\gettoken(),
+		$email,
 		$host,
 		$identity,
 		$password,
@@ -78,11 +81,12 @@ function addaccount( $host, $identity, $password, $username)
 	return $status?_toid($host, $identity):$status;
 }
 
-function updateaccount( $host, $identity, $password, $username)
+function updateaccount( $email, $host, $identity, $password, $username)
 {
 	$b = \OPIBackend::instance();
 
 	list($status, $res) = $b->fetchmailupdateaccount( \OPI\session\gettoken(),
+		$email,
 		$host,
 		$identity,
 		$password,

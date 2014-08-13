@@ -6,7 +6,7 @@ function checknull()
 
 	foreach( $args as $arg )
 	{
-		if( $arg == null )
+		if( $arg === null )
 		{
 			return false;
 		}
@@ -19,7 +19,7 @@ function checknullarray( $arr )
 {
     foreach( $arr as $arg )
     {
-            if( $arg == null )
+            if( $arg === null )
             {
                     return false;
             }

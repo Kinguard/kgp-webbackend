@@ -386,11 +386,12 @@ class OPIBackend
 		return $this->_dorequest($req);
 	}
 
-	function fetchmailaddaccount($token, $hostname, $identity, $password, $username)
+	function fetchmailaddaccount($token, $email, $hostname, $identity, $password, $username)
 	{
 		$req = array();
 		$req["cmd"] = "fetchmailaddaccount";
 		$req["token"] = $token;
+		$req["email"] = $email;
 		$req["hostname"] = $hostname;
 		$req["identity"] = $identity;
 		$req["password"] = $password;
@@ -399,11 +400,12 @@ class OPIBackend
 		return $this->_dorequest($req);
 	}
 
-	function fetchmailupdateaccount($token, $hostname, $identity, $password, $username)
+	function fetchmailupdateaccount($token, $email, $hostname, $identity, $password, $username)
 	{
 		$req = array();
 		$req["cmd"] = "fetchmailupdateaccount";
 		$req["token"] = $token;
+		$req["email"] = $email;
 		$req["hostname"] = $hostname;
 		$req["identity"] = $identity;
 		$req["password"] = $password;
