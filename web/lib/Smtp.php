@@ -96,6 +96,14 @@ function deleteaddress( $domain, $address )
 		$app->halt(404);
 	}
 
+	list($adr_part,$dmn_part) = explode( "@", $address,2);
+
+	if( $dmn_part != $domain )
+	{
+		$app->halt(400);
+	}
+	$address = $adr_part;
+
 	// Check if address exists
 	if(\OPI\SMTPModel\addressexists($domain, $address))
 	{
