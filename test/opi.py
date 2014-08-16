@@ -5,6 +5,7 @@ class OPI:
 	def __init__(self, url="http://localhost:8000/index.php"):
 		self.url = url+"/api"
 		self.s = requests.session()
+		self.s.verify=False
 
 	#
 	# Session management
@@ -54,6 +55,12 @@ class OPI:
 		if r.status_code == 200:
 			return r.json()
 		return False
+
+	def getusergroups( self, user):
+		r = self.s.get(self.url+"/users/%s/groups"%user)
+		if r.status_code == 200:
+			return r.json()
+		return false
 
 	def getusers(self):
 		r = self.s.get(self.url+"/users")

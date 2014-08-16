@@ -32,7 +32,8 @@ def setupsecop():
 	# Add users and groups expected in test
 	s.adduser("admin","secret")
 	s.adduser("user", "secret")
-	s.addgroup("admin")
+	# Group admin always exists
+	#s.addgroup("admin")
 	s.addgroupmember("admin","admin")
 
 
@@ -161,6 +162,27 @@ class TestUser( TestBase ):
 		self.assertEqual(lg["user"]["displayname"], "Temp User")
 
 		self.assertTrue( self.opi.getuser( "temp2" ) )
+
+	def testUserGroups( self ):
+		self.assertTrue( self.opi.login( "admin", "secret" ) )
+
+		self.assertEqual( len(self.opi.getusergroups("admin")), 1)
+
+		self.assertTrue( self.opi.addgroup("g1"))
+		self.assertTrue( self.opi.addgroup("g2"))
+		self.assertTrue( self.opi.addgroup("g3"))
+
+		self.assertTrue( self.opi.addusergroup( "g1","admin") )
+		self.assertEqual( len(self.opi.getusergroups("admin")), 2)
+
+		self.assertTrue( self.opi.addusergroup( "g3","admin") )
+		self.assertEqual( len(self.opi.getusergroups("admin")), 3)
+
+		self.assertTrue( self.opi.addusergroup( "g2","admin") )
+		self.assertEqual( len(self.opi.getusergroups("admin")), 4)
+
+		self.assertTrue( self.opi.deletegroupuser("g1","admin") )
+		self.assertEqual( len(self.opi.getusergroups("admin")), 3)
 
 	def testCreateDelete( self ):
 
