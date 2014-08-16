@@ -45,8 +45,11 @@ function getgroups( $username )
 	$app->response->headers->set('Content-Type', 'application/json');
 
 	$groups = \OPI\UserModel\getgroups( $username );
-
-	print json_encode( $groups );
+	$o_groups = Array();
+	foreach($groups as $group) {
+		$o_groups[] = array('id' => $group);
+	}
+	print json_encode( $o_groups );
 }
 
 function deleteuser($id)
