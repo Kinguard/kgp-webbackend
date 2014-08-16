@@ -1,3 +1,9 @@
+opi-webbackend (1.11) vili; urgency=low
+
+  * Implement get user groups
+
+ -- Tor Krill <tor@openproducts.se>  Sat, 16 Aug 2014 14:12:20 +0200
+
 opi-webbackend (1.10) vili; urgency=low
 
   * Trim domain of address in smtp receive
