@@ -33,19 +33,30 @@ function getusers()
 
 	$app->response->headers->set('Content-Type', 'application/json');
 
-        $users = \OPI\UserModel\getusers();
+	$users = \OPI\UserModel\getusers();
 
 	print json_encode( $users );
+}
+
+function getgroups( $username )
+{
+	$app = \Slim\Slim::getInstance();
+
+	$app->response->headers->set('Content-Type', 'application/json');
+
+	$groups = \OPI\UserModel\getgroups( $username );
+
+	print json_encode( $groups );
 }
 
 function deleteuser($id)
 {
 	$app = \Slim\Slim::getInstance();
 
-        if( !\OPI\UserModel\deleteuser( $id ) )
-        {
-            $app->halt(404);
-        }
+	if( !\OPI\UserModel\deleteuser( $id ) )
+	{
+		$app->halt(404);
+	}
 }
 
 function deleteusers()
