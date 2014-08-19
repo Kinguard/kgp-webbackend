@@ -1,3 +1,9 @@
+opi-webbackend (1.12) vili; urgency=low
+
+  * Don't escape unicode characters hopefully fixing #110
+
+ -- Tor Krill <tor@openproducts.se>  Tue, 19 Aug 2014 09:53:23 +0200
+
 opi-webbackend (1.11) vili; urgency=low
 
   * Implement get user groups

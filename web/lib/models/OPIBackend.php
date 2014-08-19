@@ -40,7 +40,7 @@ class OPIBackend
             return array(false, "Not connected");
         }
         
-        fwrite($this->sock,json_encode($req));
+        fwrite($this->sock,json_encode($req, JSON_UNESCAPED_UNICODE ));
 
         $res=json_decode(fgets($this->sock,16384),true);
         
