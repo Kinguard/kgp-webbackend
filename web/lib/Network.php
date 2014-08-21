@@ -168,16 +168,24 @@ function getopiname()
 {
 	$app = \Slim\Slim::getInstance();
 	$app->response->headers->set('Content-Type', 'application/json');
+
 	$opiname = \OPI\NetworkModel\getopiname();
-	if($opiname === false) {
-		if(!$status) $app->halt(400);
+
+	if($opiname === false)
+	{
+		$app->halt(400);
 	}
 	printf('{"opiname": "%s"}',$opiname );
 }
 
 function setopiname($name)
 {
-	//\OPI\NetworkModel\setopiname($name);
+	$app = \Slim\Slim::getInstance();
+
+	if( ! \OPI\NetworkModel\setopiname($name) )
+	{
+		$app->response->setStatus(400);
+	}
 }
 
 function checkopiname()
@@ -210,6 +218,6 @@ function checkopiname()
 		$res['isValid'] = true;
 		$res['value'] = "Name available";
 	}
-	error_log(json_encode($res)."\n",3,"/tmp/backend.log");	
+
 	print json_encode($res);	
 }

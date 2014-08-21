@@ -365,6 +365,7 @@ class OPIBackend
     		 
     		return $this->_dorequest($req);
 	}
+
 	function networkgetopiname($token) 
 	{
 	    	$req = array();
@@ -373,6 +374,17 @@ class OPIBackend
     	
 	    	return $this->_dorequest($req);
 	}
+
+	function networksetopiname($token, $hostname)
+	{
+		$req = array();
+		$req["cmd"] = "networksetopiname";
+		$req["token"] = $token;
+		$req["hostname"] = $hostname;
+
+		return $this->_dorequest($req);
+	}
+
 
 	function fetchmailgetaccounts($token, $username)
 	{

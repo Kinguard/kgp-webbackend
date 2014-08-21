@@ -74,4 +74,9 @@ function getopiname()
 }
 function setopiname( $name )
 {
+	$b = \OPIBackend::instance();
+
+	list($status,$res) = $b->networksetopiname( \OPI\session\gettoken(), $name);
+
+	return $status;
 }

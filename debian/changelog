@@ -1,3 +1,10 @@
+opi-webbackend (1.13) vili; urgency=low
+
+  * Implement set opiname
+  * Implement query opiname
+
+ -- Tor Krill <tor@openproducts.se>  Thu, 21 Aug 2014 17:12:44 +0200
+
 opi-webbackend (1.12) vili; urgency=low
 
   * Don't escape unicode characters hopefully fixing #110
