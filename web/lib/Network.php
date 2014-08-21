@@ -179,3 +179,37 @@ function setopiname($name)
 {
 	//\OPI\NetworkModel\setopiname($name);
 }
+
+function checkopiname()
+{
+	error_reporting(error_reporting() & ~E_WARNING);
+	// turn off error reporting so that slim does not trigger on an expected 403 response from backend servers.
+	$app = \Slim\Slim::getInstance();
+	
+	$data = http_build_query( array(
+				"checkname" => true, 
+				"fqdn" => $app->request->post("value").".op-i.me"
+				)
+			); 
+	$context_options = Array(
+		"http" =>	Array(
+				"method"  => "POST",
+				"timeout" => 1,
+				"content" => $data,
+				'header' => "Content-Type: application/x-www-form-urlencoded\r\n".
+				"Content-Length: ".strlen($data)."\r\n",
+			)
+		);
+	$context = stream_context_create($context_options);
+	
+	$fp = @fopen("https://auth.openproducts.com/update_dns.php",'r',false,$context);
+	if($fp === false) {
+		$res['isValid'] = false;
+		$res['value'] = "Name not available";
+	} else {
+		$res['isValid'] = true;
+		$res['value'] = "Name available";
+	}
+	error_log(json_encode($res)."\n",3,"/tmp/backend.log");	
+	print json_encode($res);	
+}

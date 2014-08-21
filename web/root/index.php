@@ -21,7 +21,7 @@ require_once 'Session.php';
 \Slim\Slim::registerAutoloader();
 
 $app = new \Slim\Slim(array(
-	'debug' => true
+	//'debug' => true
 	)
 );
 
@@ -103,6 +103,7 @@ $app->put('/api/network/ports/:port', "\OPI\session\\requireadmin", "\OPI\\netwo
 
 $app->get('/api/network/opiname', "\OPI\session\\requireadmin", "\OPI\\network\getopiname");
 $app->post('/api/network/opiname/:name', "\OPI\session\\requireadmin", "\OPI\\network\setopiname");
+$app->post('/api/network/checkopiname', "\OPI\session\\requireloggedin", "\OPI\\network\checkopiname");
 
 // Misc other stuff
 $app->post('/api/shutdown', "\OPI\session\\requireadmin", "\OPI\\device\shutdown");
