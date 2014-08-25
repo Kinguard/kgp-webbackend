@@ -67,7 +67,7 @@ function getaccounts( $user = NULL)
 	return false;
 }
 
-function addaccount( $email, $host, $identity, $password, $username)
+function addaccount( $email, $host, $identity, $password, $username, $ssl)
 {
 	$b = \OPIBackend::instance();
 
@@ -76,12 +76,13 @@ function addaccount( $email, $host, $identity, $password, $username)
 		$host,
 		$identity,
 		$password,
-		$username );
+		$username,
+		$ssl);
 
 	return $status?_toid($host, $identity):$status;
 }
 
-function updateaccount( $email, $host, $identity, $password, $username)
+function updateaccount( $email, $host, $identity, $password, $username, $ssl)
 {
 	$b = \OPIBackend::instance();
 
@@ -90,7 +91,8 @@ function updateaccount( $email, $host, $identity, $password, $username)
 		$host,
 		$identity,
 		$password,
-		$username );
+		$username,
+		$ssl);
 
 	return $status?_toid($host, $identity):$status;
 }

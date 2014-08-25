@@ -61,8 +61,9 @@ function addaccount()
 	$identity	= $app->request->post('identity');
 	$password 	= $app->request->post('password');
 	$username	= $app->request->post('username');
+	$ssl		= $app->request->post('encrypt')=="1"?"true":"false";
 
-	if( ! checknull($host, $email, $identity, $password, $username) )
+	if( ! checknull($host, $email, $identity, $password, $username, $ssl) )
 	{
 		$app->halt(400);
 	}
@@ -77,7 +78,13 @@ function addaccount()
 		$app->halt(409);
 	}
 
-	$id = \OPI\FetchmailModel\addaccount( $email, $host, $identity, $password, $username );
+	$id = \OPI\FetchmailModel\addaccount(
+		$email,
+		$host,
+		$identity,
+		$password,
+		$username,
+		$ssl);
 
 	$app->response->headers->set('Content-Type', 'application/json');
 
@@ -93,8 +100,9 @@ function updateaccount($id)
 	$identity	= $app->request->post('identity');
 	$password 	= $app->request->post('password');
 	$username	= $app->request->post('username');
+	$ssl		= $app->request->post('encrypt')=="1"?"true":"false";
 
-	if( ! checknull($email, $host, $identity, $password, $username) )
+	if( ! checknull($email, $host, $identity, $password, $username, $ssl) )
 	{
 		$app->halt(400);
 	}
@@ -119,7 +127,13 @@ function updateaccount($id)
 			$app->halt(401);
 		}
 
-		\OPI\FetchmailModel\updateaccount($email, $host, $identity, $password, $username );
+		\OPI\FetchmailModel\updateaccount(
+			$email,
+			$host,
+			$identity,
+			$password,
+			$username,
+			$ssl );
 	}
 }
 
