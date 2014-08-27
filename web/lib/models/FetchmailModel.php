@@ -28,7 +28,8 @@ function getaccountbyhost($host, $identity)
 			"email"		=> $res["email"],
 			"host"		=> $res["host"],
 			"identity"	=> $res["identity"],
-			"username"	=> $res["username"]
+			"username"	=> $res["username"],
+			"encrypt"	=> $res["ssl"] == "true" ? "1":"0"
 		);
 	}
 	return array();
@@ -57,7 +58,8 @@ function getaccounts( $user = NULL)
 			"email"		=> $account["email"],
 			"host"		=> $account["host"],
 			"identity"	=> $account["identity"],
-			"username"	=> $account["username"]
+			"username"	=> $account["username"],
+			"encrypt"	=> $account["ssl"] == "true" ? "1":"0"
 			);
 		}
 

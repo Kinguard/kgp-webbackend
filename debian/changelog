@@ -1,3 +1,9 @@
+opi-webbackend (1.15) vili; urgency=low
+
+  * Add ssl when returning fetchmail accounts #160
+
+ -- Tor Krill <tor@openproducts.se>  Wed, 27 Aug 2014 11:49:57 +0200
+
 opi-webbackend (1.14) vili; urgency=low
 
   * Use ssl parameter to fetchmail
