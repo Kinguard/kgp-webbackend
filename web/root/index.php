@@ -35,7 +35,7 @@ $app->delete('/api/session', "\OPI\session\logout");
 $app->post('/api/users', "\OPI\session\\requireadmin", "\OPI\users\createuser");
 $app->post('/api/users/:id/changepassword', "\OPI\session\\requireloggedin", "\OPI\users\updatepassword");
 $app->put('/api/users/:id', "\OPI\session\\requireloggedin", "\OPI\users\updateuser");
-$app->get('/api/users', "\OPI\session\\requireadmin", "\OPI\users\getusers");
+$app->get('/api/users', "\OPI\session\\requireloggedin", "\OPI\users\getusers");
 $app->get('/api/users/:id', "\OPI\session\\requireloggedin", "\OPI\users\getuser");
 $app->get('/api/users/:id/groups', "\OPI\session\\requireloggedin", "\OPI\users\getgroups");
 $app->delete('/api/users/:id', "\OPI\session\\requireadmin", "\OPI\users\deleteuser");
@@ -58,14 +58,14 @@ $app->post('/api/updates', "\OPI\session\\requireadmin", "\OPI\updates\setstate"
 $app->put('/api/updates', "\OPI\session\\requireadmin", "\OPI\updates\setstate");
 
 // SMTP domains
-$app->get('/api/smtp/domains', "\OPI\session\\requireadmin", "\OPI\smtp\getdomains");
-$app->post('/api/smtp/domains', "\OPI\session\\requireadmin", "\OPI\smtp\adddomain");
-$app->delete('/api/smtp/domains/:id', "\OPI\session\\requireadmin", "\OPI\smtp\deletedomain");
+$app->get('/api/smtp/domains', "\OPI\session\\requireloggedin", "\OPI\smtp\getdomains");
+$app->post('/api/smtp/domains', "\OPI\session\\requireloggedin", "\OPI\smtp\adddomain");
+$app->delete('/api/smtp/domains/:id', "\OPI\session\\requireloggedin", "\OPI\smtp\deletedomain");
 
 // SMTP Mail-addresses
-$app->post('/api/smtp/domains/:name/addresses', "\OPI\session\\requireadmin", "\OPI\smtp\addaddress");
-$app->get('/api/smtp/domains/:name/addresses', "\OPI\session\\requireadmin", "\OPI\smtp\getaddresses");
-$app->delete('/api/smtp/domains/:name/addresses/:address', "\OPI\session\\requireadmin", "\OPI\smtp\deleteaddress");
+$app->post('/api/smtp/domains/:name/addresses', "\OPI\session\\requireloggedin", "\OPI\smtp\addaddress");
+$app->get('/api/smtp/domains/:name/addresses', "\OPI\session\\requireloggedin", "\OPI\smtp\getaddresses");
+$app->delete('/api/smtp/domains/:name/addresses/:address', "\OPI\session\\requireloggedin", "\OPI\smtp\deleteaddress");
 
 // SMTP Settings
 $app->get('/api/smtp/settings', "\OPI\session\\requireadmin", "\OPI\smtp\getsettings");

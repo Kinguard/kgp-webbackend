@@ -1,3 +1,9 @@
+opi-webbackend (1.16) vili; urgency=low
+
+  * Fix bugs on email for non admin users
+
+ -- Tor Krill <tor@openproducts.se>  Thu, 28 Aug 2014 09:10:03 +0200
+
 opi-webbackend (1.15) vili; urgency=low
 
   * Add ssl when returning fetchmail accounts #160

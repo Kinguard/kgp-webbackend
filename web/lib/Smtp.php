@@ -83,7 +83,10 @@ function addaddress( $domain )
 		$app->halt(400);
 	}
 
-	\OPI\SMTPModel\addaddress($domain, $address, $user);
+	if( ! \OPI\SMTPModel\addaddress($domain, $address, $user) )
+	{
+		$app->status(403);
+	}
 }
 
 function deleteaddress( $domain, $address )
