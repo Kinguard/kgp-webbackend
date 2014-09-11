@@ -39,12 +39,15 @@ class OPIBackend
         {
             return array(false, "Not connected");
         }
-        
-        fwrite($this->sock,json_encode($req, JSON_UNESCAPED_UNICODE ));
+
+		fwrite($this->sock,json_encode($req, JSON_UNESCAPED_UNICODE ));
 
         $res=json_decode(fgets($this->sock,16384),true);
-        
-        return $this->_processreply($res);
+
+		fclose( $this->sock);
+		$this->connected = FALSE;
+
+		return $this->_processreply($res);
     }
             
     function login($user, $password)

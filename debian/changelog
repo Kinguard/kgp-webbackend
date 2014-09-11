@@ -1,3 +1,10 @@
+opi-webbackend (1.17) vili; urgency=low
+
+  * Close connection after each call. Seems to be some
+    concurrency problems in OC app
+
+ -- Tor Krill <tor@openproducts.se>  Thu, 11 Sep 2014 14:57:00 +0200
+
 opi-webbackend (1.16) vili; urgency=low
 
   * Fix bugs on email for non admin users
