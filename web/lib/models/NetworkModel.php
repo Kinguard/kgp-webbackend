@@ -4,26 +4,83 @@ namespace OPI\NetworkModel;
 
 function getsettings()
 {
-	return array(
-		"type"			=> "dynamic",
-		"ipnumber"		=> "192.168.1.82",
-		"netmask"		=> "255.255.255.0",
-		"gateway"		=> "192.168.1.1",
-		"dns1"			=> "8.8.8.8",
-		"dns2"			=> "4.4.4.4"
-	);
+	$b = \OPIBackend::instance();
+	list($status,$res) = $b->networkgetsettings( \OPI\session\gettoken());
+
+	if( $status )
+	{
+		$ret = array();
+		$ret["type"] = $res["type"] == "static" ? "static" : "dynamic";
+		$ret["ipnumber"] = $res["ipnumber"];
+		$ret["netmask"] = $res["netmask"];
+		$ret["gateway"] = $res["gateway"];
+
+		$len = count( $res["dns"] );
+
+		if( $len > 0 )
+		{
+			$ret["dns1"] = $res["dns"][0];
+
+			if( $len > 1 )
+			{
+				$ret["dns2"] = $res["dns"][1];
+			}
+			else
+			{
+				$ret["dns2"] = "";
+			}
+		}
+		else
+		{
+			$ret["dns1"] = "";
+			$ret["dns2"] = "";
+		}
+
+		return $ret;
+	}
+
+	return false;
 }
 
 function setdynamic()
 {
-	
+	$b = \OPIBackend::instance();
+
+	list($status,$res) = $b->networksetsettings(
+			\OPI\session\gettoken(),
+			"dhcp",
+			"",
+			"",
+			"",
+			array()
+		);
+	return $status;
 }
 
 function setstatic($ip, $netmask, $gw = "", $dns1="", $dns2="")
 {
-	
-}
+	$b = \OPIBackend::instance();
 
+	$nss = array();
+	if( $dns1 != "" )
+	{
+		$nss[] = $dns1;
+	}
+	if( $dns2 != "" )
+	{
+		$nss[] = $dns2;
+	}
+	
+	list($status,$res) = $b->networksetsettings(
+			\OPI\session\gettoken(),
+			"static",
+			$ip,
+			$netmask,
+			$gw,
+			$nss
+		);
+	return $status;
+}
 
 function setports( $ports )
 {

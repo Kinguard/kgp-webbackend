@@ -388,6 +388,28 @@ class OPIBackend
 		return $this->_dorequest($req);
 	}
 
+	function networkgetsettings($token)
+	{
+		$req = array();
+		$req["cmd"] = "getnetworksettings";
+		$req["token"] = $token;
+
+		return $this->_dorequest($req);
+	}
+
+	function networksetsettings($token, $type, $ipnumber, $netmask, $gateway, $dns)
+	{
+		$req = array();
+		$req["cmd"] = "setnetworksettings";
+		$req["token"] = $token;
+		$req["type"] = $type;
+		$req["ipnumber"] = $ipnumber;
+		$req["netmask"] = $netmask;
+		$req["gateway"] = $gateway;
+		$req["dns"] = $dns;
+
+		return $this->_dorequest($req);
+	}
 
 	function fetchmailgetaccounts($token, $username)
 	{
