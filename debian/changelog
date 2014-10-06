@@ -1,3 +1,9 @@
+opi-webbackend (1.18) vili; urgency=low
+
+  * Implement network settings
+
+ -- Tor Krill <tor@openproducts.se>  Mon, 06 Oct 2014 16:11:43 +0200
+
 opi-webbackend (1.17) vili; urgency=low
 
   * Close connection after each call. Seems to be some
