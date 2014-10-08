@@ -14,6 +14,7 @@ require 'Fetchmail.php';
 require 'Backup.php';
 require 'Network.php';
 require 'Device.php';
+require 'Shell.php';
 
 require_once 'Session.php';
 \OPI\session\setup();

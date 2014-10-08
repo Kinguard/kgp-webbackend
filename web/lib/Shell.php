@@ -30,10 +30,10 @@ function setsettings()
 		$app->response->setStatus(400);
 		print_r($app->request->params());
 	} else {
-		if ($enable == "0" or $enable == "1") {
+		if ($enable == "1" or $enable == "0") {
 			$res = array();
 
-			if( $enable == 0 )
+			if( $enable == "1" )
 			{
 				$res["status"] = \OPI\ShellModel\enable();
 			}
