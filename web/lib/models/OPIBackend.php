@@ -474,4 +474,30 @@ class OPIBackend
 		return $this->_dorequest($req);
 	}
 
+	function shellgetsettings($token)
+	{
+		$req = array();
+		$req["cmd"] = "getshellsettings";
+		$req["token"] = $token;
+
+		return $this->_dorequest($req);
+	}
+
+	function shellsetenabled($token)
+	{
+		$req = array();
+		$req["cmd"] = "doshellenable";
+		$req["token"] = $token;
+
+		return $this->_dorequest($req);
+	}
+
+	function shellsetdisabled($token)
+	{
+		$req = array();
+		$req["cmd"] = "doshelldisable";
+		$req["token"] = $token;
+
+		return $this->_dorequest($req);
+	}
 }

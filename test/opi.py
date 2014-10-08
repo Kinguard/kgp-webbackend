@@ -293,4 +293,26 @@ class OPI:
 	def deletegroupuser(self, group, user ):
 		r = self.s.delete(self.url+"/groups/%s/%s"%(group, user) )
 		return r.status_code == 200
+	#
+	# Shell functions
+	#
 
+	def getshellsettings(self):
+		r = self.s.get(self.url+"/shell")
+		if r.status_code == 200:
+			return r.json()
+		return False
+
+	def setshellsettings(self, enable):
+		r = self.s.post( self.url + "/shell", {'enable':enable})
+		return r.status_code == 200
+
+	#
+	# System functions
+	#
+
+	def shutdown(self, action):
+		r = self.post( self.url+"/shutdown", {'action':action})
+		if r.status_code == 200:
+			return r.json()
+		return False

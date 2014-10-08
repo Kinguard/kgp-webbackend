@@ -108,5 +108,8 @@ $app->post('/api/network/checkopiname', "\OPI\session\\requireloggedin", "\OPI\\
 // Misc other stuff
 $app->post('/api/shutdown', "\OPI\session\\requireadmin", "\OPI\\device\shutdown");
 
+$app->get('/api/shell', "\OPI\session\\requireadmin", "\OPI\\shell\getsettings");
+$app->post('/api/shell', "\OPI\session\\requireadmin", "\OPI\\shell\setsettings");
+
 $app->run();
 
