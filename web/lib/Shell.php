@@ -12,7 +12,11 @@ require_once 'models/ShellModel.php';
 
 function getsettings()
 {
-	$ret["enabled"] = \OPI\ShellModel\getenabled();
+	if( \OPI\ShellModel\getenabled() ) {
+		$ret["enabled"] = "1";
+	} else {
+		$ret["enabled"] = "0";
+	}
 
 	$app = \Slim\Slim::getInstance();
 	$app->response->headers->set('Content-Type', 'application/json');
@@ -24,25 +28,44 @@ function setsettings()
 {
 	$app = \Slim\Slim::getInstance();
 
-	$enable = $app->request->post('enable');
+	$enable = $app->request->post('enabled');
 
 	if ($enable == null) {
 		$app->response->setStatus(400);
 		print_r($app->request->params());
 	} else {
-		if ($enable == "1" or $enable == "0") {
+		if ($enable == "1" or $enable == "0")
+		{
 			$res = array();
 
 			if( $enable == "1" )
 			{
 				$res["status"] = \OPI\ShellModel\enable();
+				if ($res["status"])
+				{
+					$res['enabled'] = "1";
+				}
+				else
+				{
+					$res['enabled'] = "0";
+				}
 			}
 			else
 			{
 				$res["status"] = \OPI\ShellModel\disable();
+				if ($res["status"])
+				{
+					$res['enabled'] = "0";
+				}
+				else
+				{
+					$res['enabled'] = "1";
+				}
 			}
 			print json_encode($res);
-		} else {
+		}
+		else
+		{
 			$app->response->setStatus(400);
 			print_r($app->request->params());
 		}

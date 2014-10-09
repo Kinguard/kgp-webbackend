@@ -1,3 +1,9 @@
+opi-webbackend (1.21) vili; urgency=low
+
+  * Aligned API for shell access with web frontend
+
+ -- PA Nilsson <pa@openproducts.se>  Thu, 09 Oct 2014 22:04:12 +0200
+
 opi-webbackend (1.20) vili; urgency=low
 
   * Fix missing include and parameters for shell settings
