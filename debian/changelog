@@ -1,3 +1,9 @@
+opi-webbackend (1.22) vili; urgency=low
+
+  * Update backend to use new smtp settings api
+
+ -- Tor Krill <tor@openproducts.se>  Wed, 03 Dec 2014 15:46:29 +0100
+
 opi-webbackend (1.21) vili; urgency=low
 
   * Aligned API for shell access with web frontend

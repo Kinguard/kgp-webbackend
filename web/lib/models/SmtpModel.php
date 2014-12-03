@@ -132,12 +132,24 @@ function getsettings()
 	if( $status )
 	{
 
+		$type = "usecustom";
+		if( $res["type"] == "OPI" )
+		{
+			$type = "useopi";
+		}
+		else if( $res["type"] == "EXTERNAL" )
+		{
+			$type = "useexternal";
+		}
+
 		return array(
-			"usecustom"	=> $res["usecustom"],
-			"relay"		=> $res["relay"],
-			"username"	=> $res["username"],
-			"password"	=> $res["password"],
-			"port"		=> $res["port"]
+			"smtpsettings"	=> $type,
+			"relay"			=> isset($res["hostname"])?$res["hostname"]:"",
+			"username"		=> isset($res["username"])?$res["username"]:"",
+			"password"		=> isset($res["password"])?$res["password"]:"",
+			"port"			=> isset($res["port"])?$res["port"]:"",
+			"sendexternal"	=> isset($res["send"])?$res["send"]:false,
+			"receiverelay"	=> isset($res["receive"])?$res["receive"]:false,
 		);
 	}
 	return $status;
@@ -147,13 +159,33 @@ function setsettings( $settings )
 {
 	$b = \OPIBackend::instance();
 
+	$type = $settings["type"];
+	if( $type == "useexternal")
+	{
+		$settings["type"] = "EXTERNAL";
+	}
+	else if( $type == "usecustom")
+	{
+		$settings["type"] = "CUSTOM";
+	}
+	else if( $type == "useopi")
+	{
+		$settings["type"] = "OPI";
+	}
+	else
+	{
+		return 400;
+	}
+
 	list($status, $res) = $b->smtpsetsettings(
 		\OPI\session\gettoken(),
-		$settings["usecustom"],
+		$settings["type"],
 		$settings["relay"],
 		$settings["port"],
 		$settings["username"],
-		$settings["password"]
+		$settings["password"],
+		$settings["send"],
+		$settings["receive"]
 		);
 
 	return $status;

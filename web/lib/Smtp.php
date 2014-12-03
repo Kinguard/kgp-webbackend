@@ -146,22 +146,26 @@ function setsettings( )
 {
 	$app = \Slim\Slim::getInstance();
 
-	$usecustom	= $app->request->post('usecustom');
+	$type		= $app->request->post('smtpsettings');
 	$relay 		= $app->request->post('relay');
 	$username	= $app->request->post('username');
 	$password 	= $app->request->post('password');
 	$port 		= $app->request->post('port');
+	$send 		= $app->request->post('sendexternal');
+	$receive 	= $app->request->post('receiverelay');
 
-	if( !checknull( $usecustom, $relay, $username, $password, $port ) )
+	if( !checknull( $type, $relay, $username, $password, $port, $send, $receive ) )
 	{
 		$app->halt(400);
 	}
 	$settings = array(
-		"usecustom"	=> $usecustom,
+		"type"		=> $type,
 		"relay"		=> $relay,
 		"username"	=> $username,
 		"password"	=> $password,
-		"port"		=> $port
+		"port"		=> $port,
+		"send"		=> $send=="true",
+		"receive"	=> $receive=="true"
 	);
 
 	\OPI\SMTPModel\setsettings($settings);
