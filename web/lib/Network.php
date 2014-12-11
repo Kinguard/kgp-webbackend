@@ -60,7 +60,7 @@ function setsettings()
 }
 function _validateport($portno)
 {
-	return !(False === array_search( $portno, [25,80,443,143,993,2525]));
+	return !(False === array_search( $portno, [25,80,443,143,587,993,2525]));
 }
 
 

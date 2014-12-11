@@ -1,3 +1,9 @@
+opi-webbackend (1.23) vili; urgency=low
+
+  * Added port 587 to validate port function
+
+ -- PA Nilsson <pa@openproducts.se>  Thu, 11 Dec 2014 10:49:18 +0100
+
 opi-webbackend (1.22) vili; urgency=low
 
   * Update backend to use new smtp settings api
