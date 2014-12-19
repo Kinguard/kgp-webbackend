@@ -51,15 +51,20 @@ function requireadmin()
 
 function loggedin()
 {
-	
-	$res["authenticated"] = isloggedin() && \OPI\UserModel\getuser(getuser());
-	if( $res["authenticated"] )
+	$res = [ "authenticated" => false];
+	if(isloggedin() )
 	{
-		$res["user"]["username"] = $_SESSION['USER'];
-		$res["user"]["admin"] = $_SESSION['ADMIN'];
-		$res["user"]["displayname"] = $_SESSION["DISPLAYNAME"];
+		$user = \OPI\UserModel\getuser(getuser());
+		if( $user )
+		{
+			$_SESSION["DISPLAYNAME"] = $user["displayname"];
+			$res["authenticated"] = true;
+			$res["user"]["username"] = $_SESSION['USER'];
+			$res["user"]["admin"] = $_SESSION['ADMIN'];
+			$res["user"]["displayname"] = $_SESSION["DISPLAYNAME"];
+		}
 	}
-	//$res["session"] = $_SESSION;
+
 	echo json_encode( $res );
 }
 

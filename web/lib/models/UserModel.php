@@ -73,16 +73,17 @@ function getusers()
 
 function getuser( $username )
 {
-    $b = \OPIBackend::instance();
+	$b = \OPIBackend::instance();
 
-    list($status, $rep) = $b->getuser( \OPI\session\gettoken(), $username );
+	list($status, $rep) = $b->getuser( \OPI\session\gettoken(), $username );
 
-    if( $status )
-    {
-        $rep["id"] = $rep["username"];
-    }
+	if( $status )
+	{
+		$rep["id"] = $rep["username"];
+		$rep["displayname"] = $rep["displayname"];
+	}
 
-    return $status ? $rep : false;
+	return $status ? $rep : false;
 }
 
 function getgroups( $username )
