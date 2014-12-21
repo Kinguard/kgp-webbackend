@@ -126,9 +126,17 @@ function getopiname()
 {
 	$b = \OPIBackend::instance();
 	list($status,$res) = $b->networkgetopiname( \OPI\session\gettoken());
-	if($status) return $res["opiname"];
-	else return false;
+
+	if($status)
+	{
+		return $res["opiname"];
+	}
+	else
+	{
+		return false;
+	}
 }
+
 function setopiname( $name )
 {
 	$b = \OPIBackend::instance();
