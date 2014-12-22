@@ -257,6 +257,19 @@ class OPI:
 	def setport(self, port, value):
 		r = self.s.put(self.url+"/network/ports/%d" % port, {"enabled":value} )
 		return r.status_code == 200
+
+	def getopiname(self):
+		r = self.s.get(self.url+"/network/opiname" )
+		if r.status_code == 200:
+			return r.json()
+		return False
+
+	def setopiname(self, name):
+		r = self.s.post(self.url+"/network/opiname/%s" % name )
+		if r.status_code == 200:
+			return r.json()
+		return False
+
 	#
 	# Group functions
 	#
