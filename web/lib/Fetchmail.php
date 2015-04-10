@@ -102,7 +102,7 @@ function updateaccount($id)
 	$username	= $app->request->post('username');
 	$ssl		= $app->request->post('encrypt')=="1"?"true":"false";
 
-	if( ! checknull($email, $host, $identity, $password, $username, $ssl) )
+	if( ! checknull($email, $host, $identity, $username, $ssl) )
 	{
 		$app->halt(400);
 	}
