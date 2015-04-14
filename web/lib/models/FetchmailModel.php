@@ -84,13 +84,17 @@ function addaccount( $email, $host, $identity, $password, $username, $ssl)
 	return $status?_toid($host, $identity):$status;
 }
 
-function updateaccount( $email, $host, $identity, $password, $username, $ssl)
+function updateaccount( $id, $email, $host, $identity, $password, $username, $ssl)
 {
 	$b = \OPIBackend::instance();
 
+	list($orighost, $origidentity) = _fromid($id);
+
 	list($status, $res) = $b->fetchmailupdateaccount( \OPI\session\gettoken(),
 		$email,
+		$orighost,
 		$host,
+		$origidentity,
 		$identity,
 		$password,
 		$username,

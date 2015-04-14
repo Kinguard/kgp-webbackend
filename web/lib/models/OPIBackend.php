@@ -40,14 +40,14 @@ class OPIBackend
             return array(false, "Not connected");
         }
 
-		fwrite($this->sock,json_encode($req, JSON_UNESCAPED_UNICODE ));
+	fwrite($this->sock,json_encode($req, JSON_UNESCAPED_UNICODE ));
 
         $res=json_decode(fgets($this->sock,16384),true);
 
-		fclose( $this->sock);
-		$this->connected = FALSE;
+	fclose( $this->sock);
+	$this->connected = FALSE;
 
-		return $this->_processreply($res);
+	return $this->_processreply($res);
     }
             
     function login($user, $password)
@@ -450,13 +450,16 @@ class OPIBackend
 		return $this->_dorequest($req);
 	}
 
-	function fetchmailupdateaccount($token, $email, $hostname, $identity, $password, $username, $ssl)
+	function fetchmailupdateaccount($token, $email, $orighostname, $hostname, 
+		$origidentity, $identity, $password, $username, $ssl)
 	{
 		$req = array();
 		$req["cmd"] = "fetchmailupdateaccount";
 		$req["token"] = $token;
 		$req["email"] = $email;
+		$req["orighostname"] = $orighostname;
 		$req["hostname"] = $hostname;
+		$req["origidentity"] = $origidentity;
 		$req["identity"] = $identity;
 		$req["password"] = $password;
 		$req["username"] = $username;

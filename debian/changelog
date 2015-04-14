@@ -1,3 +1,9 @@
+opi-webbackend (1.26) vili; urgency=medium
+
+  * Update updatefetchmail to handle change of all fields
+
+ -- Tor Krill <tor@openproducts.se>  Tue, 14 Apr 2015 13:41:34 +0200
+
 opi-webbackend (1.25) vili; urgency=low
 
   * Removed requirement of password to update fetchmail account
