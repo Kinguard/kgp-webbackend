@@ -169,22 +169,30 @@ function getopiname()
 	$app = \Slim\Slim::getInstance();
 	$app->response->headers->set('Content-Type', 'application/json');
 
-	$opiname = \OPI\NetworkModel\getopiname();
+	list($opiname,$enabled) = \OPI\NetworkModel\getopiname();
 
 	if($opiname === false)
 	{
 		$app->halt(400);
 	}
-	printf('{"opiname": "%s"}',$opiname );
+	printf('{"opiname": "%s","dnsenabled":"%s"}',$opiname,$enabled );
 }
 
-function setopiname($name)
+function setopiname()
 {
 	$app = \Slim\Slim::getInstance();
+	$settings = $app->request->post();
 
-	if( ! \OPI\NetworkModel\setopiname($name) )
+	if($settings['dnsenabled']) {
+		if( ! \OPI\NetworkModel\setopiname($settings['name']) )
 	{
 		$app->response->setStatus(400);
+		}
+	} else {
+		if( ! \OPI\NetworkModel\disabledns() )
+		{
+			$app->response->setStatus(400);
+		}
 	}
 }
 

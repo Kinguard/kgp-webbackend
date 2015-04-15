@@ -129,7 +129,7 @@ function getopiname()
 
 	if($status)
 	{
-		return $res["opiname"];
+		return array($res["opiname"],$res["dnsenabled"]);
 	}
 	else
 	{
@@ -143,5 +143,12 @@ function setopiname( $name )
 
 	list($status,$res) = $b->networksetopiname( \OPI\session\gettoken(), $name);
 
+	return $status;
+}
+
+function disabledns()
+{
+	$b = \OPIBackend::instance();
+	list($status,$res) = $b->networkdisabledns( \OPI\session\gettoken());
 	return $status;
 }

@@ -390,6 +390,14 @@ class OPIBackend
 		return $this->_dorequest($req);
 	}
 
+	function networkdisabledns($token)
+	{
+		$req = array();
+		$req["cmd"] = "networkdisabledns";
+		$req["token"] = $token;
+	
+		return $this->_dorequest($req);
+	}
 	function networkgetsettings($token)
 	{
 		$req = array();
