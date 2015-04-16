@@ -1,3 +1,9 @@
+opi-webbackend (1.28) vili; urgency=low
+
+  * Missed update of index.php 
+
+ -- PA Nilsson <pa@openproducts.se>  Thu, 16 Apr 2015 08:57:34 +0200
+
 opi-webbackend (1.27) vili; urgency=low
 
   * Added support to turn on/off OPI DNS
