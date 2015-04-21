@@ -1,3 +1,9 @@
+opi-webbackend (1.29) vili; urgency=low
+
+  * Using displayname in fetchmail account list
+
+ -- PA Nilsson <pa@openproducts.se>  Tue, 21 Apr 2015 11:40:04 +0200
+
 opi-webbackend (1.28) vili; urgency=low
 
   * Missed update of index.php 

@@ -53,13 +53,15 @@ function getaccounts( $user = NULL)
 		$ret = array();
 		foreach( $res["accounts"] as $account )
 		{
+			$user_info = \OPI\UserModel\getuser($account["username"]);
 			$ret[] = array(
 			"id"		=> _toid($account["host"], $account["identity"]),
 			"email"		=> $account["email"],
 			"host"		=> $account["host"],
 			"identity"	=> $account["identity"],
 			"username"	=> $account["username"],
-			"encrypt"	=> $account["ssl"] == "true" ? "1":"0"
+			"encrypt"	=> $account["ssl"] == "true" ? "1":"0",
+			"displayname" => $user_info['displayname']
 			);
 		}
 
