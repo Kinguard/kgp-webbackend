@@ -1,3 +1,9 @@
+opi-webbackend (1.30) vili; urgency=medium
+
+  * Added support for Custom Certificates 
+
+ -- PA Nilsson <pa@openproducts.se>  Fri, 02 Dec 2016 16:04:41 +0100
+
 opi-webbackend (1.29) vili; urgency=low
 
   * Using displayname in fetchmail account list

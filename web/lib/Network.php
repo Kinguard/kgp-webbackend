@@ -229,3 +229,62 @@ function checkopiname()
 
 	print json_encode($res);	
 }
+
+function getcert()
+{
+	$app = \Slim\Slim::getInstance();
+	$app->response->headers->set('Content-Type', 'application/json');
+
+	$res = \OPI\NetworkModel\getCert();
+
+	print json_encode($res);
+}
+
+function setcert()
+{
+	$app = \Slim\Slim::getInstance();
+	$settings = $app->request->post();
+	$app->response->headers->set('Content-Type', 'application/json');
+
+	$res = \OPI\NetworkModel\setCert($settings);
+	if( ! $res[0] )
+	{
+		print json_encode($res);
+		$app->response->setStatus(400);
+	}
+}
+
+function checkcert()
+{
+	$app = \Slim\Slim::getInstance();
+	$app->response->headers->set('Content-Type', 'application/json');
+	$post = $app->request->post();
+
+	if (\OPI\NetworkModel\checkCert($post['value']) )
+	{
+		$msg = '{"isValid": true}';
+	}
+	else
+	{
+		$msg = '{"isValid": false,"value":"Invalid Certificate"}';
+	}
+	print($msg);
+}
+
+function checkkey()
+{
+	$app = \Slim\Slim::getInstance();
+	$app->response->headers->set('Content-Type', 'application/json');
+	$post = $app->request->post();
+	
+	if (\OPI\NetworkModel\checkKey($post['value']) )
+	{
+		$msg = '{"isValid": true}';
+	}
+	else
+	{
+		$msg = '{"isValid": false,"value":"Invalid Key"}';
+	}
+	print($msg);
+}
+

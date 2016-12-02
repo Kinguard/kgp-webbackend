@@ -152,3 +152,53 @@ function disabledns()
 	list($status,$res) = $b->networkdisabledns( \OPI\session\gettoken());
 	return $status;
 }
+
+function getCert()
+{
+	$b = \OPIBackend::instance();
+	list($status,$res) = $b->networkgetcert( \OPI\session\gettoken());
+	if($status)
+	{
+		return $res;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+function setCert($settings)
+{
+	$b = \OPIBackend::instance();
+	$status = $b->networksetcert( \OPI\session\gettoken(), $settings);
+	return $status;
+
+}
+
+function checkCert($CertVal)
+{
+	$b = \OPIBackend::instance();
+	list($status,$res) = $b->networkcheckcert( \OPI\session\gettoken(),"cert",$CertVal);
+	if($status)
+	{
+		return $res;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+function checkKey($CertVal)
+{
+	$b = \OPIBackend::instance();
+	list($status,$res) = $b->networkcheckcert( \OPI\session\gettoken(),"key",$CertVal);
+	if($status)
+	{
+		return $res;
+	}
+	else
+	{
+		return false;
+	}
+}

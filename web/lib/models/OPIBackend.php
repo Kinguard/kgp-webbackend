@@ -389,6 +389,42 @@ class OPIBackend
 
 		return $this->_dorequest($req);
 	}
+	
+	function networkgetcert($token)
+	{
+		$req = array();
+		$req["cmd"] = "networkgetcert";
+		$req["token"] = $token;
+		return $this->_dorequest($req);
+	}
+
+	function networksetcert($token,$settings)
+	{
+		$req = array();
+		$req["cmd"] = "networksetcert";
+		$req["token"] = $token;
+		$req["CertType"] = $settings["CertType"];
+		$req["CustomCertVal"] = $settings["CustomCertVal"];
+		if (isset($settings["CustomKeyVal"]) && $settings["CustomKeyVal"]) {
+			$req["CustomKeyVal"] = $settings["CustomKeyVal"];
+		}
+		else
+		{
+			$req["CustomKeyVal"]="";	
+		}
+		return $this->_dorequest($req);
+	}
+
+	function networkcheckcert($token,$type,$certval)
+	{
+		$req = array();
+		$req["cmd"] = "networkcheckcert";
+		$req["token"] = $token;
+		$req["type"] = $type;
+		$req["CertVal"] = $certval;
+		return $this->_dorequest($req);
+	}
+
 
 	function networkdisabledns($token)
 	{
