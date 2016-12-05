@@ -1,3 +1,9 @@
+opi-webbackend (1.31) vili; urgency=medium
+
+  * Added missing changes to index.php
+
+ -- PA Nilsson <pa@openproducts.se>  Mon, 05 Dec 2016 13:58:17 +0100
+
 opi-webbackend (1.30) vili; urgency=medium
 
   * Added support for Custom Certificates 
