@@ -19,10 +19,17 @@ function getstatus()
 	$b = \OPIBackend::instance();
 	list($status,$res) = $b->backupgetstatus( \OPI\session\gettoken());
 	
+	//return $res;
+	if(isset($res['log']) )
+		$log = $res['log'];
+	else
+		$log = "";
+
 	return array(
 		"date"		=> $res["date"], 
 		"status"	=> $res["backup_status"],
-		"info"		=> $res["info"]
+		"info"		=> $res["info"],
+		"log"		=> $res["log"]
 	);
 }
 
@@ -68,10 +75,10 @@ function getsettings()
 */
 }
 
-function setsettings($location, $type)
+function setsettings($location, $type, $AWSkey, $AWSseckey, $AWSbucket)
 {
 	$b = \OPIBackend::instance();
-	list($status,$res) = $b->backupsetsettings( \OPI\session\gettoken(),$location,$type);
+	list($status,$res) = $b->backupsetsettings( \OPI\session\gettoken(),$location, $type, $AWSkey, $AWSseckey, $AWSbucket);
 	
 	return $status;
 	

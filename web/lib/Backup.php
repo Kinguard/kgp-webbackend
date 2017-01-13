@@ -115,6 +115,9 @@ function setsettings()
 	$enabled 	= $app->request->post('enabled');
 	$location	= $app->request->post('location');
 	$type 		= $app->request->post('type');
+	$AWSkey		= $app->request->post('AWSkey') ? $app->request->post('AWSkey') : "";
+	$AWSseckey	= $app->request->post('AWSseckey') ? $app->request->post('AWSseckey') : "";
+	$AWSbucket	= $app->request->post('AWSbucket') ? $app->request->post('AWSbucket') : "";
 
 	// Validate indata
 	//if( !checknull( $enabled, $location, $type ) )
@@ -123,7 +126,7 @@ function setsettings()
 		$app->halt(400);
 	}
 
-	if( ! in_array( $location, array( "remote", "local") ) )
+	if( ! in_array( $location, array( "op", "local", "amazon") ) )
 	{
 		$app->halt(400);
 	}
@@ -134,9 +137,10 @@ function setsettings()
 		$app->halt(400);
 	}
 	*/
-	if($enabled == "false") {
+	if($enabled == "false")
+	{
 		$location = "none";
 	}
 	
-	\OPI\BackupModel\setsettings($location, $type);
+	\OPI\BackupModel\setsettings($location, $type, $AWSkey, $AWSseckey, $AWSbucket);
 }
