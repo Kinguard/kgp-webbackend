@@ -29,7 +29,7 @@ function getstatus()
 		"date"		=> $res["date"], 
 		"status"	=> $res["backup_status"],
 		"info"		=> $res["info"],
-		"log"		=> $res["log"]
+		"log"		=> $log
 	);
 }
 
