@@ -15,6 +15,7 @@ require 'Backup.php';
 require 'Network.php';
 require 'Device.php';
 require 'Shell.php';
+require 'System.php';
 
 require_once 'Session.php';
 \OPI\session\setup();
@@ -108,6 +109,13 @@ $app->post('/api/network/checkopiname', "\OPI\session\\requireloggedin", "\OPI\\
 $app->get('/api/network/CertSettings', "\OPI\session\\requireadmin", "\OPI\\network\getcert");
 $app->post('/api/network/CertSettings', "\OPI\session\\requireadmin", "\OPI\\network\setcert");
 $app->post('/api/network/checkcert', "\OPI\session\\requireadmin", "\OPI\\network\checkcert");
+
+// System status and messages
+$app->get('/api/system/messages', "\OPI\session\\requireloggedin", "\OPI\\system\getmessages");
+$app->post('/api/system/messages', "\OPI\session\\requireadmin", "\OPI\\system\ackmessage");
+$app->get('/api/system/status', "\OPI\session\\requireloggedin", "\OPI\\system\getstatus");
+$app->get('/api/system/storage', "\OPI\session\\requireloggedin", "\OPI\\system\getstorage");
+$app->get('/api/system/packages', "\OPI\session\\requireloggedin", "\OPI\\system\getpackages");
 
 // Misc other stuff
 $app->post('/api/shutdown', "\OPI\session\\requireadmin", "\OPI\\device\shutdown");

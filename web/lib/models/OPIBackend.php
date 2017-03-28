@@ -2,117 +2,117 @@
 
 class OPIBackend
 {
-    
-    private static $instance;
-    
-    public static function instance()  {
-        if ( !isset(self::$instance) ) {
-            self::$instance = new self;
-        }
+	
+	private static $instance;
+	
+	public static function instance()  {
+		if ( !isset(self::$instance) ) {
+			self::$instance = new self;
+		}
 
-        return self::$instance;
-    }
-    
-    var $sock;
-    
-    function _connect()
-    {
-        $this->sock = stream_socket_client("unix:///tmp/opib");
-        return ! ( $this->sock === FALSE );
-    }
-    
-    function _processreply( $res )
-    {
-        if( $res["status"]["value"] == 0 )
-        {
-            return array(true, $res);
-        }
-        else
-        {
-            return array(false, $res["status"]["desc"]);
-        }
-    }
-    
-    function _dorequest($req)
-    {
-        if( !$this->_connect() )
-        {
-            return array(false, "Not connected");
-        }
+		return self::$instance;
+	}
+	
+	var $sock;
+	
+	function _connect()
+	{
+		$this->sock = stream_socket_client("unix:///tmp/opib");
+		return ! ( $this->sock === FALSE );
+	}
+	
+	function _processreply( $res )
+	{
+		if( $res["status"]["value"] == 0 )
+		{
+			return array(true, $res);
+		}
+		else
+		{
+			return array(false, $res["status"]["desc"]);
+		}
+	}
+	
+	function _dorequest($req)
+	{
+		if( !$this->_connect() )
+		{
+			return array(false, "Not connected");
+		}
 
 	fwrite($this->sock,json_encode($req, JSON_UNESCAPED_UNICODE ));
 
-        $res=json_decode(fgets($this->sock,16384),true);
+		$res=json_decode(fgets($this->sock,16384),true);
 
 	fclose( $this->sock);
 	$this->connected = FALSE;
 
 	return $this->_processreply($res);
-    }
-            
-    function login($user, $password)
-    {        
-        $req = array();
-        $req["cmd"] = "login";
-        $req["username"] = $user;
-        $req["password"] = $password;
-        
-        return $this->_dorequest($req);
-    }
-    
-    function createuser($token, $user, $password, $display)
-    {
-        $req = array();
-        $req["cmd"] = "createuser";
-        $req["token"] = $token;
-        $req["username"] = $user;
-        $req["password"] = $password;
-        $req["displayname"] = $display;
-        
-        return $this->_dorequest($req);
-    }
+	}
+			
+	function login($user, $password)
+	{        
+		$req = array();
+		$req["cmd"] = "login";
+		$req["username"] = $user;
+		$req["password"] = $password;
+		
+		return $this->_dorequest($req);
+	}
+	
+	function createuser($token, $user, $password, $display)
+	{
+		$req = array();
+		$req["cmd"] = "createuser";
+		$req["token"] = $token;
+		$req["username"] = $user;
+		$req["password"] = $password;
+		$req["displayname"] = $display;
+		
+		return $this->_dorequest($req);
+	}
 
-    function updateuserpassword($token, $user, $password, $newpassword)
-    {
-        $req = array();
-        $req["cmd"] = "updateuserpassword";
-        $req["token"] = $token;
-        $req["username"] = $user;
-        $req["password"] = $password?$password:"";
-        $req["newpassword"] = $newpassword;
+	function updateuserpassword($token, $user, $password, $newpassword)
+	{
+		$req = array();
+		$req["cmd"] = "updateuserpassword";
+		$req["token"] = $token;
+		$req["username"] = $user;
+		$req["password"] = $password?$password:"";
+		$req["newpassword"] = $newpassword;
 
-        return $this->_dorequest($req);
-    }
+		return $this->_dorequest($req);
+	}
 
-    function updateuser($token, $user, $display)
-    {
-        $req = array();
-        $req["cmd"] = "updateuser";
-        $req["token"] = $token;
-        $req["username"] = $user;
-        $req["displayname"] = $display;
-        
-        return $this->_dorequest($req);
-    }
+	function updateuser($token, $user, $display)
+	{
+		$req = array();
+		$req["cmd"] = "updateuser";
+		$req["token"] = $token;
+		$req["username"] = $user;
+		$req["displayname"] = $display;
+		
+		return $this->_dorequest($req);
+	}
 
-    function getuser($token, $user)
-    {
-        $req = array();
-        $req["cmd"] = "getuser";
-        $req["token"] = $token;
-        $req["username"] = $user;
-        
-        return $this->_dorequest($req);
-    }
+	function getuser($token, $user)
+	{
+		$req = array();
+		$req["cmd"] = "getuser";
+		$req["token"] = $token;
+		$req["username"] = $user;
+		
+		return $this->_dorequest($req);
+	}
 
-    function getusers($token)
-    {
-        $req = array();
-        $req["cmd"] = "getusers";
-        $req["token"] = $token;
-        
-        return $this->_dorequest($req);
-    }
+	function getusers($token)
+	{
+		$req = array();
+		$req["cmd"] = "getusers";
+		$req["token"] = $token;
+		
+		return $this->_dorequest($req);
+	}
 
 	function getusergroups( $token, $username )
 	{
@@ -124,88 +124,88 @@ class OPIBackend
 		return $this->_dorequest($req);
 	}
 
-    function deleteuser($token, $username)
-    {
-        $req = array();
-        $req["cmd"] = "deleteuser";
-        $req["token"] = $token;
-        $req["username"] = $username;
-        
-        return $this->_dorequest($req);
-    }
+	function deleteuser($token, $username)
+	{
+		$req = array();
+		$req["cmd"] = "deleteuser";
+		$req["token"] = $token;
+		$req["username"] = $username;
+		
+		return $this->_dorequest($req);
+	}
 
 
-    function getgroups($token)
-    {
-        $req = array();
-        $req["cmd"] = "groupsget";
-        $req["token"] = $token;
+	function getgroups($token)
+	{
+		$req = array();
+		$req["cmd"] = "groupsget";
+		$req["token"] = $token;
 
-        return $this->_dorequest($req);
-    }
+		return $this->_dorequest($req);
+	}
 
-    function addgroup($token, $group)
-    {
-        $req = array();
-        $req["cmd"] = "groupadd";
-        $req["token"] = $token;
-        $req["group"] = $group;
+	function addgroup($token, $group)
+	{
+		$req = array();
+		$req["cmd"] = "groupadd";
+		$req["token"] = $token;
+		$req["group"] = $group;
 
-        return $this->_dorequest($req);
-    }
+		return $this->_dorequest($req);
+	}
 
-    function addgroupmember($token, $group, $member)
-    {
-        $req = array();
-        $req["cmd"] = "groupaddmember";
-        $req["token"] = $token;
-        $req["group"] = $group;
-        $req["member"] = $member;
+	function addgroupmember($token, $group, $member)
+	{
+		$req = array();
+		$req["cmd"] = "groupaddmember";
+		$req["token"] = $token;
+		$req["group"] = $group;
+		$req["member"] = $member;
 
-        return $this->_dorequest($req);
-    }
+		return $this->_dorequest($req);
+	}
 
-    function getgroupmembers($token, $group)
-    {
-        $req = array();
-        $req["cmd"] = "groupgetmembers";
-        $req["token"] = $token;
-        $req["group"] = $group;
+	function getgroupmembers($token, $group)
+	{
+		$req = array();
+		$req["cmd"] = "groupgetmembers";
+		$req["token"] = $token;
+		$req["group"] = $group;
 
-        return $this->_dorequest($req);
-    }
+		return $this->_dorequest($req);
+	}
 
-    function deletegroup($token, $group)
-    {
-        $req = array();
-        $req["cmd"] = "groupremove";
-        $req["token"] = $token;
-        $req["group"] = $group;
+	function deletegroup($token, $group)
+	{
+		$req = array();
+		$req["cmd"] = "groupremove";
+		$req["token"] = $token;
+		$req["group"] = $group;
 
-        return $this->_dorequest($req);
-    }
+		return $this->_dorequest($req);
+	}
 
-    function deletegroupuser($token, $group, $member)
-    {
-        $req = array();
-        $req["cmd"] = "groupremovemember";
-        $req["token"] = $token;
-        $req["group"] = $group;
-        $req["member"] = $member;
+	function deletegroupuser($token, $group, $member)
+	{
+		$req = array();
+		$req["cmd"] = "groupremovemember";
+		$req["token"] = $token;
+		$req["group"] = $group;
+		$req["member"] = $member;
 
-        return $this->_dorequest($req);
-    }
+		return $this->_dorequest($req);
+	}
 
-    function shutdown( $token, $action)
-    {
-        $req = array();
-        $req["cmd"] = "shutdown";
-        $req["token"] = $token;
-        $req["action"] = $action;
+	function shutdown( $token, $action)
+	{
+		$req = array();
+		$req["cmd"] = "shutdown";
+		$req["token"] = $token;
+		$req["action"] = $action;
 
-        return $this->_dorequest($req);
-    }
-    
+		return $this->_dorequest($req);
+	}
+	
 	function updategetstate($token) 
 	{
 		$req = array();
@@ -355,32 +355,32 @@ class OPIBackend
 
 	function networkgetportstatus($token,$port) 
 	{
-	    	$req = array();
-    		$req["cmd"] = "networkgetportstatus";
-	    	$req["token"] = $token;
-	    	$req["port"] = $port;
-    	
-	    	return $this->_dorequest($req);
+			$req = array();
+			$req["cmd"] = "networkgetportstatus";
+			$req["token"] = $token;
+			$req["port"] = $port;
+		
+			return $this->_dorequest($req);
 	}
 
 	function networksetportstatus($token,$port,$state)
 	{
-    		$req = array();
-    		$req["cmd"] = "networksetportstatus";
-    		$req["token"] = $token;
-    		$req["port"] = $port;
-    		$req["set_open"] = $state;
-    		 
-    		return $this->_dorequest($req);
+			$req = array();
+			$req["cmd"] = "networksetportstatus";
+			$req["token"] = $token;
+			$req["port"] = $port;
+			$req["set_open"] = $state;
+			 
+			return $this->_dorequest($req);
 	}
 
 	function networkgetopiname($token) 
 	{
-	    	$req = array();
-    		$req["cmd"] = "networkgetopiname";
-	    	$req["token"] = $token;
-    	
-	    	return $this->_dorequest($req);
+			$req = array();
+			$req["cmd"] = "networkgetopiname";
+			$req["token"] = $token;
+		
+			return $this->_dorequest($req);
 	}
 
 	function networksetopiname($token, $hostname)
@@ -552,4 +552,109 @@ class OPIBackend
 
 		return $this->_dorequest($req);
 	}
+
+	function systemgetmessages($token)
+	{
+		$req = [
+			"cmd" => "dosystemgetmessages",
+			"token" => $token
+		];
+		$messages = [
+						[
+							'type'=>'error',
+							'date'=>'1490340965000',
+							'message'=>"Test message",
+							'id'=>'123'
+						],
+						[
+							'type'=>'warning',
+							'date'=>'1490340965',
+							'message'=>"Test message 2",
+							'id'=>'23444'
+						],
+						[
+							'type'=>'notice',
+							'date'=>'1400040965000',
+							'message'=>"This is a long message that shoule cause\n a 'Read More' button to appear.",
+							'id'=>'1111'
+						]
+					];
+		// frontend expects an object, not array...
+		//return $this->_dorequest($req);
+		//$messages = array();
+		return array ( 1, json_encode($messages) );
+	}
+
+	function systemackmessage($token,$id)
+	{
+
+		$req = [
+			"cmd" => "dosystemackmessage",
+			"token" => $token
+		];
+
+		//return $this->_dorequest($req);
+		$resp = [
+			'status' => 1,
+			'deleted' => $id
+		];
+		return json_encode($resp);
+
+	}
+
+	function systemgetstatus($token)
+	{
+		$req = [
+			"cmd" => "dosystemgetstatus",
+			"token" => $token
+		];
+
+		//return $this->_dorequest($req);
+		$uptime = "up 1 week, 2 days, 2 hours, 2 minutes";
+		$resp = [
+			'status' => 1,
+			'temperature' => 25,
+			'uptime' => substr($uptime, 3)  // use uptime -p
+		];
+
+		return $resp;
+	}
+
+	function systemgetstorage($token)
+	{
+		$req = [
+			"cmd" => "dosystemgetstorage",
+			"token" => $token
+		];
+
+		//return $this->_dorequest($req);
+		$resp = [
+			'status' => 1,
+			'total' => 61252260 * 1024,  // df -lh outputs 1k-blocks
+			'used' => 5015076 * 1024,
+			'available' => 53102688 * 1024
+		];
+
+		return $resp;
+	}
+
+	function systemgetpackages($token)
+	{
+		$req = [
+			"cmd" => "dosystemgetpackages",
+			"token" => $token
+		];
+
+		//return $this->_dorequest($req);
+		$status = 1;
+		$resp = [
+			'opi'=> '1.4.5',
+			'opi-control'=>'1.9.2',
+			'owncloud'=>'6.0.2',
+			'opi-webfrontend'=>'1.3'
+		];
+
+		return array($status,$resp);
+	}
+
 }
