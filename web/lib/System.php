@@ -15,7 +15,15 @@ function getmessages()
 	$app = \Slim\Slim::getInstance();
 	$app->response->headers->set('Content-Type', 'application/json');
 
-	print \OPI\SystemModel\getmessages();
+	$resp = \OPI\SystemModel\getmessages();
+	if ( ! $resp)
+	{
+		$app->halt(405);
+	}
+	else
+	{
+		print json_encode($resp);	
+	}
 
 }
 
@@ -26,13 +34,14 @@ function ackmessage()
 
 	$id = $app->request->post('id');
 
-	if ($id == null) {
+	if ($id == null)
+	{
 		$app->response->setStatus(400);
 		print_r($app->request->params());
 	}
 	else 
 	{
-		print \OPI\SystemModel\ackmessage($id);	
+		print json_encode( \OPI\SystemModel\ackmessage($id) );	
 	}
 }
 
@@ -41,7 +50,7 @@ function getstatus()
 	$app = \Slim\Slim::getInstance();
 	$app->response->headers->set('Content-Type', 'application/json');
 
-	print \OPI\SystemModel\getstatus();
+	print json_encode( \OPI\SystemModel\getstatus() );
 
 }
 
@@ -50,7 +59,7 @@ function getstorage()
 	$app = \Slim\Slim::getInstance();
 	$app->response->headers->set('Content-Type', 'application/json');
 
-	print \OPI\SystemModel\getstorage();
+	print json_encode( \OPI\SystemModel\getstorage() );
 
 }
 function getpackages()
@@ -58,6 +67,13 @@ function getpackages()
 	$app = \Slim\Slim::getInstance();
 	$app->response->headers->set('Content-Type', 'application/json');
 
-	print \OPI\SystemModel\getpackages();
-
+	$resp = \OPI\SystemModel\getpackages();
+	if ( ! $resp)
+	{
+		$app->halt(405);
+	}
+	else
+	{
+		print json_encode($resp);	
+	}
 }
