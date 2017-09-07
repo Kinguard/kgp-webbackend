@@ -79,3 +79,14 @@ function getpackages()
 	}
 	return $res;
 }
+
+function gettype()
+{
+	$b = \OPIBackend::instance();
+	list($status,$res) = $b->systemgettype( \OPI\session\gettoken() );
+	if( ! $status )
+	{
+		return false;
+	}
+	return $res;
+}

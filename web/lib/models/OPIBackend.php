@@ -605,4 +605,15 @@ class OPIBackend
 		return $this->_dorequest($req);
 	}
 
+	function systemgettype($token)
+	{
+		$req = [
+			"cmd" => "dosystemgettype",
+			"token" => $token
+		];
+
+		return $this->_dorequest($req);
+	}
+
+
 }

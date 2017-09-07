@@ -169,13 +169,13 @@ function getopiname()
 	$app = \Slim\Slim::getInstance();
 	$app->response->headers->set('Content-Type', 'application/json');
 
-	list($opiname,$enabled) = \OPI\NetworkModel\getopiname();
+	list($opiname,$enabled,$domain) = \OPI\NetworkModel\getopiname();
 
 	if($opiname === false)
 	{
 		$app->halt(400);
 	}
-	printf('{"opiname": "%s","dnsenabled":"%s"}',$opiname,$enabled );
+	printf('{"opiname": "%s","dnsenabled":"%s","domain":"%s"}',$opiname,$enabled,$domain );
 }
 
 function setopiname()
