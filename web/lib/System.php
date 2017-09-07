@@ -77,3 +77,17 @@ function getpackages()
 		print json_encode($resp);	
 	}
 }
+function gettype()
+{
+	$app = \Slim\Slim::getInstance();
+	$app->response->headers->set('Content-Type', 'application/json');
+	$resp = \OPI\SystemModel\gettype();
+	if ( ! $resp)
+	{
+		$app->halt(405);
+	}
+	else
+	{
+		print json_encode($resp);	
+	}
+}

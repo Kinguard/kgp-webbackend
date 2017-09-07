@@ -126,10 +126,9 @@ function getopiname()
 {
 	$b = \OPIBackend::instance();
 	list($status,$res) = $b->networkgetopiname( \OPI\session\gettoken());
-
 	if($status)
 	{
-		return array($res["opiname"],$res["dnsenabled"]);
+		return array($res["opiname"],$res["dnsenabled"],$res["domain"]);
 	}
 	else
 	{
