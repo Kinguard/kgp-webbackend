@@ -131,9 +131,12 @@ function setsettings()
 		$app->halt(400);
 	}
 
-	// validate bucket 
-	if(! preg_match ('/^[a-z0-9]([\-a-z0-9]*[a-z0-9])*(\.?[a-z0-9]([\-a-z0-9]*[a-z0-9])*)*$/',$AWSbucket) ) {
-		$app->halt(404);	
+	if ($location == "amazon")
+	{
+		// validate bucket 
+		if(! preg_match ('/^[a-z0-9]([\-a-z0-9]*[a-z0-9])*(\.?[a-z0-9]([\-a-z0-9]*[a-z0-9])*)*$/',$AWSbucket) ) {
+			$app->halt(404);	
+		}
 	}
 
 
