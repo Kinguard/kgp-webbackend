@@ -1,3 +1,10 @@
+opi-webbackend (1.36) vili; urgency=medium
+
+  * Remove 'bucket' requirement when non-S3 target is used for backup.
+  * Remove requirement to be logged in for system type call. 
+
+ -- PA Nilsson <pa@openproducts.se>  Mon, 06 Nov 2017 09:21:02 +0100
+
 opi-webbackend (1.35) vili; urgency=medium
 
   * Updates to reflect changes in opi-backend 

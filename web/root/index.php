@@ -116,7 +116,7 @@ $app->post('/api/system/messages', "\OPI\session\\requireadmin", "\OPI\\system\a
 $app->get('/api/system/status', "\OPI\session\\requireloggedin", "\OPI\\system\getstatus");
 $app->get('/api/system/storage', "\OPI\session\\requireloggedin", "\OPI\\system\getstorage");
 $app->get('/api/system/packages', "\OPI\session\\requireloggedin", "\OPI\\system\getpackages");
-$app->get('/api/system/type', "\OPI\session\\requireloggedin", "\OPI\\system\gettype");
+$app->get('/api/system/type', "\OPI\\system\gettype");
 
 // Misc other stuff
 $app->post('/api/shutdown', "\OPI\session\\requireadmin", "\OPI\\device\shutdown");
