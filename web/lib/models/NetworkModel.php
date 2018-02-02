@@ -136,13 +136,12 @@ function getopiname()
 	}
 }
 
-function setopiname( $name )
+function setopiname( $name, $domain )
 {
 	$b = \OPIBackend::instance();
 
-	list($status,$res) = $b->networksetopiname( \OPI\session\gettoken(), $name);
+	return $b->networksetopiname( \OPI\session\gettoken(), $name, $domain);
 
-	return $status;
 }
 
 function disabledns()

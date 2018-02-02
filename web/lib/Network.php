@@ -184,9 +184,22 @@ function setopiname()
 	$settings = $app->request->post();
 
 	if($settings['dnsenabled']) {
-		if( ! \OPI\NetworkModel\setopiname($settings['name']) )
+		list($status,$res) = \OPI\NetworkModel\setopiname($settings['name'],$settings['domain']);
+		if( ! $status )
 	{
 		$app->response->setStatus(400);
+			printf('{"status": "fail"}');
+		}
+		else
+		{
+			if ( isset($res["errmsg"]) && $res["errmsg"] )
+			{
+				printf('{"status": "fail", "errmsg":"%s"}',$res["errmsg"]);		
+			}
+			else
+			{
+				printf('{"resp": "%s"}',print_r($res,1));			
+			}
 		}
 	} else {
 		if( ! \OPI\NetworkModel\disabledns() )

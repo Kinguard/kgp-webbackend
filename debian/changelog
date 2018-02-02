@@ -1,3 +1,9 @@
+opi-webbackend (1.37) vili; urgency=medium
+
+  * Updates to handle setting of devicename (opiname) 
+
+ -- PA Nilsson <pa@openproducts.se>  Fri, 02 Feb 2018 15:40:24 +0100
+
 opi-webbackend (1.36) vili; urgency=medium
 
   * Remove 'bucket' requirement when non-S3 target is used for backup.

@@ -383,12 +383,13 @@ class OPIBackend
 			return $this->_dorequest($req);
 	}
 
-	function networksetopiname($token, $hostname)
+	function networksetopiname($token, $hostname, $domain)
 	{
 		$req = array();
 		$req["cmd"] = "networksetopiname";
 		$req["token"] = $token;
 		$req["hostname"] = $hostname;
+		$req["domain"] = $domain;
 
 		return $this->_dorequest($req);
 	}
