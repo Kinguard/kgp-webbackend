@@ -1,3 +1,9 @@
+opi-webbackend (1.38) vili; urgency=medium
+
+  * Support multiple domains. 
+
+ -- PA Nilsson <pa@openproducts.se>  Wed, 29 Aug 2018 15:12:57 +0200
+
 opi-webbackend (1.37) vili; urgency=medium
 
   * Updates to handle setting of devicename (opiname) 

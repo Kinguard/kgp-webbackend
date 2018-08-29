@@ -164,6 +164,15 @@ function setport($port)
 	$res['enabled'] = $enabled;
 	print json_encode($res);
 }
+
+function getdomains()
+{
+	$app = \Slim\Slim::getInstance();
+	$app->response->headers->set('Content-Type', 'application/json');
+
+	print json_encode(\OPI\NetworkModel\getdomains());
+}
+
 function getopiname()
 {
 	$app = \Slim\Slim::getInstance();
@@ -217,7 +226,7 @@ function checkopiname()
 	
 	$data = http_build_query( array(
 				"checkname" => true, 
-				"fqdn" => $app->request->post("value").".op-i.me"
+				"fqdn" => $app->request->post("fqdn")
 				)
 			); 
 	$context_options = Array(

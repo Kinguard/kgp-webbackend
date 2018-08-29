@@ -122,6 +122,20 @@ function setport( $port, $state )
 	return $status;
 }
 
+function getdomains()
+{
+	$b = \OPIBackend::instance();
+	list($status,$res) = $b->networkgetdomains( \OPI\session\gettoken());
+	if ($status)
+	{
+		return array( "status" => $status, "availabledomains" => $res["availabledomains"]);	
+	}
+	else
+	{
+		return array( "status" => $status, "availabledomains" => "", "message" => $res);	
+	}
+}
+
 function getopiname()
 {
 	$b = \OPIBackend::instance();

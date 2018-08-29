@@ -374,6 +374,15 @@ class OPIBackend
 			return $this->_dorequest($req);
 	}
 
+	function networkgetdomains($token) 
+	{
+			$req = array();
+			$req["cmd"] = "networkgetdomains";
+			$req["token"] = $token;
+		
+			return $this->_dorequest($req);
+	}
+
 	function networkgetopiname($token) 
 	{
 			$req = array();
