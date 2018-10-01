@@ -142,7 +142,7 @@ function getopiname()
 	list($status,$res) = $b->networkgetopiname( \OPI\session\gettoken());
 	if($status)
 	{
-		return array($res["opiname"],$res["dnsenabled"],$res["domain"]);
+		return $res;
 	}
 	else
 	{

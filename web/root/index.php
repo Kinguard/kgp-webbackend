@@ -16,6 +16,7 @@ require 'Network.php';
 require 'Device.php';
 require 'Shell.php';
 require 'System.php';
+require 'Status.php';
 
 require_once 'Session.php';
 \OPI\session\setup();
@@ -53,11 +54,6 @@ $app->delete('/api/groups/:name', "\OPI\session\\requireadmin", "\OPI\groups\del
 $app->delete('/api/groups/:name/:user', "\OPI\session\\requireadmin", "\OPI\groups\\removeuser");
 // Only for testing
 //$app->delete(	'/api/groups',			"\OPI\session\\requireadmin",	"\OPI\groups\deletegroups" );
-
-// Update functions
-$app->get('/api/updates', "\OPI\session\\requireadmin", "\OPI\updates\getstate");
-$app->post('/api/updates', "\OPI\session\\requireadmin", "\OPI\updates\setstate");
-$app->put('/api/updates', "\OPI\session\\requireadmin", "\OPI\updates\setstate");
 
 // SMTP domains
 $app->get('/api/smtp/domains', "\OPI\session\\requireloggedin", "\OPI\smtp\getdomains");
@@ -111,13 +107,22 @@ $app->get('/api/network/CertSettings', "\OPI\session\\requireadmin", "\OPI\\netw
 $app->post('/api/network/CertSettings', "\OPI\session\\requireadmin", "\OPI\\network\setcert");
 $app->post('/api/network/checkcert', "\OPI\session\\requireadmin", "\OPI\\network\checkcert");
 
-// System status and messages
-$app->get('/api/system/messages', "\OPI\session\\requireloggedin", "\OPI\\system\getmessages");
-$app->post('/api/system/messages', "\OPI\session\\requireadmin", "\OPI\\system\ackmessage");
-$app->get('/api/system/status', "\OPI\session\\requireloggedin", "\OPI\\system\getstatus");
-$app->get('/api/system/storage', "\OPI\session\\requireloggedin", "\OPI\\system\getstorage");
-$app->get('/api/system/packages', "\OPI\session\\requireloggedin", "\OPI\\system\getpackages");
+// System settings
+$app->get('/api/system/updatesettings', "\OPI\session\\requireadmin", "\OPI\updates\getstate");
+$app->post('/api/system/updatesettings', "\OPI\session\\requireadmin", "\OPI\updates\setstate");
 $app->get('/api/system/type', "\OPI\\system\gettype");
+$app->get('/api/system/moduleproviders', "\OPI\session\\requireloggedin", "\OPI\\system\getmoduleproviders");
+$app->get('/api/system/moduleproviderinfo/:provider', "\OPI\session\\requireloggedin", "\OPI\\system\getmoduleproviderinfo");
+$app->post('/api/system/moduleproviders', "\OPI\session\\requireloggedin", "\OPI\\system\updatemoduleproviders");
+
+
+// Status and messages
+$app->get('/api/status/messages', "\OPI\session\\requireloggedin", "\OPI\\status\getmessages");
+$app->post('/api/status/messages', "\OPI\session\\requireadmin", "\OPI\\status\ackmessage");
+$app->get('/api/status/status', "\OPI\session\\requireloggedin", "\OPI\\status\getstatus");
+$app->get('/api/status/storage', "\OPI\session\\requireloggedin", "\OPI\\status\getstorage");
+$app->get('/api/status/packages', "\OPI\session\\requireloggedin", "\OPI\\status\getpackages");
+
 
 // Misc other stuff
 $app->post('/api/shutdown', "\OPI\session\\requireadmin", "\OPI\\device\shutdown");

@@ -563,7 +563,7 @@ class OPIBackend
 		return $this->_dorequest($req);
 	}
 
-	function systemgetmessages($token)
+	function statusgetmessages($token)
 	{
 		$req = [
 			"cmd" => "dosystemgetmessages",
@@ -572,7 +572,7 @@ class OPIBackend
 		return $this->_dorequest($req);
 	}
 
-	function systemackmessage($token,$id)
+	function statusackmessage($token,$id)
 	{
 
 		$req = [
@@ -585,7 +585,7 @@ class OPIBackend
 
 	}
 
-	function systemgetstatus($token)
+	function statusgetstatus($token)
 	{
 		$req = [
 			"cmd" => "dosystemgetstatus",
@@ -595,7 +595,7 @@ class OPIBackend
 		return $this->_dorequest($req);
 	}
 
-	function systemgetstorage($token)
+	function statusgetstorage($token)
 	{
 		$req = [
 			"cmd" => "dosystemgetstorage",
@@ -605,10 +605,20 @@ class OPIBackend
 		return $this->_dorequest($req);
 	}
 
-	function systemgetpackages($token)
+	function statusgetpackages($token)
 	{
 		$req = [
 			"cmd" => "dosystemgetpackages",
+			"token" => $token
+		];
+
+		return $this->_dorequest($req);
+	}
+
+	function statusgetunitid($token)
+	{
+		$req = [
+			"cmd" => "dosystemgetunitid",
 			"token" => $token
 		];
 
@@ -619,6 +629,68 @@ class OPIBackend
 	{
 		$req = [
 			"cmd" => "dosystemgettype",
+			"token" => $token
+		];
+
+		return $this->_dorequest($req);
+	}
+
+	function systemgetmoduleproviders($token)
+	{
+		/*
+		$req = [
+			"cmd" => "dosystemgetmoduleproviders",
+			"token" => $token
+		];
+
+		return $this->_dorequest($req);
+		*/
+		$providers = array("providers" => array("OpenProducts","Dummy Provider"));
+		return array(true,$providers);				
+	}
+
+	function systemgetmoduleproviderinfo($token,$provider)
+	{
+		// remove all whitespace and make lowercase.
+		$provider=str_replace(' ', '', strtolower($provider));
+		/*
+		$req = [
+			"cmd" => "dosystemgetmoduleproviderinfo",
+			"token" => $token,
+			"provider" => $provider
+		];
+
+		return $this->_dorequest($req);
+		*/
+
+		switch ($provider) {
+			case "openproducts";
+				$providerinfo = array(
+					"enabled" => true,
+					"unitid" => "a6e8e79c-4ffa-42ff-84ae-0e0892c524f1",
+					"password" => true
+				);
+				break;
+			case "dummyprovider":
+				$providerinfo = array( 
+					"enabled" => false,
+					"username" => "somedummyvalue",
+					"password" => false
+				);
+				break;
+			default:
+				return array(false,"");
+				break;
+			}
+
+		return array(true,$providerinfo);				
+	}
+
+
+	function systemupdatemoduleproviders($token)
+	{
+		$req = [
+			"cmd" => "dosystemupdatemoduleproviders",
 			"token" => $token
 		];
 

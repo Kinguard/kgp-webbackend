@@ -1,3 +1,9 @@
+opi-webbackend (1.39) vili; urgency=medium
+
+  * Updated response when setting opiname and certificate. 
+
+ -- PA Nilsson <pa@openproducts.se>  Mon, 03 Sep 2018 16:43:34 +0200
+
 opi-webbackend (1.38) vili; urgency=medium
 
   * Support multiple domains. 

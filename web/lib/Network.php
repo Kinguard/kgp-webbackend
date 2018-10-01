@@ -178,13 +178,14 @@ function getopiname()
 	$app = \Slim\Slim::getInstance();
 	$app->response->headers->set('Content-Type', 'application/json');
 
-	list($opiname,$enabled,$domain) = \OPI\NetworkModel\getopiname();
+	$res = \OPI\NetworkModel\getopiname();
 
-	if($opiname === false)
+	if($res["opiname"] === false)
 	{
 		$app->halt(400);
 	}
-	printf('{"opiname": "%s","dnsenabled":"%s","domain":"%s"}',$opiname,$enabled,$domain );
+	print json_encode($res);
+	//printf('{"opiname": "%s","dnsenabled":"%s","domain":"%s"}',$opiname,$enabled,$domain );
 }
 
 function setopiname()
@@ -192,23 +193,17 @@ function setopiname()
 	$app = \Slim\Slim::getInstance();
 	$settings = $app->request->post();
 
-	if($settings['dnsenabled']) {
+	if(filter_var($settings['dnsenabled'], FILTER_VALIDATE_BOOLEAN) ) {
+
 		list($status,$res) = \OPI\NetworkModel\setopiname($settings['name'],$settings['domain']);
 		if( ! $status )
-	{
-		$app->response->setStatus(400);
+		{
+			$app->response->setStatus(400);
 			printf('{"status": "fail"}');
 		}
 		else
 		{
-			if ( isset($res["errmsg"]) && $res["errmsg"] )
-			{
-				printf('{"status": "fail", "errmsg":"%s"}',$res["errmsg"]);		
-			}
-			else
-			{
-				printf('{"resp": "%s"}',print_r($res,1));			
-			}
+			print json_encode($res);
 		}
 	} else {
 		if( ! \OPI\NetworkModel\disabledns() )
@@ -268,11 +263,11 @@ function setcert()
 	$settings = $app->request->post();
 	$app->response->headers->set('Content-Type', 'application/json');
 
-	$res = \OPI\NetworkModel\setCert($settings);
-	if( ! $res[0] )
+	list($status,$res) = \OPI\NetworkModel\setCert($settings);
+	print json_encode($res);
+	if( ! $status )
 	{
-		print json_encode($res);
-		$app->response->setStatus(400);
+		$app->response->setStatus(500);
 	}
 }
 
