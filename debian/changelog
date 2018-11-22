@@ -1,3 +1,9 @@
+opi-webbackend (1.40) vili; urgency=medium
+
+  * Support default email and moduleprovider calls. 
+
+ -- PA Nilsson <pa@openproducts.se>  Thu, 22 Nov 2018 12:32:29 +0100
+
 opi-webbackend (1.39) vili; urgency=medium
 
   * Updated response when setting opiname and certificate. 

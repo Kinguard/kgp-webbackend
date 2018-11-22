@@ -105,6 +105,7 @@ function updateuser($id)
     $user = array();
     $user['username']   = $app->request->put('username');
     $user['displayname']= $app->request->put('displayname');
+    $user['defaultemail']= $app->request->put('defaultemail');
 
     if( !checknullarray( $user ) )
     {

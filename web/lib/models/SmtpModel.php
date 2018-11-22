@@ -102,7 +102,7 @@ function deleteaddress( $domain, $address )
 	return $status;
 }
 
-function getaddresses( $domain )
+function getaddresses( $domain, $userfilter )
 {
 	$b = \OPIBackend::instance();
 
@@ -113,9 +113,12 @@ function getaddresses( $domain )
 		$ret = array();
 		foreach($res["addresses"] as $address )
 		{
+			if( (! $userfilter) || ( $userfilter == $address["username"] )) 
+		{
 			$ret[]= array(
 				"address" => $address["address"]."@".$domain,
 				"user" => $address["username"]);
+			}
 		}
 		return  $ret;
 	}

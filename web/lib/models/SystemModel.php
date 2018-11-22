@@ -10,74 +10,21 @@ namespace OPI\SystemModel;
 
 require_once 'models/OPIBackend.php';
 
-function getmessages()
+function getunitid()
 {
 	$b = \OPIBackend::instance();
-	list($status,$res) = $b->systemgetmessages( \OPI\session\gettoken() );
-	// messages are returned as an array of strings
-	if( ! $status )
-	{
-		return false;
-	}
-	foreach ($res['messages'] as $key => $msg) {
-		$res['messages'][$key] = json_decode($msg);
-	}
-	return $res;
-}
-
-function ackmessage($msgid)
-{
-	$b = \OPIBackend::instance();
-	list($status,$res) = $b->systemackmessage( \OPI\session\gettoken(), $msgid );
-
-	return $res;
-}
-
-
-function getstatus()
-{
-	$b = \OPIBackend::instance();
-	list($status,$res) = $b->systemgetstatus( \OPI\session\gettoken() );
-
-	if( ! $status )
-	{
-		return false;
-	}
-
-	return $res;
-}
-
-function getstorage()
-{
-	$b = \OPIBackend::instance();
-	list($status,$res) = $b->systemgetstorage( \OPI\session\gettoken() );
-
-	if( ! $status )
-	{
-		return false;
-	}
-	//$storage = explode(' ',$res["storage"]);
-	//unset($res["storage"]);
-
-	// returned result is in order of "total, used, available" in 1k blocks
-	/*$res["storage"] = 	[
-							"total" => $storage[0] * 1024,
-							"used" => $storage[1] * 1024,
-							"available" => $storage[2] * 1024
-						];
-	*/
-	return $res;
-}
-function getpackages()
-{
-	$b = \OPIBackend::instance();
-	list($status,$res) = $b->systemgetpackages( \OPI\session\gettoken() );
-
+	list($status,$res) = $b->systemgetunitid( \OPI\session\gettoken() );
 	if( ! $status )
 	{
 		return false;
 	}
 	return $res;
+}
+
+function setunitid($unitid,$mpwd,$enabled)
+{
+	$b = \OPIBackend::instance();
+	return $b->systemsetunitid( \OPI\session\gettoken(),$unitid,$mpwd,$enabled );
 }
 
 function gettype()
@@ -90,3 +37,35 @@ function gettype()
 	}
 	return $res;
 }
+
+function getmoduleproviders()
+{
+	$b = \OPIBackend::instance();
+	list($status,$res) = $b->systemgetmoduleproviders( \OPI\session\gettoken() );
+	if( ! $status )
+	{
+		return false;
+	}
+	return $res;
+}
+
+function getmoduleproviderinfo($provider)
+{
+	$b = \OPIBackend::instance();
+	list($status,$res) = $b->systemgetmoduleproviderinfo( \OPI\session\gettoken(), $provider );
+	if( ! $status )
+	{
+		return false;
+	}
+	return $res;
+}
+
+function updatemoduleproviders($provider,$settings)
+{
+	$b = \OPIBackend::instance();
+
+	return $b->systemupdatemoduleproviders( \OPI\session\gettoken(), $providers, $settings);
+
+}
+
+

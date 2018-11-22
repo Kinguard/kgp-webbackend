@@ -16,6 +16,7 @@ require 'Network.php';
 require 'Device.php';
 require 'Shell.php';
 require 'System.php';
+require 'Status.php';
 
 require_once 'Session.php';
 \OPI\session\setup();
@@ -54,11 +55,6 @@ $app->delete('/api/groups/:name/:user', "\OPI\session\\requireadmin", "\OPI\grou
 // Only for testing
 //$app->delete(	'/api/groups',			"\OPI\session\\requireadmin",	"\OPI\groups\deletegroups" );
 
-// Update functions
-$app->get('/api/updates', "\OPI\session\\requireadmin", "\OPI\updates\getstate");
-$app->post('/api/updates', "\OPI\session\\requireadmin", "\OPI\updates\setstate");
-$app->put('/api/updates', "\OPI\session\\requireadmin", "\OPI\updates\setstate");
-
 // SMTP domains
 $app->get('/api/smtp/domains', "\OPI\session\\requireloggedin", "\OPI\smtp\getdomains");
 $app->post('/api/smtp/domains', "\OPI\session\\requireloggedin", "\OPI\smtp\adddomain");
@@ -66,7 +62,8 @@ $app->delete('/api/smtp/domains/:id', "\OPI\session\\requireloggedin", "\OPI\smt
 
 // SMTP Mail-addresses
 $app->post('/api/smtp/domains/:name/addresses', "\OPI\session\\requireloggedin", "\OPI\smtp\addaddress");
-$app->get('/api/smtp/domains/:name/addresses', "\OPI\session\\requireloggedin", "\OPI\smtp\getaddresses");
+$app->get('/api/smtp/domains/:name/addresses/', "\OPI\session\\requireloggedin", "\OPI\smtp\getaddresses");
+$app->get('/api/smtp/domains/:name/addresses/:userfilter', "\OPI\session\\requireloggedin", "\OPI\smtp\getaddresses");
 $app->delete('/api/smtp/domains/:name/addresses/:address', "\OPI\session\\requireloggedin", "\OPI\smtp\deleteaddress");
 
 // SMTP Settings
@@ -108,16 +105,28 @@ $app->get('/api/network/opiname', "\OPI\session\\requireadmin", "\OPI\\network\g
 $app->post('/api/network/opiname', "\OPI\session\\requireadmin", "\OPI\\network\setopiname");
 $app->post('/api/network/checkopiname', "\OPI\session\\requireloggedin", "\OPI\\network\checkopiname");
 $app->get('/api/network/CertSettings', "\OPI\session\\requireadmin", "\OPI\\network\getcert");
-$app->post('/api/network/CertSettings', "\OPI\session\\requireadmin", "\OPI\\network\setcert");
+//$app->post('/api/network/CertSettings', "\OPI\session\\requireadmin", "\OPI\\network\setcert");
 $app->post('/api/network/checkcert', "\OPI\session\\requireadmin", "\OPI\\network\checkcert");
+$app->post('/api/network/checkkey', "\OPI\session\\requireadmin", "\OPI\\network\checkkey");
 
-// System status and messages
-$app->get('/api/system/messages', "\OPI\session\\requireloggedin", "\OPI\\system\getmessages");
-$app->post('/api/system/messages', "\OPI\session\\requireadmin", "\OPI\\system\ackmessage");
-$app->get('/api/system/status', "\OPI\session\\requireloggedin", "\OPI\\system\getstatus");
-$app->get('/api/system/storage', "\OPI\session\\requireloggedin", "\OPI\\system\getstorage");
-$app->get('/api/system/packages', "\OPI\session\\requireloggedin", "\OPI\\system\getpackages");
+// System settings
+$app->get('/api/system/updatesettings', "\OPI\session\\requireadmin", "\OPI\updates\getstate");
+$app->post('/api/system/updatesettings', "\OPI\session\\requireadmin", "\OPI\updates\setstate");
 $app->get('/api/system/type', "\OPI\\system\gettype");
+$app->get('/api/system/unitid', "\OPI\\system\getunitid");
+$app->post('/api/system/unitid', "\OPI\\system\setunitid");
+$app->get('/api/system/moduleproviders', "\OPI\session\\requireloggedin", "\OPI\\system\getmoduleproviders");
+$app->get('/api/system/moduleproviderinfo/:provider', "\OPI\session\\requireloggedin", "\OPI\\system\getmoduleproviderinfo");
+$app->post('/api/system/moduleproviders', "\OPI\session\\requireloggedin", "\OPI\\system\updatemoduleproviders");
+
+
+// Status and messages
+$app->get('/api/status/messages', "\OPI\session\\requireloggedin", "\OPI\\status\getmessages");
+$app->post('/api/status/messages', "\OPI\session\\requireadmin", "\OPI\\status\ackmessage");
+$app->get('/api/status/status', "\OPI\session\\requireloggedin", "\OPI\\status\getstatus");
+$app->get('/api/status/storage', "\OPI\session\\requireloggedin", "\OPI\\status\getstorage");
+$app->get('/api/status/packages', "\OPI\session\\requireloggedin", "\OPI\\status\getpackages");
+
 
 // Misc other stuff
 $app->post('/api/shutdown', "\OPI\session\\requireadmin", "\OPI\\device\shutdown");

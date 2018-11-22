@@ -39,9 +39,10 @@ function updateuser($user)
 {
     $username   = $user["username"];
     $display    = $user["displayname"];
+    $defaultemail = $user["defaultemail"];
 
     $b = \OPIBackend::instance();
-    list($status, $rep) = $b->updateuser( \OPI\session\gettoken(), $username, $display );
+    list($status, $rep) = $b->updateuser( \OPI\session\gettoken(), $username, $display, $defaultemail );
 
     return $status;
 }
@@ -81,6 +82,10 @@ function getuser( $username )
 	{
 		$rep["id"] = $rep["username"];
 		$rep["displayname"] = $rep["displayname"];
+        if ( isset($rep["defaultemail"]) ) {
+            $rep["defaultemail"] = $rep["defaultemail"];
+        }
+
 	}
 
 	return $status ? $rep : false;
