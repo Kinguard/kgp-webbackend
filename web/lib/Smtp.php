@@ -116,7 +116,7 @@ function deleteaddress( $domain, $address )
 	\OPI\SMTPModel\deleteaddress($domain, $address);
 }
 
-function getaddresses( $domain )
+function getaddresses( $domain, $userfilter="" )
 {
 
 	$app = \Slim\Slim::getInstance();
@@ -129,7 +129,7 @@ function getaddresses( $domain )
 
 	$app->response->headers->set('Content-Type', 'application/json');
 
-	print json_encode(\OPI\SMTPModel\getaddresses($domain) );
+	print json_encode(\OPI\SMTPModel\getaddresses($domain,$userfilter) );
 
 }
 

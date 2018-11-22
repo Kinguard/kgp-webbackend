@@ -84,13 +84,14 @@ class OPIBackend
 		return $this->_dorequest($req);
 	}
 
-	function updateuser($token, $user, $display)
+	function updateuser($token, $user, $display, $defaultemail)
 	{
 		$req = array();
 		$req["cmd"] = "updateuser";
 		$req["token"] = $token;
 		$req["username"] = $user;
 		$req["displayname"] = $display;
+		$req["defaultemail"] = $defaultemail;
 		
 		return $this->_dorequest($req);
 	}
@@ -392,13 +393,24 @@ class OPIBackend
 			return $this->_dorequest($req);
 	}
 
-	function networksetopiname($token, $hostname, $domain)
+	function networksetopiname($token, $settings)
 	{
 		$req = array();
 		$req["cmd"] = "networksetopiname";
 		$req["token"] = $token;
-		$req["hostname"] = $hostname;
-		$req["domain"] = $domain;
+		$req["hostname"] = $settings['name'];
+		$req["domain"] = $settings['domain'];
+		$req["dnsenabled"] = $settings['dnsenabled'];
+		$req["CertType"] = $settings["CertType"];
+		$req["CustomCertVal"] = $settings["CustomCertVal"];
+		if (isset($settings["CustomKeyVal"]) && $settings["CustomKeyVal"]) {
+			$req["CustomKeyVal"] = $settings["CustomKeyVal"];
+		}
+		else
+		{
+			$req["CustomKeyVal"]="";	
+		}
+
 
 		return $this->_dorequest($req);
 	}
@@ -615,11 +627,24 @@ class OPIBackend
 		return $this->_dorequest($req);
 	}
 
-	function statusgetunitid($token)
+	function systemgetunitid($token)
 	{
 		$req = [
 			"cmd" => "dosystemgetunitid",
 			"token" => $token
+		];
+
+		return $this->_dorequest($req);
+	}
+
+	function systemsetunitid($token,$unitid,$mpwd,$enabled)
+	{
+		$req = [
+			"cmd" => "dosystemsetunitid",
+			"token" => $token,
+			"unitid" => $unitid,
+			"mpwd" => $mpwd,
+			"enabled" => $enabled
 		];
 
 		return $this->_dorequest($req);

@@ -26,6 +26,34 @@ function getunitid()
 	}
 }
 
+function setunitid()
+{
+	$app = \Slim\Slim::getInstance();
+	$settings = $app->request->post();
+	$app->response->headers->set('Content-Type', 'application/json');
+
+	$unitid	= $app->request->post('unitid');
+	$mpwd 	= $app->request->post('mpwd');
+	$enabled= filter_var($app->request->post('enabled'),FILTER_VALIDATE_BOOLEAN);
+
+	// check paramerters
+	if( !checknull($unitid) || !checknull($mpwd) )
+	{
+		print('{"errormsg" : "Invalid arguments"}');
+		$app->halt(400);
+	}
+	list($status,$resp) = \OPI\SystemModel\setunitid($unitid,$mpwd,$enabled);
+	if ( ! $status)
+	{
+		$app->response->setStatus(405);
+		print("{\"errormsg\" : \"$resp\" }");
+	}
+	else
+	{
+		print json_encode($resp);	
+	}
+}
+
 function gettype()
 {
 	$app = \Slim\Slim::getInstance();
@@ -75,6 +103,7 @@ function getmoduleproviderinfo($provider)
 function updatemoduleproviders()
 {
 	$app = \Slim\Slim::getInstance();
+	$app->response->headers->set('Content-Type', 'application/json');
 	$settings = $app->request->post();
 
 	list($status,$res) = \OPI\SystemModel\updatemoduleproviders();

@@ -21,6 +21,12 @@ function getunitid()
 	return $res;
 }
 
+function setunitid($unitid,$mpwd,$enabled)
+{
+	$b = \OPIBackend::instance();
+	return $b->systemsetunitid( \OPI\session\gettoken(),$unitid,$mpwd,$enabled );
+}
+
 function gettype()
 {
 	$b = \OPIBackend::instance();

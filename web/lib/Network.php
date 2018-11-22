@@ -192,25 +192,18 @@ function setopiname()
 {
 	$app = \Slim\Slim::getInstance();
 	$settings = $app->request->post();
-
-	if(filter_var($settings['dnsenabled'], FILTER_VALIDATE_BOOLEAN) ) {
-
-		list($status,$res) = \OPI\NetworkModel\setopiname($settings['name'],$settings['domain']);
+	$settings['dnsenabled'] = filter_var($settings['dnsenabled'], FILTER_VALIDATE_BOOLEAN);
+	list($status,$res) = \OPI\NetworkModel\setopiname($settings);
 		if( ! $status )
 		{
 			$app->response->setStatus(400);
-			printf('{"status": "fail"}');
+		print $res;
 		}
 		else
 		{
 			print json_encode($res);
 		}
-	} else {
-		if( ! \OPI\NetworkModel\disabledns() )
-		{
-			$app->response->setStatus(400);
-		}
-	}
+
 }
 
 function checkopiname()
@@ -257,6 +250,9 @@ function getcert()
 	print json_encode($res);
 }
 
+/*
+** Included in setopiname 
+**
 function setcert()
 {
 	$app = \Slim\Slim::getInstance();
@@ -270,6 +266,7 @@ function setcert()
 		$app->response->setStatus(500);
 	}
 }
+*/
 
 function checkcert()
 {

@@ -62,7 +62,8 @@ $app->delete('/api/smtp/domains/:id', "\OPI\session\\requireloggedin", "\OPI\smt
 
 // SMTP Mail-addresses
 $app->post('/api/smtp/domains/:name/addresses', "\OPI\session\\requireloggedin", "\OPI\smtp\addaddress");
-$app->get('/api/smtp/domains/:name/addresses', "\OPI\session\\requireloggedin", "\OPI\smtp\getaddresses");
+$app->get('/api/smtp/domains/:name/addresses/', "\OPI\session\\requireloggedin", "\OPI\smtp\getaddresses");
+$app->get('/api/smtp/domains/:name/addresses/:userfilter', "\OPI\session\\requireloggedin", "\OPI\smtp\getaddresses");
 $app->delete('/api/smtp/domains/:name/addresses/:address', "\OPI\session\\requireloggedin", "\OPI\smtp\deleteaddress");
 
 // SMTP Settings
@@ -104,13 +105,16 @@ $app->get('/api/network/opiname', "\OPI\session\\requireadmin", "\OPI\\network\g
 $app->post('/api/network/opiname', "\OPI\session\\requireadmin", "\OPI\\network\setopiname");
 $app->post('/api/network/checkopiname', "\OPI\session\\requireloggedin", "\OPI\\network\checkopiname");
 $app->get('/api/network/CertSettings', "\OPI\session\\requireadmin", "\OPI\\network\getcert");
-$app->post('/api/network/CertSettings', "\OPI\session\\requireadmin", "\OPI\\network\setcert");
+//$app->post('/api/network/CertSettings', "\OPI\session\\requireadmin", "\OPI\\network\setcert");
 $app->post('/api/network/checkcert', "\OPI\session\\requireadmin", "\OPI\\network\checkcert");
+$app->post('/api/network/checkkey', "\OPI\session\\requireadmin", "\OPI\\network\checkkey");
 
 // System settings
 $app->get('/api/system/updatesettings', "\OPI\session\\requireadmin", "\OPI\updates\getstate");
 $app->post('/api/system/updatesettings', "\OPI\session\\requireadmin", "\OPI\updates\setstate");
 $app->get('/api/system/type', "\OPI\\system\gettype");
+$app->get('/api/system/unitid', "\OPI\\system\getunitid");
+$app->post('/api/system/unitid', "\OPI\\system\setunitid");
 $app->get('/api/system/moduleproviders', "\OPI\session\\requireloggedin", "\OPI\\system\getmoduleproviders");
 $app->get('/api/system/moduleproviderinfo/:provider', "\OPI\session\\requireloggedin", "\OPI\\system\getmoduleproviderinfo");
 $app->post('/api/system/moduleproviders', "\OPI\session\\requireloggedin", "\OPI\\system\updatemoduleproviders");

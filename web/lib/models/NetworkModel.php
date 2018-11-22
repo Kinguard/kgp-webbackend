@@ -150,11 +150,11 @@ function getopiname()
 	}
 }
 
-function setopiname( $name, $domain )
+function setopiname( $settings )
 {
 	$b = \OPIBackend::instance();
 
-	return $b->networksetopiname( \OPI\session\gettoken(), $name, $domain);
+	return $b->networksetopiname( \OPI\session\gettoken(), $settings );
 
 }
 
@@ -179,6 +179,7 @@ function getCert()
 	}
 }
 
+/* Moved to setopiname call **
 function setCert($settings)
 {
 	$b = \OPIBackend::instance();
@@ -186,6 +187,7 @@ function setCert($settings)
 	return $status;
 
 }
+*/
 
 function checkCert($CertVal)
 {
