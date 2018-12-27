@@ -41,6 +41,7 @@ $app->put('/api/users/:id', "\OPI\session\\requireloggedin", "\OPI\users\updateu
 $app->get('/api/users', "\OPI\session\\requireloggedin", "\OPI\users\getusers");
 $app->get('/api/users/:id', "\OPI\session\\requireloggedin", "\OPI\users\getuser");
 $app->get('/api/users/:id/groups', "\OPI\session\\requireloggedin", "\OPI\users\getgroups");
+$app->get('/api/users/:id/identities',"\OPI\session\\requireloggedin","\OPI\users\getidentities");
 $app->delete('/api/users/:id', "\OPI\session\\requireadmin", "\OPI\users\deleteuser");
 // Only for testing
 //$app->delete(	'/api/users', 		"\OPI\session\\requireadmin",		"\OPI\users\deleteusers");

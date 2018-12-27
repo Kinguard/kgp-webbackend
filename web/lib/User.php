@@ -52,6 +52,14 @@ function getgroups( $username )
 	print json_encode( $o_groups );
 }
 
+function getidentities( $username )
+{
+	$app = \Slim\Slim::getInstance();
+	$app->response->headers->set('Content-Type','application/json');
+	$ids = \OPI\UserModel\getidentities( $username );
+	print json_encode( $ids );
+}
+
 function deleteuser($id)
 {
 	$app = \Slim\Slim::getInstance();

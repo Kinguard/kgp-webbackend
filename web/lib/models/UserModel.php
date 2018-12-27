@@ -100,6 +100,13 @@ function getgroups( $username )
     return $status ? $rep["groups"] : false;
 }
 
+function getidentities( $username )
+{
+	$b = \OPIBackend::Instance();
+	list( $status,$ids) = $b->getuseridentities( \OPI\session\gettoken(), $username );
+	return $status ? $ids : false;
+
+}
 function updatepassword( $user, $old, $new)
 {
     $b = \OPIBackend::instance();

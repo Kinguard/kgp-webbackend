@@ -125,6 +125,16 @@ class OPIBackend
 		return $this->_dorequest($req);
 	}
 
+	function getuseridentities( $token, $username)
+	{
+		$req = array();
+		$req["cmd"]="getuseridentities";
+		$req["token"]=$token;
+		$req["username"]=$username;
+		
+		return $this->_dorequest($req);
+	}
+
 	function deleteuser($token, $username)
 	{
 		$req = array();
