@@ -151,12 +151,21 @@ function setsettings( )
 	$username	= $app->request->post('username');
 	$password 	= $app->request->post('password');
 	$port 		= $app->request->post('port');
-	$send 		= $app->request->post('sendexternal');
-	$receive 	= $app->request->post('receiverelay');
+	$send 		= filter_var($app->request->post('sendexternal'), FILTER_VALIDATE_BOOLEAN);
+	$receive 	= filter_var($app->request->post('receiverelay'), FILTER_VALIDATE_BOOLEAN);
 
 	if( !checknull( $type, $relay, $username, $password, $port, $send, $receive ) )
 	{
 		$app->halt(400);
+	}
+	if ( $type == "useexternal" )
+	{
+		print_r($send);
+		print_r($receive);
+		if( ! ($send || $receive ) )
+		{
+			$app->halt(400);
+		}
 	}
 	$settings = array(
 		"type"		=> $type,
