@@ -644,7 +644,12 @@ class OPIBackend
 			"token" => $token
 		];
 
-		return $this->_dorequest($req);
+		$res = $this->_dorequest($req);
+		if (isset($res[1]["provider"]) && ($res[1]["provider"] == "kgp" ))
+		{
+			$res[1]["provider"] = "openproducts";
+		}
+		return $res;
 	}
 
 	function systemsetunitid($token,$unitid,$mpwd,$enabled)
