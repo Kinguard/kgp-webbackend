@@ -643,12 +643,16 @@ class OPIBackend
 			"cmd" => "dosystemgetunitid",
 			"token" => $token
 		];
-
 		$res = $this->_dorequest($req);
 		if (isset($res[1]["provider"]) && ($res[1]["provider"] == "kgp" ))
 		{
 			$res[1]["provider"] = "openproducts";
 		}
+		if ($res[1]["unitid"] != "")
+		{
+			$res[1]["enabled"]	= true;
+		}
+
 		return $res;
 	}
 

@@ -1,3 +1,9 @@
+opi-webbackend (1.44) vili; urgency=medium
+
+  * Use "unitid" to set provider enabled flag. 
+
+ -- PA Nilsson <pa@openproducts.se>  Tue, 15 Jan 2019 20:25:04 +0100
+
 opi-webbackend (1.43) vili; urgency=medium
 
   * Hardcoded provider to "openproducts" 
