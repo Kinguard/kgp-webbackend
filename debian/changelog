@@ -1,3 +1,9 @@
+opi-webbackend (1.45) vili; urgency=medium
+
+  * Buster update
+
+ -- Tor Krill <tor@openproducts.se>  Fri, 30 Aug 2019 11:48:57 +0200
+
 opi-webbackend (1.44) vili; urgency=medium
 
   * Use "unitid" to set provider enabled flag. 
