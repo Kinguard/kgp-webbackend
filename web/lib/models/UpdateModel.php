@@ -27,5 +27,33 @@ function setstate($state)
 	list($status,$res) = $b->updatesetstate( \OPI\session\gettoken(),$state);
 	
 	return $status;
-	
+}
+
+function startupdate()
+{
+	$b = \OPIBackend::instance();
+	list($status,$res) = $b->systemstartupdate( \OPI\session\gettoken());
+
+	return $status;
+}
+
+function getupgrade()
+{
+	$b = \OPIBackend::instance();
+	list($status,$res) = $b->systemgetupgrade( \OPI\session\gettoken());
+
+    if( $status )
+    {
+       return $res;
+    }
+
+    return false;
+}
+
+function startupgrade()
+{
+	$b = \OPIBackend::instance();
+	list($status,$res) = $b->systemstartupgrade( \OPI\session\gettoken());
+
+	return $status;
 }

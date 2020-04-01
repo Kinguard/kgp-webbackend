@@ -91,6 +91,7 @@ $app->get('/api/backup/subscriptions/:id', "\OPI\session\\requireadmin", "\OPI\\
 
 $app->get('/api/backup/settings', "\OPI\session\\requireadmin", "\OPI\\backup\getsettings");
 $app->post('/api/backup/settings', "\OPI\session\\requireadmin", "\OPI\\backup\setsettings");
+$app->post('/api/backup/start', "\OPI\session\\requireadmin", "\OPI\backup\startbackup");
 
 
 // Network Settings
@@ -119,6 +120,10 @@ $app->post('/api/system/unitid', "\OPI\\system\setunitid");
 $app->get('/api/system/moduleproviders', "\OPI\session\\requireloggedin", "\OPI\\system\getmoduleproviders");
 $app->get('/api/system/moduleproviderinfo/:provider', "\OPI\session\\requireloggedin", "\OPI\\system\getmoduleproviderinfo");
 $app->post('/api/system/moduleproviders', "\OPI\session\\requireloggedin", "\OPI\\system\updatemoduleproviders");
+
+$app->get('/api/system/upgrade', "\OPI\session\\requireadmin", "\OPI\updates\getupgradeavailable");
+$app->post('/api/system/upgrade', "\OPI\session\\requireadmin", "\OPI\updates\startupgrade");
+$app->post('/api/system/update', "\OPI\session\\requireadmin", "\OPI\updates\startupdate");
 
 
 // Status and messages

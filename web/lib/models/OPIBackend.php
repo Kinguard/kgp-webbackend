@@ -40,14 +40,14 @@ class OPIBackend
 			return array(false, "Not connected");
 		}
 
-	fwrite($this->sock,json_encode($req, JSON_UNESCAPED_UNICODE ));
+		fwrite($this->sock,json_encode($req, JSON_UNESCAPED_UNICODE ));
 
 		$res=json_decode(fgets($this->sock,16384),true);
 
-	fclose( $this->sock);
-	$this->connected = FALSE;
+		fclose( $this->sock);
+		$this->connected = FALSE;
 
-	return $this->_processreply($res);
+		return $this->_processreply($res);
 	}
 			
 	function login($user, $password)
@@ -216,7 +216,37 @@ class OPIBackend
 
 		return $this->_dorequest($req);
 	}
-	
+
+
+	function systemgetupgrade($token)
+	{
+		$req = array();
+		$req["cmd"] = "dosystemgetupgrade";
+		$req["token"] = $token;
+
+		return $this->_dorequest($req);
+	}
+
+	function systemstartupgrade($token)
+	{
+		$req = array();
+		$req["cmd"] = "dosystemstartupgrade";
+		$req["token"] = $token;
+
+		return $this->_dorequest($req);
+	}
+
+	function systemstartupdate($token)
+	{
+		$req = array();
+		$req["cmd"] = "dosystemstartupdate";
+		$req["token"] = $token;
+
+		return $this->_dorequest($req);
+	}
+
+
+
 	function updategetstate($token) 
 	{
 		$req = array();
@@ -276,6 +306,16 @@ class OPIBackend
 
 		return $this->_dorequest($req);
 	}
+
+	function backupstartbackup($token)
+	{
+		$req = array();
+		$req["cmd"] = "backupstartbackup";
+		$req["token"] = $token;
+
+		return $this->_dorequest($req);
+	}
+
 
 	function smtpgetdomains($token)
 	{

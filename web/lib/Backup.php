@@ -153,3 +153,15 @@ function setsettings()
 	
 	\OPI\BackupModel\setsettings($location, $type, $AWSkey, $AWSseckey, $AWSbucket);
 }
+
+function startbackup()
+{
+	$app = \Slim\Slim::getInstance();
+
+	list($status,$res) = \OPI\BackupModel\startbackup();
+
+	if( ! $status )
+	{
+		$app->response->setStatus(400);
+	}
+}

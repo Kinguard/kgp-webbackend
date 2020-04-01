@@ -33,6 +33,14 @@ function getstatus()
 	);
 }
 
+function startbackup()
+{
+	$b = \OPIBackend::instance();
+	list($status,$res) = $b->backupstartbackup( \OPI\session\gettoken());
+
+	return $status;
+}
+
 function addsubscription( $code )
 {
 	return $code;

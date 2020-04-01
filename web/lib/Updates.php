@@ -35,3 +35,46 @@ function setstate() {
 		}
 	}
 }
+
+function getupgradeavailable()
+{
+	$app = \Slim\Slim::getInstance();
+
+	$app->response->headers->set('Content-Type', 'application/json');
+
+	list($status,$res) = \OPI\UpdateModel\getupgrade();
+
+	if( ! $status )
+	{
+		$app->response->setStatus(400);
+		printf('{"status": "fail"}');
+	}
+	else
+	{
+		print json_encode($res);
+	}
+}
+
+function startupgrade()
+{
+	$app = \Slim\Slim::getInstance();
+
+	$status = \OPI\UpdateModel\startupgrade();
+
+	if( ! $status )
+	{
+		$app->response->setStatus(400);
+	}
+}
+
+function startupdate()
+{
+	$app = \Slim\Slim::getInstance();
+
+	$status = \OPI\UpdateModel\startupdate();
+
+	if( ! $status )
+	{
+		$app->response->setStatus(400);
+	}
+}
