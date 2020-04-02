@@ -1,3 +1,9 @@
+opi-webbackend (1.47) vili; urgency=medium
+
+  * Minor bugfixes
+
+ -- Tor Krill <tor@openproducts.se>  Thu, 02 Apr 2020 15:00:03 +0200
+
 opi-webbackend (1.46) vili; urgency=medium
 
   * Add start update
