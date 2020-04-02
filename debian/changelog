@@ -1,3 +1,12 @@
+opi-webbackend (1.46) vili; urgency=medium
+
+  * Add start update
+  * Add start upgrade
+  * Add check upgrade
+  * Add start backup
+
+ -- Tor Krill <tor@openproducts.se>  Wed, 01 Apr 2020 15:36:19 +0200
+
 opi-webbackend (1.45) vili; urgency=medium
 
   * Buster update
