@@ -158,7 +158,7 @@ function startbackup()
 {
 	$app = \Slim\Slim::getInstance();
 
-	list($status,$res) = \OPI\BackupModel\startbackup();
+	$status = \OPI\BackupModel\startbackup();
 
 	if( ! $status )
 	{

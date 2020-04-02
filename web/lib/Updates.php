@@ -42,9 +42,9 @@ function getupgradeavailable()
 
 	$app->response->headers->set('Content-Type', 'application/json');
 
-	list($status,$res) = \OPI\UpdateModel\getupgrade();
+	$res = \OPI\UpdateModel\getupgrade();
 
-	if( ! $status )
+	if( ! $res )
 	{
 		$app->response->setStatus(400);
 		printf('{"status": "fail"}');
