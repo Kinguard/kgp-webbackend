@@ -5,7 +5,7 @@ class OPI:
 	def __init__(self, url="http://localhost:8000/index.php"):
 		self.url = url+"/api"
 		self.s = requests.session()
-		self.s.verify=False
+		self.s.verify=True
 
 	#
 	# Session management
@@ -16,6 +16,7 @@ class OPI:
 
 	def loggedin(self):
 		r = self.s.get( self.url+"/session" )
+		print(r.text)
 		if  r.status_code == 200:
 			return r.json()
 		return False
@@ -81,6 +82,24 @@ class OPI:
 		r = self.s.post(self.url+"/updates", {'doupdates': update})
 		return r.status_code == 200
 
+	def doupdate(self):
+		r = self.s.post(self.url+"/system/update")
+		return r.status_code == 200
+
+	#
+	# Upgrade functions
+	#
+	def getupgrade(self):
+		r = self.s.get(self.url+"/system/upgrade")
+		if r.status_code == 200:
+			return r.json()
+		return False
+
+	def doupgrade(self):
+		r = self.s.post(self.url+"/system/upgrade")
+		return r.status_code == 200
+
+
 	#
 	# SMTP functions
 	#
@@ -120,7 +139,7 @@ class OPI:
 
 	def deleteaddress(self, domain, address):
 		r = self.s.delete(self.url + "/smtp/domains/%s/addresses/%s" % (domain, address))
-		print r.text
+		print(r.text)
 		return r.status_code == 200
 
 	def getsmtpsettings(self):
@@ -181,6 +200,10 @@ class OPI:
 		if r.status_code == 200:
 			return r.json()
 		return False
+
+	def dobackup(self):
+		r = self.s.post(self.url+"/backup/start" )
+		return r.status_code == 200
 
 
 	#

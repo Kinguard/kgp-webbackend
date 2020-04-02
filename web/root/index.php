@@ -125,7 +125,6 @@ $app->get('/api/system/upgrade', "\OPI\session\\requireadmin", "\OPI\updates\get
 $app->post('/api/system/upgrade', "\OPI\session\\requireadmin", "\OPI\updates\startupgrade");
 $app->post('/api/system/update', "\OPI\session\\requireadmin", "\OPI\updates\startupdate");
 
-
 // Status and messages
 $app->get('/api/status/messages', "\OPI\session\\requireloggedin", "\OPI\\status\getmessages");
 $app->post('/api/status/messages', "\OPI\session\\requireadmin", "\OPI\\status\ackmessage");

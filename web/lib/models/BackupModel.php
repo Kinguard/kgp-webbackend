@@ -74,13 +74,6 @@ function getsettings()
 	list($status,$res) = $b->backupgetsettings( \OPI\session\gettoken());
 	
 	return $res;
-/*
-	return array(
-		"enabled"	=> true,
-		"location"	=> "remote",
-		"type"		=> "timeline"
-	);
-*/
 }
 
 function setsettings($location, $type, $AWSkey, $AWSseckey, $AWSbucket)
