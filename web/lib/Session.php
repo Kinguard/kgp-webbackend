@@ -94,13 +94,13 @@ function login()
             $app->halt(401);
     }
 
-    $token = \OPI\UserModel\authenticateuser($user, $password);
-    if( $token )
+    list($status, $resp) = \OPI\UserModel\authenticateuser($user, $password);
+    if( $status )
     {
         //TODO: Perhaps safeguard token in session better
         session_regenerate_id(true);
         $_SESSION["AUTHENTICATED"] = true;
-        $_SESSION["TOKEN"] = $token;
+        $_SESSION["TOKEN"] = $resp;
         $_SESSION['USER'] = $user;
         $_SESSION['ADMIN'] = \OPI\GroupModel\useringroup("admin", $user);
         $u = \OPI\UserModel\getuser($user);
@@ -109,8 +109,7 @@ function login()
         $app->stop();
     }
 
-    $app->response->setStatus(401);
-    print_r($app->request->params());
+    $app->response->setStatus($resp);
     logout();
 }
 

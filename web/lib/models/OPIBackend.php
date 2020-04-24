@@ -4,7 +4,8 @@ class OPIBackend
 {
 	
 	private static $instance;
-	
+	private $laststatus;
+
 	public static function instance()  {
 		if ( !isset(self::$instance) ) {
 			self::$instance = new self;
@@ -23,6 +24,7 @@ class OPIBackend
 	
 	function _processreply( $res )
 	{
+		$this->laststatus = $res["status"]["value"];
 		if( $res["status"]["value"] == 0 )
 		{
 			return array(true, $res);
@@ -48,6 +50,11 @@ class OPIBackend
 		$this->connected = FALSE;
 
 		return $this->_processreply($res);
+	}
+
+	function laststatus()
+	{
+		return $this->laststatus;
 	}
 			
 	function login($user, $password)

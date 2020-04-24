@@ -16,7 +16,16 @@ function authenticateuser( $user, $password )
     $b = \OPIBackend::instance();
     
     list($status, $res) = $b->login($user, $password);
-    
+
+    if( $status )
+    {
+	    return array(true, $res["token"]);
+    }
+    else
+    {
+	    return array(false, $b->laststatus() );
+    }
+
     return $status?$res["token"]:false;
 }
 
