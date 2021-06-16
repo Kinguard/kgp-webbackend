@@ -76,10 +76,10 @@ function getsettings()
 	return $res;
 }
 
-function setsettings($location, $type, $AWSkey, $AWSseckey, $AWSbucket)
+function setsettings($location, $type, $AWSkey, $AWSseckey, $AWSbucket, $AWSregion)
 {
 	$b = \OPIBackend::instance();
-	list($status,$res) = $b->backupsetsettings( \OPI\session\gettoken(),$location, $type, $AWSkey, $AWSseckey, $AWSbucket);
+	list($status,$res) = $b->backupsetsettings( \OPI\session\gettoken(),$location, $type, $AWSkey, $AWSseckey, $AWSbucket, $AWSregion);
 	
 	return $status;
 	

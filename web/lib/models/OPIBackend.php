@@ -282,7 +282,7 @@ class OPIBackend
 		return $this->_dorequest($req);
 	}
 
-	function backupsetsettings($token,$location, $type, $AWSkey, $AWSseckey, $AWSbucket) 
+	function backupsetsettings($token,$location, $type, $AWSkey, $AWSseckey, $AWSbucket, $AWSregion)
 	{
 		$req = array();
 		$req["cmd"] = "backupsetsettings";
@@ -292,6 +292,7 @@ class OPIBackend
 		$req["AWSkey"] = $AWSkey;
 		$req["AWSseckey"] = $AWSseckey;
 		$req["AWSbucket"] = $AWSbucket;
+		$req["AWSregion"] = $AWSregion;
 
 		return $this->_dorequest($req);
 	}

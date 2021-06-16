@@ -118,6 +118,7 @@ function setsettings()
 	$AWSkey		= $app->request->post('AWSkey') ? $app->request->post('AWSkey') : "";
 	$AWSseckey	= $app->request->post('AWSseckey') ? $app->request->post('AWSseckey') : "";
 	$AWSbucket	= $app->request->post('AWSbucket') ? $app->request->post('AWSbucket') : "";
+	$AWSregion	= $app->request->post('AWSregion') ? $app->request->post('AWSregion') : "";
 
 	// Validate indata
 	//if( !checknull( $enabled, $location, $type ) )
@@ -151,7 +152,7 @@ function setsettings()
 		$location = "none";
 	}
 	
-	\OPI\BackupModel\setsettings($location, $type, $AWSkey, $AWSseckey, $AWSbucket);
+	\OPI\BackupModel\setsettings($location, $type, $AWSkey, $AWSseckey, $AWSbucket, $AWSregion);
 }
 
 function startbackup()
