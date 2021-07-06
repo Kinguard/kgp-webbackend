@@ -153,6 +153,8 @@ function getsettings()
 			"port"			=> isset($res["port"])?$res["port"]:"",
 			"sendexternal"	=> isset($res["send"])?$res["send"]:false,
 			"receiverelay"	=> isset($res["receive"])?$res["receive"]:false,
+			"relaysend"	=> isset($res["relaysend"])?$res["relaysend"]:false,
+			"relayreceive"	=> isset($res["relayreceive"])?$res["relayreceive"]:false,
 		);
 	}
 	return $status;
