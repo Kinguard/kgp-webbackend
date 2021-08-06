@@ -12,16 +12,20 @@ require_once 'models/ShellModel.php';
 
 function getsettings()
 {
-	if( \OPI\ShellModel\getenabled() ) {
-		$ret["enabled"] = "1";
-	} else {
-		$ret["enabled"] = "0";
+	$ret = \OPI\ShellModel\getenabled();
+
+	if( $ret === false )
+	{
+		$app->response->setStatus(500);
+		print_r($app->request->params());
 	}
+	else
+	{
+		$app = \Slim\Slim::getInstance();
+		$app->response->headers->set('Content-Type', 'application/json');
 
-	$app = \Slim\Slim::getInstance();
-	$app->response->headers->set('Content-Type', 'application/json');
-
-	print json_encode($ret);
+		print json_encode($ret);
+	}
 }
 
 function setsettings()

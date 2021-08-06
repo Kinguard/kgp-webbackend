@@ -20,7 +20,11 @@ function getenabled()
 		return false;
 	}
 
-	return $res["enabled"];
+	$ret = array();
+	$ret["enabled"] = $res["enabled"];
+	$ret["available"] = $res["available"];
+
+	return $ret;
 }
 
 function enable()
