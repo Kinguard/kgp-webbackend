@@ -32,41 +32,47 @@ function setsettings()
 {
 	$app = \Slim\Slim::getInstance();
 
+
+
+	$curstatus = \OPI\ShellModel\getenabled();
+
+	if( !$curstatus["available"] )
+	{
+		$app->response->setStatus(409);
+		print "SSH control currently not available";
+		return;
+	}
+
 	$enable = $app->request->post('enabled');
 
 	if ($enable == null) {
 		$app->response->setStatus(400);
 		print_r($app->request->params());
 	} else {
-		if ($enable == "1" or $enable == "0")
+		if (gettype($enable)  == "string")
 		{
 			$res = array();
 
-			if( $enable == "1" )
+			if( $enable == "true" )
 			{
+				$res["available"] = true;
 				$res["status"] = \OPI\ShellModel\enable();
-				if ($res["status"])
-				{
-					$res['enabled'] = "1";
-				}
-				else
-				{
-					$res['enabled'] = "0";
-				}
+				$res["enabled"] = $res["status"];
+				print json_encode($res);
+			}
+			else if( $enable == "false" )
+			{
+				$res["available"] = true;
+				$res["status"] = \OPI\ShellModel\disable();
+				$res["enabled"] = !$res["status"];
+				print json_encode($res);
 			}
 			else
 			{
-				$res["status"] = \OPI\ShellModel\disable();
-				if ($res["status"])
-				{
-					$res['enabled'] = "0";
-				}
-				else
-				{
-					$res['enabled'] = "1";
-				}
+				$app->response->setStatus(400);
+				print_r($app->request->params());
+				echo "\nType: " . gettype($enable)." ".$enable;
 			}
-			print json_encode($res);
 		}
 		else
 		{
