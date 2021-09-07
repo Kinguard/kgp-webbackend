@@ -1,3 +1,27 @@
+opi-webbackend (1.49) vili; urgency=medium
+
+  * Buster release
+
+ -- Tor Krill <tor@openproducts.se>  Tue, 07 Sep 2021 11:10:42 +0200
+
+opi-webbackend (1.49~test4) vili; urgency=medium
+
+  * Update Shell set access code validation to work with ssh not available
+
+ -- Tor Krill <tor@openproducts.se>  Wed, 11 Aug 2021 09:42:04 +0200
+
+opi-webbackend (1.49~test3) vili; urgency=medium
+
+  * Propagate shell available to frontend
+
+ -- Tor Krill <tor@openproducts.se>  Fri, 06 Aug 2021 16:33:03 +0200
+
+opi-webbackend (1.49~test2) vili; urgency=medium
+
+  * Add relay send/receive to getsmtpsettings
+
+ -- Tor Krill <tor@openproducts.se>  Tue, 06 Jul 2021 12:08:59 +0200
+
 opi-webbackend (1.49~test1) vili; urgency=medium
 
   * Add region to S3 backup settings
